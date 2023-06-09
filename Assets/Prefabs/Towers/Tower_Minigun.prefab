@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8896560347556682951}
   m_Layer: 0
   m_Name: Tower_Minigun
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,11 +150,12 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6794088983540792884, guid: 2b48497e6c238ef4abb7f74ab934fe02,
     type: 3}
   firePoint: {fileID: 801112843364903003}
-  health: 100
+  health: 500
   fireRate: 10
   range: 15
   fireSpan: 10
   turnSpeed: 5
+  damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
 --- !u!1 &5961758272178072595
 GameObject:
   m_ObjectHideFlags: 0

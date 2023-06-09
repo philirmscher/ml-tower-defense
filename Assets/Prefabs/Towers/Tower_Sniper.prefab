@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 3365784915575297284}
   m_Layer: 0
   m_Name: Tower_Sniper
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -181,8 +181,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6794088983540792884, guid: 07e73520db8f1ad468f55fd078e97237,
     type: 3}
   firePoint: {fileID: 7637853630731460731}
-  health: 100
+  health: 500
   fireRate: 0.5
   range: 80
   fireSpan: 2
   turnSpeed: 2
+  damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}

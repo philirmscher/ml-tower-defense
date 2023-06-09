@@ -8,6 +8,12 @@ public class EnemyScript : MonoBehaviour
     public float turnSpeed = 10f;
     public float health = 100f;
     public float damage = 10f;
+    public float attackRange = 2f;
+    public float attackRate = 1f;
+    
+    public Material damageMaterial;
+    
+    private float attackCountdown = 0f;
     
     public void Move(int direction)
     {
@@ -23,10 +29,25 @@ public class EnemyScript : MonoBehaviour
     {
         health -= amount;
         
+        StartCoroutine(FlashDamage());
+
         if (health <= 0f)
         {
             Die();
         }
+    }
+    
+    IEnumerator FlashDamage()
+    {
+        var renderer = GetComponent<Renderer>();
+        
+        var originalMaterial = renderer.material;
+        
+        renderer.material = damageMaterial;
+        
+        yield return new WaitForSeconds(0.1f);
+        
+        renderer.material = originalMaterial;
     }
     
     void Die()
@@ -36,13 +57,45 @@ public class EnemyScript : MonoBehaviour
     
     void Update()
     {
-        if (true)
+        var towers = GameObject.FindGameObjectsWithTag("Tower");
+        
+        var nearestTower = towers[0];
+        
+        foreach (var tower in towers)
         {
-            //do something
+            var distanceToTower = Vector3.Distance(transform.position, tower.transform.position);
+            
+            if (distanceToTower < Vector3.Distance(transform.position, nearestTower.transform.position))
+            {
+                nearestTower = tower;
+            }
         }
-        else
+        
+        
+        var distance = Vector3.Distance(transform.position, nearestTower.transform.position);
+            
+        if (distance <= attackRange)
         {
-            Destroy(this);
+            if (attackCountdown <= 0f)
+            {
+                Attack(nearestTower);
+                attackCountdown = 1f / attackRate;
+            }
+                
+            attackCountdown -= Time.deltaTime;
         }
+    }
+    
+    void Attack(GameObject tower)
+    {
+        var towerScript = tower.GetComponent<TowerScript>();
+        
+        towerScript.TakeDamage(damage);
+    }
+    
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

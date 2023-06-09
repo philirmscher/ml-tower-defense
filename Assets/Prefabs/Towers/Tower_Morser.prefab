@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 5414534225934334838}
   m_Layer: 0
   m_Name: Tower_Morser
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -181,8 +181,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6794088983540792884, guid: fe0bf15071b9c2a408e04bd67035d413,
     type: 3}
   firePoint: {fileID: 4756532277168992420}
-  health: 100
+  health: 500
   fireRate: 0.5
   range: 20
   fireSpan: 7
   turnSpeed: 3
+  damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}

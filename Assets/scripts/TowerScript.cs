@@ -14,6 +14,8 @@ public class TowerScript : MonoBehaviour
     public float range = 15f;
     public float fireSpan = 10f;
     public float turnSpeed = 10f;
+    
+    public Material damageMaterial;
 
     private float fireCountdown = 0f;
     private Transform target;
@@ -28,10 +30,25 @@ public class TowerScript : MonoBehaviour
     {
         health -= amount;
         
+        StartCoroutine(FlashDamage());
+
         if (health <= 0f)
         {
             Die();
         }
+    }
+    
+    IEnumerator FlashDamage()
+    {
+        var renderer = GetComponent<Renderer>();
+        
+        var originalMaterial = renderer.material;
+        
+        renderer.material = damageMaterial;
+        
+        yield return new WaitForSeconds(0.1f);
+        
+        renderer.material = originalMaterial;
     }
     
     void Die()
@@ -83,6 +100,8 @@ public class TowerScript : MonoBehaviour
             //test if the target is within the fire span
             Vector3 targetDir = target.position - transform.position;
             float angle = Vector3.Angle(targetDir, transform.forward);
+            
+            Debug.Log(angle);
             
             if (angle < fireSpan)
             {
