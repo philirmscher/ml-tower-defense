@@ -5,11 +5,19 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     public float speed = 10f;
+    public float turnSpeed = 10f;
     public float health = 100f;
     public float damage = 10f;
     
-    public float horizontal = 0f;
-    public float vertical = 0f;
+    public void Move(int direction)
+    {
+        transform.Translate(Vector3.forward * direction * speed * Time.deltaTime);
+    }
+    
+    public void Rotate(int direction)
+    {
+        transform.Rotate(Vector3.up * direction * turnSpeed * Time.deltaTime);
+    }
     
     public void TakeDamage(float amount)
     {
@@ -36,12 +44,5 @@ public class EnemyScript : MonoBehaviour
         {
             Destroy(this);
         }
-    }
-    
-    void FixedUpdate()
-    {
-        
-        Vector3 movement = new Vector3(horizontal, 0f, vertical);
-        transform.Translate(movement * speed * Time.deltaTime, Space.World);
     }
 }
