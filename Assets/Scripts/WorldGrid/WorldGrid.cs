@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class WorldGrid
 {
-    [SerializeField] private int width;
-    [SerializeField] private int height;
-    [SerializeField] private float cellSize;
+    private int width;
+    private int height;
+    private float cellSize;
     private int[,] gridArray;
 
     public WorldGrid(int width, int height, float cellSize)
