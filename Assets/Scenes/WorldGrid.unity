@@ -1433,6 +1433,7 @@ GameObject:
   - component: {fileID: 1521759717}
   - component: {fileID: 1521759716}
   - component: {fileID: 1521759719}
+  - component: {fileID: 1521759720}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1507,7 +1508,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521759715}
   m_LocalRotation: {x: 0.5916976, y: -0, z: -0, w: 0.8061601}
-  m_LocalPosition: {x: 0, y: 18, z: -3.86}
+  m_LocalPosition: {x: 0, y: 26.61, z: -3.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1643,6 +1644,21 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &1521759720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521759715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a10905fd46129bb46831dd310dc1421d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1521759717}
+  target: {fileID: 1576633890}
+  distanceToTarget: 50
 --- !u!1 &1576633886
 GameObject:
   m_ObjectHideFlags: 0
