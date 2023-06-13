@@ -18,8 +18,10 @@ MonoBehaviour:
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 4563234416873121898, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
       type: 3}
+    <StartCount>k__BackingField: 6
   - <Name>k__BackingField: Wall
     <ID>k__BackingField: 2
     <Size>k__BackingField: {x: 4, y: 2}
     <Prefab>k__BackingField: {fileID: 5688392115560976595, guid: c267f6ae6ccaf9a4cb580b4586b3f9fd,
       type: 3}
+    <StartCount>k__BackingField: 10

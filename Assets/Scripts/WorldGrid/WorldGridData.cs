@@ -6,7 +6,11 @@ using UnityEngine;
 public class WorldGridData
 {
     Dictionary<Vector3Int, PlacementData> placedObjects = new();
-    public void AddObjectAt(Vector3Int gridPosition, Vector2Int objectSize, int ID, int placedObjectIndex)
+    public void AddObjectAt(
+        Vector3Int gridPosition, 
+        Vector2Int objectSize, 
+        int ID, 
+        int placedObjectIndex)
     {
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
         PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
@@ -23,7 +27,7 @@ public class WorldGridData
         List<Vector3Int> returnVal = new();
         for (int x = 0; x < objectSize.x; x++)
         {
-            for (int y = 0; x < objectSize.y; y++)
+            for (int y = 0; y < objectSize.y; y++)
             {
                 returnVal.Add(gridPosition + new Vector3Int(x, 0, y));
             }
