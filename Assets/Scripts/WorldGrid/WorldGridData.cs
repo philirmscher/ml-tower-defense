@@ -45,11 +45,26 @@ public class WorldGridData
         }
         return true;
     }
+
+    internal void RemoveObjectAt(Vector3Int worldGridPosition)
+    {
+        foreach (var pos in placedObjects[worldGridPosition].occupiedPositions)
+        {
+            placedObjects.Remove(pos);
+        }
+    }
+
+    internal int GetRepresentationIndex(Vector3Int worldGridPosition)
+    {
+        if(placedObjects.ContainsKey(worldGridPosition) == false)
+            return -1;
+        return placedObjects[worldGridPosition].PlacedObjectsIndex;
+    }
 }
 
 internal class PlacementData
 {
-    public List<Vector3Int> occupiedPosition;
+    public List<Vector3Int> occupiedPositions;
     public int ID { 
         get; private set; 
     }
@@ -59,7 +74,7 @@ internal class PlacementData
 
     public PlacementData(List<Vector3Int> occupiedPosition, int iD, int placedObjectsIndex)
     {
-        this.occupiedPosition = occupiedPosition;
+        this.occupiedPositions = occupiedPosition;
         ID = iD;
         PlacedObjectsIndex = placedObjectsIndex;
     }

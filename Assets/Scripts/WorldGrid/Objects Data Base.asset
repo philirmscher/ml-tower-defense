@@ -19,9 +19,14 @@ MonoBehaviour:
     <Prefab>k__BackingField: {fileID: 4563234416873121898, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
       type: 3}
     <StartCount>k__BackingField: 6
+    <hasCorner>k__BackingField: 0
+    <cornerPrefab>k__BackingField: {fileID: 0}
   - <Name>k__BackingField: Wall
     <ID>k__BackingField: 2
-    <Size>k__BackingField: {x: 4, y: 2}
+    <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 5688392115560976595, guid: c267f6ae6ccaf9a4cb580b4586b3f9fd,
       type: 3}
     <StartCount>k__BackingField: 10
+    <hasCorner>k__BackingField: 1
+    <cornerPrefab>k__BackingField: {fileID: 288089230879727120, guid: be1356ac9e336af4ca9b22d6acd8af38,
+      type: 3}

@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class PlacementSystem : MonoBehaviour
 {
-    [SerializeField] private GameObject mouseIndicator;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Grid worldGrid;
     [SerializeField] private ObjectsDataBase database;
-    private int selectedObjectIndex = -1;
     [SerializeField] private GameObject gridVisualization;
+    [SerializeField] private ObjectPlacer objectPlacer;
+
     private WorldGridData defenseObjects;
 
-    private List<GameObject> placedGameObjects = new();
+    IDefenseObjectsState defenseObjectsState;
 
 
     [SerializeField] private PreviewSystem preview;
@@ -27,18 +27,22 @@ public class PlacementSystem : MonoBehaviour
     public void StartPlacment(int ID)
     {
         StopPlacement();
-        selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
-        if(selectedObjectIndex < 0)
-        {
-            Debug.LogError($"No ID Found {ID}");
-            return;
-        }
         gridVisualization.SetActive(true);
+        defenseObjectsState = new PlacementState(ID,
+                                                 worldGrid,
+                                                 preview,
+                                                 database,
+                                                 objectPlacer,
+                                                 defenseObjects);
+        inputManager.OnClicked += PlaceStructure;
+        inputManager.OnExit += StopPlacement;
+    }
 
-        preview.StartShowingPlacementPreview(
-            database.objectsData[selectedObjectIndex].Prefab,
-            database.objectsData[selectedObjectIndex].Size);
-
+    public void StartRemovment()
+    {
+        StopPlacement();
+        gridVisualization.SetActive(true);
+        defenseObjectsState = new RemovmentState(worldGrid, preview, objectPlacer, defenseObjects);
         inputManager.OnClicked += PlaceStructure;
         inputManager.OnExit += StopPlacement;
     }
@@ -51,50 +55,32 @@ public class PlacementSystem : MonoBehaviour
         Vector3 mousePosition = inputManager.GetSelectedMapPosition();
         Vector3Int worldGridPosition = worldGrid.WorldToCell(mousePosition);
 
-        bool placementValidity = CheckPlacementValidity(worldGridPosition, selectedObjectIndex);
-        if (placementValidity == false)
-            return;
-
-        GameObject newObject = Instantiate(database.objectsData[selectedObjectIndex].Prefab);
-        newObject.transform.position = worldGrid.CellToWorld(worldGridPosition);
-
-        placedGameObjects.Add(newObject);
-        defenseObjects.AddObjectAt(
-            worldGridPosition,
-            database.objectsData[selectedObjectIndex].Size,
-            database.objectsData[selectedObjectIndex].ID,
-            placedGameObjects.Count - 1);
-
-        preview.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
-    }
-
-    private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
-    {
-        return defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size);
+        defenseObjectsState.OnAction(worldGridPosition);
     }
 
     private void StopPlacement()
     {
-        selectedObjectIndex = -1;
+        if (defenseObjectsState == null)
+            return;
+
         gridVisualization.SetActive(false);
-        preview.StopShowingPreview();
+        defenseObjectsState.EndState();
         inputManager.OnClicked -= PlaceStructure;
         inputManager.OnExit -= StopPlacement;
         lastDetectedPostion = Vector3Int.zero;
+        defenseObjectsState = null;
     }
 
     private void Update()
     {
-        if (selectedObjectIndex < 0)
+        if (defenseObjectsState == null)
             return;
 
         Vector3 mousePosition = inputManager.GetSelectedMapPosition();
         Vector3Int worldGridPosition = worldGrid.WorldToCell(mousePosition);
         if(lastDetectedPostion != worldGridPosition)
         {
-            bool placementValidity = CheckPlacementValidity(worldGridPosition, selectedObjectIndex);
-            mouseIndicator.transform.position = mousePosition;
-            preview.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), placementValidity);
+            defenseObjectsState.UpdateState(worldGridPosition);
             lastDetectedPostion = worldGridPosition;
         }
     }
