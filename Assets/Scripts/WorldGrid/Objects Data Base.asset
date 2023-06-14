@@ -30,7 +30,7 @@ MonoBehaviour:
     <hasCorner>k__BackingField: 0
     <cornerPrefab>k__BackingField: {fileID: 0}
   - <Name>k__BackingField: WallCorner
-    <ID>k__BackingField: 2
+    <ID>k__BackingField: 3
     <Size>k__BackingField: {x: 2, y: 2}
     <Prefab>k__BackingField: {fileID: 288089230879727120, guid: be1356ac9e336af4ca9b22d6acd8af38,
       type: 3}

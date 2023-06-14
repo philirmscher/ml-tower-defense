@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Tower
+  - CameraCollider
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - Grid
   - Water
   - UI
-  - 
+  - CameraCollider
   - 
   - 
   - 
