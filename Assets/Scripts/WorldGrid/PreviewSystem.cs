@@ -28,8 +28,12 @@ public class PreviewSystem : MonoBehaviour
     public void StartShowingPlacementPreview(GameObject prefab, Vector2Int size)
     {
         previewObject = Instantiate(prefab);
+        Vector3 offsetPosition = OffsetPreviewOnGrid(previewObject.transform.position, previewObject.transform.localScale);
+        previewObject.transform.position = offsetPosition;
+
         PreparePreview(previewObject);
         PrepareCursor(size);
+
         cellIndicator.SetActive(true);
     }
 
@@ -40,6 +44,19 @@ public class PreviewSystem : MonoBehaviour
             cellIndicator.transform.localScale = new Vector3(size.x, 1, size.y);
             cellIndicatorRenderer.material.mainTextureScale = size;
         }
+    }
+
+    public Quaternion GetPreviewRotation()
+    {
+        if (previewObject != null)
+            return previewObject.transform.rotation;
+        return Quaternion.identity;
+    }
+    public Vector3 GetPreviewPosition()
+    {
+        if (previewObject != null)
+            return previewObject.transform.position;
+        return Vector3.zero;
     }
 
     private void PreparePreview(GameObject previewObject)
@@ -56,12 +73,21 @@ public class PreviewSystem : MonoBehaviour
         }
     }
 
+    
+
     internal void RotatePreview(Quaternion rotation)
     {
         if (previewObject != null)
         {
             previewObject.transform.rotation = rotation;
         }
+    }
+
+    public Vector3 OffsetPreviewOnGrid(Vector3 position, Vector3 scale)
+    {
+        Vector3 halfScaleOffset = new Vector3(scale.x, 0f, scale.z);
+        position += halfScaleOffset;
+        return position;
     }
 
     public void StopShowingPreview()
@@ -109,9 +135,9 @@ public class PreviewSystem : MonoBehaviour
     private void MovePreview(Vector3 position)
     {
         previewObject.transform.position = new Vector3(
-            position.x,
+            position.x + previewObject.transform.localScale.x,
             position.y + previewYOffset,
-            position.z);
+            position.z + previewObject.transform.localScale.z);
     }
 
     internal void StartShowingRemovePreview()

@@ -56,8 +56,7 @@ public class PlacementState : IDefenseObjectsState
             ? database.objectsData[selectedObjectIndex].cornerPrefab
             : database.objectsData[selectedObjectIndex].Prefab;
 
-        int index = objectPlacer.PlaceObject(prefab, worldGrid.CellToWorld(worldGridPosition));
-
+        int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
 
         defenseObjects.AddObjectAt(
             worldGridPosition,
@@ -76,9 +75,8 @@ public class PlacementState : IDefenseObjectsState
 
         // Rotate the prefab of the selected object
         GameObject prefab = selectedObject.Prefab;
-        Quaternion currentRotation = prefab.transform.rotation;
+        Quaternion currentRotation = previewSystem.GetPreviewRotation();
         Quaternion newRotation = Quaternion.Euler(0f, angle, 0f) * currentRotation;
-        prefab.transform.rotation = newRotation;
 
         // Rotate the preview object
         if (previewSystem != null)
@@ -101,4 +99,5 @@ public class PlacementState : IDefenseObjectsState
         bool placementValidity = CheckPlacementValidity(worldGridPosition, selectedObjectIndex);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), placementValidity);
     }
+
 }
