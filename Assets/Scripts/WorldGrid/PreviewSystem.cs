@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,6 +56,14 @@ public class PreviewSystem : MonoBehaviour
         }
     }
 
+    internal void RotatePreview(Quaternion rotation)
+    {
+        if (previewObject != null)
+        {
+            previewObject.transform.rotation = rotation;
+        }
+    }
+
     public void StopShowingPreview()
     {
         cellIndicator.SetActive(false);
@@ -95,6 +104,7 @@ public class PreviewSystem : MonoBehaviour
     {
         cellIndicator.transform.position = position;
     }
+
 
     private void MovePreview(Vector3 position)
     {

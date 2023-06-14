@@ -63,4 +63,9 @@ public class RemovmentState : IDefenseObjectsState
         bool validity = CheckIfSelectionIsValid(worldGridPosition);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), validity);
     }
+
+    public void RotateObject(float angle)
+    {
+        // Do nothing since rotation doesn't make sense in the removal state
+    }
 }

@@ -35,7 +35,21 @@ public class PlacementSystem : MonoBehaviour
                                                  objectPlacer,
                                                  defenseObjects);
         inputManager.OnClicked += PlaceStructure;
+        inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
+    }
+
+    public void RotateStructure()
+    {
+        // Check if an object is being placed
+        if (defenseObjectsState == null)
+        {
+            Debug.Log("No Object being Placed!");
+            return;
+        }
+
+        // Rotate the object being placed by 90 degrees clockwise
+        defenseObjectsState.RotateObject(90f);
     }
 
     public void StartRemovment()
@@ -66,6 +80,7 @@ public class PlacementSystem : MonoBehaviour
         gridVisualization.SetActive(false);
         defenseObjectsState.EndState();
         inputManager.OnClicked -= PlaceStructure;
+        inputManager.OnPressR -= RotateStructure;
         inputManager.OnExit -= StopPlacement;
         lastDetectedPostion = Vector3Int.zero;
         defenseObjectsState = null;

@@ -67,7 +67,25 @@ public class PlacementState : IDefenseObjectsState
 
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }
+    public void RotateObject(float angle)
+    {
+        if (selectedObjectIndex == -1)
+            return;
 
+        ObjectsData selectedObject = database.objectsData[selectedObjectIndex];
+
+        // Rotate the prefab of the selected object
+        GameObject prefab = selectedObject.Prefab;
+        Quaternion currentRotation = prefab.transform.rotation;
+        Quaternion newRotation = Quaternion.Euler(0f, angle, 0f) * currentRotation;
+        prefab.transform.rotation = newRotation;
+
+        // Rotate the preview object
+        if (previewSystem != null)
+            previewSystem.RotatePreview(newRotation);
+
+        Debug.Log($"Rotation: {newRotation.eulerAngles}");
+    }
     private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
     {
         return defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size);
