@@ -24,6 +24,13 @@ public class ObjectPlacer : MonoBehaviour
         placedGameObjects[gameObjectIndex] = null;
     }
 
+    public GameObject GetObjectAt(int gameObjectIndex)
+    {
+        if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
+            return null;
+        return placedGameObjects[gameObjectIndex];
+    }
+
     public Quaternion GetObjectRotation(int gameObjectIndex)
     {
         if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RemovmentState : IDefenseObjectsState
 {
-    private int gameObjectIndex = -1;
+    private int worldGridObjectIndex = -1;
     Grid worldGrid;
     PreviewSystem previewSystem;
     ObjectPlacer objectPlacer;
@@ -43,11 +43,11 @@ public class RemovmentState : IDefenseObjectsState
         }
         else
         {
-            gameObjectIndex = selectedData.GetRepresentationIndex(worldGridPosition);
-            if (gameObjectIndex == -1)
+            worldGridObjectIndex = selectedData.GetRepresentationIndex(worldGridPosition);
+            if (worldGridObjectIndex == -1)
                 return;
             selectedData.RemoveObjectAt(worldGridPosition);
-            objectPlacer.RemoveObjectAt(gameObjectIndex);
+            objectPlacer.RemoveObjectAt(worldGridObjectIndex);
         }
         Vector3 cellPosition = worldGrid.CellToWorld(worldGridPosition);
         previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(worldGridPosition));

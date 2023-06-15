@@ -54,6 +54,62 @@ public class WorldGridData
         }
     }
 
+    public Vector2Int GetObjectGridSize(Vector3Int worldGridPosition)
+    {
+        if (placedObjects.TryGetValue(worldGridPosition, out PlacementData data))
+        {
+            Vector2Int smallestPos = new Vector2Int(-1, -1);
+            Vector2Int largestPos = new Vector2Int(-1, -1);
+
+
+            foreach (var pos in data.occupiedPositions)
+            {
+                if(smallestPos == new Vector2Int(-1, -1))
+                {
+                    smallestPos = new Vector2Int(pos.x, pos.z);
+                }
+                if (largestPos == new Vector2Int(-1, -1))
+                {
+                    largestPos = new Vector2Int(pos.x, pos.z);
+                }
+
+                if (smallestPos.x > pos.x)
+                    smallestPos.x = pos.x;
+                if (smallestPos.y > pos.z)
+                    smallestPos.y = pos.z;
+
+                if (largestPos.x < pos.x)
+                    largestPos.x = pos.x;
+                if (largestPos.y < pos.z)
+                    largestPos.y = pos.z;
+
+            }
+
+
+            return new Vector2Int(largestPos.x - smallestPos.x + 1, largestPos.y - smallestPos.y + 1);
+        }
+
+        return Vector2Int.zero;
+    }
+    public int GetIDAt(Vector3Int worldGridPosition)
+    {
+        if (placedObjects.TryGetValue(worldGridPosition, out PlacementData placementData))
+        {
+            return placementData.ID;
+        }
+
+        return -1; // oder einen anderen Rückgabewert, der den Fall abdeckt, wenn keine ID gefunden wurde
+    }
+
+    public int GetObjectDatabaseIndex(Vector3Int worldGridPosition)
+    {
+        if (placedObjects.ContainsKey(worldGridPosition) == false)
+            return -1;
+
+        Debug.Log($" ID: {placedObjects[worldGridPosition].ID}");
+        return placedObjects[worldGridPosition].ID;
+    }
+
     internal int GetRepresentationIndex(Vector3Int worldGridPosition)
     {
         if(placedObjects.ContainsKey(worldGridPosition) == false)

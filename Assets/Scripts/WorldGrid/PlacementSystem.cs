@@ -34,7 +34,7 @@ public class PlacementSystem : MonoBehaviour
                                                  database,
                                                  objectPlacer,
                                                  defenseObjects);
-        inputManager.OnClicked += PlaceStructure;
+        inputManager.OnClicked += SelectWorldGrid;
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
     }
@@ -56,12 +56,29 @@ public class PlacementSystem : MonoBehaviour
     {
         StopPlacement();
         gridVisualization.SetActive(true);
-        defenseObjectsState = new RemovmentState(worldGrid, preview, objectPlacer, defenseObjects);
-        inputManager.OnClicked += PlaceStructure;
+        defenseObjectsState = new RemovmentState(worldGrid,
+                                                 preview,
+                                                 objectPlacer,
+                                                 defenseObjects);
+        inputManager.OnClicked += SelectWorldGrid;
         inputManager.OnExit += StopPlacement;
     }
 
-    private void PlaceStructure()
+    public void StartAdjustment()
+    {
+        StopPlacement();
+        gridVisualization.SetActive(true);
+        defenseObjectsState = new AdjustmentState(worldGrid,
+                                                  preview,
+                                                  objectPlacer,
+                                                  defenseObjects,
+                                                  database);
+        inputManager.OnClicked += SelectWorldGrid;
+        inputManager.OnPressR += RotateStructure;
+        inputManager.OnExit += StopPlacement;
+    }
+
+    private void SelectWorldGrid()
     {
         if (inputManager.IsPointerOverUI())
             return;
@@ -79,7 +96,7 @@ public class PlacementSystem : MonoBehaviour
 
         gridVisualization.SetActive(false);
         defenseObjectsState.EndState();
-        inputManager.OnClicked -= PlaceStructure;
+        inputManager.OnClicked -= SelectWorldGrid;
         inputManager.OnPressR -= RotateStructure;
         inputManager.OnExit -= StopPlacement;
         lastDetectedPostion = Vector3Int.zero;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlacementState : IDefenseObjectsState
 {
-    private int selectedObjectIndex = -1;
+    private int databaseObjectIndex = -1;
     int ID;
     Grid worldGrid;
     PreviewSystem previewSystem;
@@ -27,12 +27,12 @@ public class PlacementState : IDefenseObjectsState
         this.objectPlacer = objectPlacer;
         this.defenseObjects = defenseObjects;
 
-        selectedObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
-        if (selectedObjectIndex > -1)
+        databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
+        if (databaseObjectIndex > -1)
         {
             previewSystem.StartShowingPlacementPreview(
-                database.objectsData[selectedObjectIndex].Prefab,
-                database.objectsData[selectedObjectIndex].Size
+                database.objectsData[databaseObjectIndex].Prefab,
+                database.objectsData[databaseObjectIndex].Size
             );
         }
         else
@@ -47,31 +47,31 @@ public class PlacementState : IDefenseObjectsState
 
     public void OnAction(Vector3Int worldGridPosition)
     {
-        bool placementValidity = CheckPlacementValidity(worldGridPosition, selectedObjectIndex);
+        bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex);
         if (placementValidity == false)
             return;
 
-        bool isCornerWall = CheckForCornerWall(worldGridPosition, database.objectsData[selectedObjectIndex].Size);
+        bool isCornerWall = CheckForCornerWall(worldGridPosition, database.objectsData[databaseObjectIndex].Size);
         GameObject prefab = isCornerWall
-            ? database.objectsData[selectedObjectIndex].cornerPrefab
-            : database.objectsData[selectedObjectIndex].Prefab;
+            ? database.objectsData[databaseObjectIndex].cornerPrefab
+            : database.objectsData[databaseObjectIndex].Prefab;
 
         int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
 
         defenseObjects.AddObjectAt(
             worldGridPosition,
-            database.objectsData[selectedObjectIndex].Size,
-            database.objectsData[selectedObjectIndex].ID,
+            database.objectsData[databaseObjectIndex].Size,
+            database.objectsData[databaseObjectIndex].ID,
             index);
 
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }
     public void RotateObject(float angle)
     {
-        if (selectedObjectIndex == -1)
+        if (databaseObjectIndex == -1)
             return;
 
-        ObjectsData selectedObject = database.objectsData[selectedObjectIndex];
+        ObjectsData selectedObject = database.objectsData[databaseObjectIndex];
 
         // Rotate the prefab of the selected object
         GameObject prefab = selectedObject.Prefab;
@@ -96,7 +96,7 @@ public class PlacementState : IDefenseObjectsState
 
     public void UpdateState(Vector3Int worldGridPosition)
     {
-        bool placementValidity = CheckPlacementValidity(worldGridPosition, selectedObjectIndex);
+        bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), placementValidity);
     }
 
