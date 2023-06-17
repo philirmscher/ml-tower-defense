@@ -26,7 +26,7 @@ public class AdjustmentState : IDefenseObjectsState
         this.defenseObjects = defenseObjects;
         this.database = database;
 
-        previewSystem.StartShowingRemovePreview();
+        //previewSystem.StartShowingRemovePreview();
     }
     public void EndState()
     {
@@ -93,7 +93,7 @@ public class AdjustmentState : IDefenseObjectsState
     }
     private bool CheckIfSelectionIsValid(Vector3Int worldGridPosition)
     {
-        return !defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one);
+        return defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one);
     }
     private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
     {
@@ -125,6 +125,7 @@ public class AdjustmentState : IDefenseObjectsState
 
     public void UpdateState(Vector3Int worldGridPosition)
     {
+
         bool validity = CheckIfSelectionIsValid(worldGridPosition);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), validity);
     }
