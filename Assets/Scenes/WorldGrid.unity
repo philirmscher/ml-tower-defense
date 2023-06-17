@@ -3050,6 +3050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 20
+  database: {fileID: 11400000, guid: ab5248326a0bb9f4eb20edf9e961a4b7, type: 2}
 --- !u!1 &1881921567
 GameObject:
   m_ObjectHideFlags: 0

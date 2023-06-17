@@ -14,17 +14,20 @@ public class AdjustmentState : IDefenseObjectsState
     ObjectPlacer objectPlacer;
     WorldGridData defenseObjects;
     ObjectsDataBase database;
+    PointsManager pointsManager;
     public AdjustmentState(Grid worldGrid,
                            PreviewSystem previewSystem,
                            ObjectPlacer objectPlacer,
                            WorldGridData defenseObjects,
-                           ObjectsDataBase database)
+                           ObjectsDataBase database,
+                           PointsManager pointsManager)
     {
         this.worldGrid = worldGrid;
         this.previewSystem = previewSystem;
         this.objectPlacer = objectPlacer;
         this.defenseObjects = defenseObjects;
         this.database = database;
+        this.pointsManager = pointsManager;
 
         //previewSystem.StartShowingRemovePreview();
     }
@@ -56,7 +59,7 @@ public class AdjustmentState : IDefenseObjectsState
                 GameObject prefab = objectPlacer.GetObjectAt(worldGridObjectIndex);
                 objectGridSize = selectedData.GetObjectGridSize(worldGridPosition);
                 objectWorldGridID = selectedData.GetIDAt(worldGridPosition);
-                databaseObjectIndex = databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectDatabaseIndex(worldGridPosition));
+                databaseObjectIndex = databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectID(worldGridPosition));
                 selectedData.RemoveObjectAt(worldGridPosition);
                 objectPlacer.RemoveObjectAt(worldGridObjectIndex);
 

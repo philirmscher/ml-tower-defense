@@ -18,7 +18,7 @@ using UnityEngine;
     [field: SerializeField] public GameObject Prefab { get; private set; }
     [field: SerializeField] public bool hasCorner { get; private set; }
     [field: SerializeField] public int Cost { get; private set; }
-    [field: SerializeField] public int AvailableInstances { get; private set; } //represents current available Objectscount decreses when placing and increases when removing or buying objects
+    [field: SerializeField] public int AvailableInstances { get; set; } //represents current available Objectscount decreses when placing and increases when removing or buying objects
     [field: SerializeField] public int MaxAvailableInstances { get; private set; }
     [field: SerializeField] public GameObject cornerPrefab { get; private set; }
 }

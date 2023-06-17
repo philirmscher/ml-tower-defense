@@ -61,7 +61,9 @@ public class PlacementSystem : MonoBehaviour
         defenseObjectsState = new RemovmentState(worldGrid,
                                                  preview,
                                                  objectPlacer,
-                                                 defenseObjects);
+                                                 defenseObjects,
+                                                 database,
+                                                 pointsManager);
         inputManager.OnClicked += SelectWorldGrid;
         inputManager.OnExit += StopPlacement;
     }
@@ -74,7 +76,8 @@ public class PlacementSystem : MonoBehaviour
                                                   preview,
                                                   objectPlacer,
                                                   defenseObjects,
-                                                  database);
+                                                  database,
+                                                  pointsManager);
         inputManager.OnClicked += SelectWorldGrid;
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;

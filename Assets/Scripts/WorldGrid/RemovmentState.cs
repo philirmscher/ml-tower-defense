@@ -10,16 +10,22 @@ public class RemovmentState : IDefenseObjectsState
     PreviewSystem previewSystem;
     ObjectPlacer objectPlacer;
     WorldGridData defenseObjects;
+    ObjectsDataBase database;
+    PointsManager pointsManager;
 
     public RemovmentState(Grid worldGrid,
                           PreviewSystem previewSystem,
                           ObjectPlacer objectPlacer,
-                          WorldGridData defenseObjects)
+                          WorldGridData defenseObjects,
+                          ObjectsDataBase database,
+                          PointsManager pointsManager)
     {
         this.worldGrid = worldGrid;
         this.previewSystem = previewSystem;
         this.objectPlacer = objectPlacer;
         this.defenseObjects = defenseObjects;
+        this.database = database;
+        this.pointsManager = pointsManager;
 
         previewSystem.StartShowingRemovePreview();
     }
@@ -46,6 +52,8 @@ public class RemovmentState : IDefenseObjectsState
             worldGridObjectIndex = selectedData.GetRepresentationIndex(worldGridPosition);
             if (worldGridObjectIndex == -1)
                 return;
+
+            pointsManager.RemoveObject(database.objectsData.FindIndex(data => data.ID == selectedData.GetIDAt(worldGridPosition)));
             selectedData.RemoveObjectAt(worldGridPosition);
             objectPlacer.RemoveObjectAt(worldGridObjectIndex);
         }

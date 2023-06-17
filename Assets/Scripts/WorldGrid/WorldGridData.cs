@@ -98,10 +98,11 @@ public class WorldGridData
             return placementData.ID;
         }
 
+        Debug.Log($"Worldgridposition: {worldGridPosition}");
         return -1; // oder einen anderen Rückgabewert, der den Fall abdeckt, wenn keine ID gefunden wurde
     }
 
-    public int GetObjectDatabaseIndex(Vector3Int worldGridPosition)
+    public int GetObjectID(Vector3Int worldGridPosition)
     {
         if (placedObjects.ContainsKey(worldGridPosition) == false)
             return -1;

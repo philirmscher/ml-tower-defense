@@ -67,7 +67,7 @@ public class PlacementState : IDefenseObjectsState
             database.objectsData[databaseObjectIndex].ID,
             index);
 
-        pointsManager.RemovePoints(database.objectsData[databaseObjectIndex].Cost);
+        pointsManager.PlaceObject(databaseObjectIndex);
 
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }
@@ -86,14 +86,11 @@ public class PlacementState : IDefenseObjectsState
         // Rotate the preview object
         if (previewSystem != null)
             previewSystem.RotatePreview(newRotation);
-
-        Debug.Log($"Rotation: {newRotation.eulerAngles}");
     }
     private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
     {
-        if (defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size) && 
-            pointsManager.GetCurrentPoints() >= database.objectsData[selectedObjectIndex].Cost && 
-            database.objectsData[selectedObjectIndex].AvailableInstances > 0)
+        if (defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size) &&
+            pointsManager.CheckPlaceObject(selectedObjectIndex))
         {
             return true;
         }
