@@ -6,10 +6,7 @@ public class PointsManager : MonoBehaviour
 {
     [SerializeField] private int points;
 
-    public PointsManager(int startPoints)
-    {
-        this.points = startPoints;
-    }
+    public event System.Action OnPointsChanged;
 
     public int GetCurrentPoints()
     {
@@ -18,6 +15,18 @@ public class PointsManager : MonoBehaviour
 
     public void AddPoints(int points)
     {
+        if(points >= 0)
         this.points += points;
+        OnPointsChanged?.Invoke();
+    }
+
+    public bool RemovePoints(int points)
+    {
+        if (points > this.points)
+            return false;
+
+        this.points -= points;
+        OnPointsChanged?.Invoke();
+        return true;
     }
 }

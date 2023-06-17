@@ -11,6 +11,7 @@ public class PlacementState : IDefenseObjectsState
     ObjectsDataBase database;
     ObjectPlacer objectPlacer;
     WorldGridData defenseObjects;
+    PointsManager pointsManager;
 
     public PlacementState(
         int id,
@@ -18,7 +19,8 @@ public class PlacementState : IDefenseObjectsState
         PreviewSystem previewSystem,
         ObjectsDataBase database,
         ObjectPlacer objectPlacer,
-        WorldGridData defenseObjects)
+        WorldGridData defenseObjects,
+        PointsManager pointsManager)
     {
         ID = id;
         this.worldGrid = worldGrid;
@@ -26,6 +28,7 @@ public class PlacementState : IDefenseObjectsState
         this.database = database;
         this.objectPlacer = objectPlacer;
         this.defenseObjects = defenseObjects;
+        this.pointsManager = pointsManager;
 
         databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == ID);
         if (databaseObjectIndex > -1)
@@ -64,6 +67,8 @@ public class PlacementState : IDefenseObjectsState
             database.objectsData[databaseObjectIndex].ID,
             index);
 
+        pointsManager.RemovePoints(database.objectsData[databaseObjectIndex].Cost);
+
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }
     public void RotateObject(float angle)
@@ -86,13 +91,20 @@ public class PlacementState : IDefenseObjectsState
     }
     private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
     {
-        return defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size);
+        if (defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size) && 
+            pointsManager.GetCurrentPoints() >= database.objectsData[selectedObjectIndex].Cost && 
+            database.objectsData[selectedObjectIndex].AvailableInstances > 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     private bool CheckForCornerWall(Vector3Int position, Vector2Int objectSize)
     {
         return false;
     }
+
 
     public void UpdateState(Vector3Int worldGridPosition)
     {

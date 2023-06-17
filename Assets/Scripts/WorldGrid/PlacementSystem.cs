@@ -10,6 +10,7 @@ public class PlacementSystem : MonoBehaviour
     [SerializeField] private ObjectsDataBase database;
     [SerializeField] private GameObject gridVisualization;
     [SerializeField] private ObjectPlacer objectPlacer;
+    [SerializeField] private PointsManager pointsManager;
 
     private WorldGridData defenseObjects;
 
@@ -33,7 +34,8 @@ public class PlacementSystem : MonoBehaviour
                                                  preview,
                                                  database,
                                                  objectPlacer,
-                                                 defenseObjects);
+                                                 defenseObjects,
+                                                 pointsManager);
         inputManager.OnClicked += SelectWorldGrid;
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
