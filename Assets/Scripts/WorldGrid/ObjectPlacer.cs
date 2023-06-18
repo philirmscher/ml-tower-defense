@@ -37,4 +37,11 @@ public class ObjectPlacer : MonoBehaviour
             return Quaternion.identity;
         return placedGameObjects[gameObjectIndex].transform.rotation;
     }
+
+    public Vector3 GetObjectPosition(int gameObjectIndex)
+    {
+        if (placedGameObjects.Count <= gameObjectIndex || placedGameObjects[gameObjectIndex] == null)
+            return Vector3.zero;
+        return placedGameObjects[gameObjectIndex].transform.position;
+    }
 }

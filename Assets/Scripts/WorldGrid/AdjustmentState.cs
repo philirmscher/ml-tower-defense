@@ -10,6 +10,7 @@ public class AdjustmentState : IDefenseObjectsState
     private Vector2Int objectGridSize;
     private int objectWorldGridID = -1;
     private Vector3Int worldGridPositionCache;
+    private Vector3 prefabPositionCache;
     Grid worldGrid;
     PreviewSystem previewSystem;
     ObjectPlacer objectPlacer;
@@ -36,12 +37,10 @@ public class AdjustmentState : IDefenseObjectsState
     {
         if (hasObjectSelected)
         {
-            worldGridObjectIndex = defenseObjects.GetRepresentationIndex(worldGridPositionCache);
-            if (worldGridObjectIndex == -1)
-                return;
-
             GameObject prefab = database.objectsData[databaseObjectIndex].Prefab;
-            int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), worldGridPositionCache);
+
+            // Platzieren Sie das Objekt an seiner ursprünglichen Position
+            int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), prefabPositionCache);
 
             defenseObjects.AddObjectAt(
                 worldGridPositionCache,
@@ -49,6 +48,7 @@ public class AdjustmentState : IDefenseObjectsState
                 objectWorldGridID,
                 index);
         }
+
         previewSystem.StopShowingPreview();
         worldGridObjectIndex = -1;
         databaseObjectIndex = -1;
@@ -76,6 +76,7 @@ public class AdjustmentState : IDefenseObjectsState
                     return;
 
                 GameObject prefab = objectPlacer.GetObjectAt(worldGridObjectIndex);
+                prefabPositionCache = objectPlacer.GetObjectPosition(worldGridObjectIndex);
                 objectGridSize = selectedData.GetObjectGridSize(worldGridPosition);
                 objectWorldGridID = selectedData.GetIDAt(worldGridPosition);
                 databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectID(worldGridPosition));
