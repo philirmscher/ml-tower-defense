@@ -14,8 +14,7 @@ public class PlacementSystem : MonoBehaviour
 
     private WorldGridData defenseObjects;
 
-    IDefenseObjectsState defenseObjectsState;
-
+    IDefenseObjectsState defenseObjectsState; 
 
     [SerializeField] private PreviewSystem preview;
     private Vector3Int lastDetectedPostion = Vector3Int.zero;
@@ -27,6 +26,7 @@ public class PlacementSystem : MonoBehaviour
 
     public void StartPlacment(int ID)
     {
+        Debug.Log("START PLACEMENT!!!!!!!!!");
         StopPlacement();
         gridVisualization.SetActive(true);
         defenseObjectsState = new PlacementState(ID,

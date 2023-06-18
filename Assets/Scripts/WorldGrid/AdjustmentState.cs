@@ -9,6 +9,7 @@ public class AdjustmentState : IDefenseObjectsState
     private bool hasObjectSelected = false;
     private Vector2Int objectGridSize;
     private int objectWorldGridID = -1;
+    private Vector3Int worldGridPositionCache;
     Grid worldGrid;
     PreviewSystem previewSystem;
     ObjectPlacer objectPlacer;
@@ -33,7 +34,25 @@ public class AdjustmentState : IDefenseObjectsState
     }
     public void EndState()
     {
+        if (hasObjectSelected)
+        {
+            worldGridObjectIndex = defenseObjects.GetRepresentationIndex(worldGridPositionCache);
+            if (worldGridObjectIndex == -1)
+                return;
+
+            GameObject prefab = database.objectsData[databaseObjectIndex].Prefab;
+            int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), worldGridPositionCache);
+
+            defenseObjects.AddObjectAt(
+                worldGridPositionCache,
+                objectGridSize,
+                objectWorldGridID,
+                index);
+        }
         previewSystem.StopShowingPreview();
+        worldGridObjectIndex = -1;
+        databaseObjectIndex = -1;
+        hasObjectSelected = false;
     }
 
     public void OnAction(Vector3Int worldGridPosition)
@@ -59,12 +78,14 @@ public class AdjustmentState : IDefenseObjectsState
                 GameObject prefab = objectPlacer.GetObjectAt(worldGridObjectIndex);
                 objectGridSize = selectedData.GetObjectGridSize(worldGridPosition);
                 objectWorldGridID = selectedData.GetIDAt(worldGridPosition);
-                databaseObjectIndex = databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectID(worldGridPosition));
+                databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectID(worldGridPosition));
                 selectedData.RemoveObjectAt(worldGridPosition);
                 objectPlacer.RemoveObjectAt(worldGridObjectIndex);
 
                 previewSystem.StartShowingPlacementPreview(prefab, objectGridSize);
                 hasObjectSelected = true;
+                worldGridPositionCache = worldGridPosition;
+                Debug.Log(worldGridPositionCache);
             }
         }
         else
@@ -98,10 +119,8 @@ public class AdjustmentState : IDefenseObjectsState
     {
         return defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one);
     }
-    private bool CheckPlacementValidity(Vector3Int worldGridPosition, int selectedObjectIndex)
-    {
-        return defenseObjects.CanPlaceObjectAt(worldGridPosition, database.objectsData[selectedObjectIndex].Size);
-    }
+
+
     private bool CheckPlacementValidity(Vector3Int worldGridPosition)
     {
         return defenseObjects.CanPlaceObjectAt(worldGridPosition, objectGridSize);

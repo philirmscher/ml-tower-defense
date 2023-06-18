@@ -16,7 +16,7 @@ public class AvailibilityTextUpdater : MonoBehaviour
 
     private void Start()
     {
-        pointsManager.OnAvailibilityChanged += UpdateText;
+        pointsManager.OnAvailabilityChanged += UpdateText;
         UpdateText();  // Initialisieren des Texts basierend auf dem Indexwert
     }
 

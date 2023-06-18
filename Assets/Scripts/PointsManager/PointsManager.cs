@@ -10,7 +10,7 @@ public class PointsManager : MonoBehaviour
     private List<int> availableInstancesList;
 
     public event System.Action OnPointsChanged;
-    public event System.Action OnAvailibilityChanged;
+    public event System.Action OnAvailabilityChanged;
     private void Awake()
     {
         availableInstancesList = new List<int>();
@@ -70,7 +70,7 @@ public class PointsManager : MonoBehaviour
         if(availableInstancesList[databaseObjectIndex] > 0)
         {
             availableInstancesList[databaseObjectIndex] -= 1;
-            OnAvailibilityChanged?.Invoke();
+            OnAvailabilityChanged?.Invoke();
         }
         else
         {
@@ -88,7 +88,7 @@ public class PointsManager : MonoBehaviour
     {
         Debug.Log(databaseObjectIndex);
         availableInstancesList[databaseObjectIndex] += 1;
-        OnAvailibilityChanged?.Invoke();
+        OnAvailabilityChanged?.Invoke();
     }
 
     public int GetAvailability(int databaseObjectIndex)
