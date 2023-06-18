@@ -11,6 +11,8 @@ public class AdjustmentState : IDefenseObjectsState
     private int objectWorldGridID = -1;
     private Vector3Int worldGridPositionCache;
     private Vector3 prefabPositionCache;
+    private Quaternion prefabRotationCache;
+
     Grid worldGrid;
     PreviewSystem previewSystem;
     ObjectPlacer objectPlacer;
@@ -40,8 +42,7 @@ public class AdjustmentState : IDefenseObjectsState
             GameObject prefab = database.objectsData[databaseObjectIndex].Prefab;
 
             // Platzieren Sie das Objekt an seiner ursprünglichen Position
-            int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), prefabPositionCache);
-
+            int index = objectPlacer.PlaceObject(prefab, prefabRotationCache, prefabPositionCache);
             defenseObjects.AddObjectAt(
                 worldGridPositionCache,
                 objectGridSize,
@@ -76,17 +77,21 @@ public class AdjustmentState : IDefenseObjectsState
                     return;
 
                 GameObject prefab = objectPlacer.GetObjectAt(worldGridObjectIndex);
+
+                //caching
                 prefabPositionCache = objectPlacer.GetObjectPosition(worldGridObjectIndex);
+                prefabRotationCache = objectPlacer.GetObjectRotation(worldGridObjectIndex);
+                worldGridPositionCache = defenseObjects.GetObjectGridPosition(worldGridPosition);
+
                 objectGridSize = selectedData.GetObjectGridSize(worldGridPosition);
                 objectWorldGridID = selectedData.GetIDAt(worldGridPosition);
+
                 databaseObjectIndex = database.objectsData.FindIndex(data => data.ID == selectedData.GetObjectID(worldGridPosition));
                 selectedData.RemoveObjectAt(worldGridPosition);
                 objectPlacer.RemoveObjectAt(worldGridObjectIndex);
 
                 previewSystem.StartShowingPlacementPreview(prefab, objectGridSize);
                 hasObjectSelected = true;
-                worldGridPositionCache = worldGridPosition;
-                Debug.Log(worldGridPositionCache);
             }
         }
         else

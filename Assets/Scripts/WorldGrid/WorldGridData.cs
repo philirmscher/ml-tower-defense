@@ -117,6 +117,32 @@ public class WorldGridData
             return -1;
         return placedObjects[worldGridPosition].PlacedObjectsIndex;
     }
+    public Vector3Int GetObjectGridPosition(Vector3Int worldGridPosition)
+    {
+        if (placedObjects.TryGetValue(worldGridPosition, out PlacementData placementData))
+        {
+            Vector3Int bottomLeftCell = GetBottomLeftCell(placementData.occupiedPositions);
+
+            return bottomLeftCell;
+        }
+
+        return Vector3Int.zero; // oder einen anderen Rückgabewert, der den Fall abdeckt, wenn keine Position gefunden wurde
+    }
+
+    private Vector3Int GetBottomLeftCell(List<Vector3Int> occupiedPositions)
+    {
+        Vector3Int bottomLeftCell = occupiedPositions[0];
+
+        foreach (Vector3Int position in occupiedPositions)
+        {
+            if (position.x < bottomLeftCell.x)
+                bottomLeftCell.x = position.x;
+            if (position.z < bottomLeftCell.z)
+                bottomLeftCell.z = position.z;
+        }
+
+        return bottomLeftCell;
+    }
 }
 
 internal class PlacementData
