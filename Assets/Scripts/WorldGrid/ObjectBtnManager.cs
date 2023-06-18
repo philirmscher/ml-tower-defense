@@ -11,6 +11,8 @@ public class ObjectBtnManager : MonoBehaviour
     [SerializeField] private ObjectsDataBase objectsDataBase;
     [SerializeField] private PlacementSystem placementSystem;
     [SerializeField] private PointsManager pointsManager;
+    [SerializeField] private string CurrencySymbol = "$";
+    [SerializeField] private float BtnSpacing = 10f;
 
     private List<GameObject> buttonObjects = new List<GameObject>();
 
@@ -28,11 +30,13 @@ public class ObjectBtnManager : MonoBehaviour
             ObjectsData objectData = objectsDataBase.objectsData[objectDataIndex];
             GameObject buttonObject = Instantiate(buttonPrefab, buttonContainer);
             buttonObject.transform.SetParent(buttonContainer, false); // Set the parent while preserving local position and scale
-            TMP_Text buttonText = buttonObject.GetComponentInChildren<TMP_Text>();
+            TMP_Text availabilityText = buttonObject.GetComponentsInChildren<TMP_Text>()[0];
+            TMP_Text costText = buttonObject.GetComponentsInChildren<TMP_Text>()[1];
             Image buttonImage = buttonObject.GetComponent<Image>();
             Button button = buttonObject.GetComponent<Button>();
 
-            buttonText.text = pointsManager.GetAvailability(objectDataIndex).ToString();
+            availabilityText.text = pointsManager.GetAvailability(objectDataIndex).ToString();
+            costText.text = CurrencySymbol + objectData.Cost.ToString();
             buttonImage.sprite = objectData.icon; // Set the button icon using the object's icon from ObjectData
             button.onClick.AddListener(() => placementSystem.StartPlacment(objectData.ID));
 
@@ -43,7 +47,7 @@ public class ObjectBtnManager : MonoBehaviour
     {
         // Add Horizontal Layout Group component to buttonContainer
         HorizontalLayoutGroup layoutGroup = buttonContainer.gameObject.AddComponent<HorizontalLayoutGroup>();
-        layoutGroup.spacing = 10f; // Set the spacing between buttons
+        layoutGroup.spacing = BtnSpacing; // Set the spacing between buttons
 
         // Set the child alignment to middle center (optional)
         layoutGroup.childAlignment = TextAnchor.MiddleCenter;
