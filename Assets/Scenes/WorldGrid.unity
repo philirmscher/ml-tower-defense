@@ -572,6 +572,8 @@ MonoBehaviour:
   objectsDataBase: {fileID: 11400000, guid: ab5248326a0bb9f4eb20edf9e961a4b7, type: 2}
   placementSystem: {fileID: 1942013261}
   pointsManager: {fileID: 1778434285}
+  CurrencySymbol: $
+  BtnSpacing: 10
 --- !u!114 &809814928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1956,6 +1958,7 @@ GameObject:
   - component: {fileID: 1523039442}
   - component: {fileID: 1523039444}
   - component: {fileID: 1523039443}
+  - component: {fileID: 1523039445}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -2025,6 +2028,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1523039441}
   m_CullTransparentMesh: 1
+--- !u!114 &1523039445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523039441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12f3329644578564ea8c2da9cbd51dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 1523039442}
+  transitionDuration: 0.1
+  targetDistance: 300
+  inputManager: {fileID: 334321144}
+  direction: 1
 --- !u!1 &1566176055
 GameObject:
   m_ObjectHideFlags: 0
