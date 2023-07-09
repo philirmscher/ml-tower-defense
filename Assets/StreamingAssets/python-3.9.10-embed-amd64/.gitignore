@@ -1,0 +1,26 @@
+Lib/
+
+# Python
+*.pyc
+__pycache__/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+
+# Environment
+.env
+
+# Dependency management
+pip-lock.txt
+pipenv.lock
+poetry.lock
+
+# Other
+*.log
+*.swp
+.DS_Store
