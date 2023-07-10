@@ -2,21 +2,39 @@ using Python.Runtime;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using System;
+using TMPro;
 
 public class PythonScriptRunner : MonoBehaviour
 {
+    public TextMeshProUGUI resultText;
+
     private void Start()
     {
         using (Py.GIL())
         {
             dynamic sys = Py.Import("sys");
-            dynamic version = sys.version;
-            string pythonVersion = version.ToString();
+            dynamic platform = Py.Import("platform");
+            dynamic math = Py.Import("math");
+
+            // Python-Version abrufen
+            dynamic pythonVersion = sys.version;
             UnityEngine.Debug.Log("Python Version: " + pythonVersion);
 
-            dynamic message = "Hello, Python!";
-            string messageString = message.ToString();
-            UnityEngine.Debug.Log(messageString);
+            // Betriebssysteminformationen abrufen
+            dynamic osInfo = platform.system();
+            UnityEngine.Debug.Log("Operating System: " + osInfo);
+
+            // Berechnung in Python durchführen
+            dynamic result = math.sqrt(25);
+
+            // Ergebnis an Unity übermitteln
+            float unityResult = (float)result;
+
+            // Ergebnis in Unity ausgeben
+            UnityEngine.Debug.Log("Square root of 25: " + unityResult);
+            UnityEngine.Debug.Log("Result Text is null: " + (resultText == null));
+            resultText.text = "Result sqrt(25): " + unityResult + " Current OS: " + osInfo + " Current Python Version: " + pythonVersion; 
         }
 
         LogInstalledLibraries();
@@ -52,7 +70,7 @@ public class PythonScriptRunner : MonoBehaviour
         string packages = "";
         foreach (string packageName in installedPackages)
         {
-            if(packages == "")
+            if (packages == "")
             {
                 packages += "Installed Packages: ";
             }

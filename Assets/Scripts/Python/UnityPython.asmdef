@@ -1,7 +1,9 @@
 {
     "name": "UnityPython",
     "rootNamespace": "UnityPython",
-    "references": [],
+    "references": [
+        "Unity.TextMeshPro"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,

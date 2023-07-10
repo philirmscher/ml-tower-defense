@@ -8,14 +8,14 @@ public class PythonIntegration : MonoBehaviour
     {
         UnityPython.PythonLifeCycle.Initialize();
 
-        using (Py.GIL())
-        {
-            dynamic locals = new PyDict();
-
-            string pythonScriptPath = "Assets/Scripts/Python/testBaslines3.py";
-            string pythonScriptCode = System.IO.File.ReadAllText(pythonScriptPath);
-
-            PythonEngine.Exec(pythonScriptCode, locals, locals);
-        }
+        //using (Py.GIL())
+        //{
+        //    dynamic locals = new PyDict();
+        //
+        //    string pythonScriptPath = "Assets/Scripts/Python/testBaslines3.py";
+        //    string pythonScriptCode = System.IO.File.ReadAllText(pythonScriptPath);
+        //
+        //    PythonEngine.Exec(pythonScriptCode, locals, locals);
+        //}
     }
 }
