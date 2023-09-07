@@ -26,7 +26,6 @@ public class PlacementSystem : MonoBehaviour
 
     public void StartPlacment(int ID)
     {
-        Debug.Log("START PLACEMENT!!!!!!!!!");
         StopPlacement();
         gridVisualization.SetActive(true);
         defenseObjectsState = new PlacementState(ID,
@@ -99,7 +98,6 @@ public class PlacementSystem : MonoBehaviour
         if (defenseObjectsState == null)
             return;
 
-        gridVisualization.SetActive(false);
         defenseObjectsState.EndState();
         inputManager.OnClicked -= SelectWorldGrid;
         inputManager.OnPressR -= RotateStructure;

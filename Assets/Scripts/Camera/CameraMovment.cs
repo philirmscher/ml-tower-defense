@@ -40,6 +40,16 @@ public class CameraMovement : MonoBehaviour
             float angle = maxXAngle;
             float clampedXRotation = Mathf.Clamp(currentXRotation + rotationAroundXAxis, 0f, angle);
             rotationAroundXAxis = clampedXRotation - currentXRotation;
+            
+            // Limit the X-rotation between minXAngle and maxXAngle
+            if (currentXRotation + rotationAroundXAxis < minXAngle)
+            {
+                rotationAroundXAxis = minXAngle - currentXRotation;
+            }
+            else if (currentXRotation + rotationAroundXAxis > maxXAngle)
+            {
+                rotationAroundXAxis = maxXAngle - currentXRotation;
+            }
 
             cam.transform.position = target.transform.position;
             cam.transform.Rotate(new Vector3(1, 0, 0), rotationAroundXAxis);
