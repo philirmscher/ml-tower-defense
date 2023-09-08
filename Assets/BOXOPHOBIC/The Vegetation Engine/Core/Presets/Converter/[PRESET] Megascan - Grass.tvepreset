@@ -1,0 +1,20 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Megascan
+InfoPreset Megascans asset work best if per object variation is added! TVE will add procedural variation but please note that it isn't working in all cases! Set the Vertex Data to World for simple translation motion instead of bending!
+InfoStatus ● ● ● ● ●
+InfoOnline https://quixel.com/megascans/home
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+// Set Material
+Include Opaque by RenderType
+Include Unity Lit Commons
+Include Unity Lit Packer
+
+Include Use Default Grass Masks
+Include Use Default Grass Settings

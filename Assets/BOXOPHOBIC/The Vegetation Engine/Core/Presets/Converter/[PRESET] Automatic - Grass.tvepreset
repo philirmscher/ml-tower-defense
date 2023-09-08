@@ -1,0 +1,21 @@
+*******************************************************************
+*                             INFO                                *
+*******************************************************************
+
+InfoTitle Automatic Grass
+InfoPreset Use this preset to convert Grass objects.
+InfoWarning The automatic conversion might not work as expected! The preset will convert the materials only if the Standard/Lit shaders are used!
+InfoStatus ● ● ● ● ●
+InfoOnline https://docs.google.com/document/d/145JOVlJ1tE-WODW45YoJ6Ixg23mFc56EnB_8Tbwloz8/edit#heading=h.1fsztsnbzbgj
+
+*******************************************************************
+*                             PRESET                              *
+*******************************************************************
+
+// Include Unity Default Features
+Include Unity Lit Commons
+Include Unity Lit Packer
+
+Include Use Default Grass Masks
+Include Use Default Grass Settings
+
