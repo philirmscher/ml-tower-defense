@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Pine_06_Branches (TVE Material)
   m_Shader: {fileID: 4800000, guid: a933075b367f9b24981408633f72ff34, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - TVE_FEATURE_CLIP
   - _DISABLE_DECALS
@@ -30,6 +32,7 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -416,18 +419,18 @@ Material:
     - _BumpScale: 1
     - _CameraFadeValue: 1
     - _CategoryDetail: 0
-    - _CategoryEmissive: 0
-    - _CategoryGlobal: 0
-    - _CategoryGradient: 0
-    - _CategoryMain: 0
-    - _CategoryMotion: 0
+    - _CategoryEmissive: 1
+    - _CategoryGlobal: 1
+    - _CategoryGradient: 1
+    - _CategoryMain: 1
+    - _CategoryMotion: 1
     - _CategoryNoise: 0
-    - _CategoryOcclusion: 0
+    - _CategoryOcclusion: 1
     - _CategoryPerspective: 0
-    - _CategoryRender: 0
+    - _CategoryRender: 1
     - _CategoryRendering: 0
     - _CategorySizeFade: 0
-    - _CategorySubsurface: 0
+    - _CategorySubsurface: 1
     - _CoatCoverage: 1
     - _CoatIOR: 0.5
     - _CoatMask: 0
