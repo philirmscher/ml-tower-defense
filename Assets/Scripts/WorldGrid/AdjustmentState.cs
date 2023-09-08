@@ -68,7 +68,7 @@ public class AdjustmentState : IDefenseObjectsState
             }
             if (selectedData == null)
             {
-                //do something
+                Debug.Log("No selected Data");
             }
             else
             {
