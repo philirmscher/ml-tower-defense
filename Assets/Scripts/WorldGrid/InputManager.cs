@@ -11,12 +11,14 @@ public class InputManager : MonoBehaviour
 
     private Vector3 lastPosition;
 
-    public event Action OnClicked, OnExit, OnPressR, OnTabPressed;
+    public event Action OnLeftClicked, OnRightClicked, OnExit, OnPressR, OnTabPressed;
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-            OnClicked?.Invoke();
+            OnLeftClicked?.Invoke();
+        if (Input.GetMouseButtonDown(1))
+            OnRightClicked?.Invoke();
         if (Input.GetKeyDown(KeyCode.Escape))
             OnExit?.Invoke();
         if (Input.GetKeyDown(KeyCode.R))

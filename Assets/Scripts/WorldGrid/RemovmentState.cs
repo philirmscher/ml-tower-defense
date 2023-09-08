@@ -35,7 +35,7 @@ public class RemovmentState : IDefenseObjectsState
         previewSystem.StopShowingPreview();
     }
 
-    public void OnAction(Vector3Int worldGridPosition)
+    public void OnLeftClicked(Vector3Int worldGridPosition)
     {
         WorldGridData selectedData = null;
         if (defenseObjects.CanPlaceObjectAt(worldGridPosition,Vector2Int.one) == false)
@@ -75,5 +75,10 @@ public class RemovmentState : IDefenseObjectsState
     public void RotateObject(float angle)
     {
         // Do nothing since rotation doesn't make sense in the removal state
+    }
+
+    public void OnRightClicked(Vector3Int worldGridPosition)
+    {
+        throw new NotImplementedException();
     }
 }

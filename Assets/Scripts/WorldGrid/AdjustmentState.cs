@@ -56,7 +56,7 @@ public class AdjustmentState : IDefenseObjectsState
         hasObjectSelected = false;
     }
 
-    public void OnAction(Vector3Int worldGridPosition)
+    public void OnLeftClicked(Vector3Int worldGridPosition)
     {
         if(hasObjectSelected == false)
         {
@@ -156,5 +156,10 @@ public class AdjustmentState : IDefenseObjectsState
 
         bool validity = CheckIfSelectionIsValid(worldGridPosition);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), validity);
+    }
+
+    public void OnRightClicked(Vector3Int worldGridPosition)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -26,7 +26,6 @@ public class PlacementSystem : MonoBehaviour
 
     public void StartPlacment(int ID)
     {
-        Debug.Log("START PLACEMENT!!!!!!!!!");
         StopPlacement();
         gridVisualization.SetActive(true);
         defenseObjectsState = new PlacementState(ID,
@@ -36,7 +35,8 @@ public class PlacementSystem : MonoBehaviour
                                                  objectPlacer,
                                                  defenseObjects,
                                                  pointsManager);
-        inputManager.OnClicked += SelectWorldGrid;
+        inputManager.OnLeftClicked += () => SelectWorldGrid(KeyCode.Mouse0);
+        inputManager.OnRightClicked += () => SelectWorldGrid(KeyCode.Mouse1);
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
     }
@@ -64,7 +64,7 @@ public class PlacementSystem : MonoBehaviour
                                                  defenseObjects,
                                                  database,
                                                  pointsManager);
-        inputManager.OnClicked += SelectWorldGrid;
+        inputManager.OnLeftClicked += () => SelectWorldGrid(KeyCode.Mouse0);
         inputManager.OnExit += StopPlacement;
     }
 
@@ -78,12 +78,12 @@ public class PlacementSystem : MonoBehaviour
                                                   defenseObjects,
                                                   database,
                                                   pointsManager);
-        inputManager.OnClicked += SelectWorldGrid;
+        inputManager.OnLeftClicked += () => SelectWorldGrid(KeyCode.Mouse0);
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
     }
 
-    private void SelectWorldGrid()
+    private void SelectWorldGrid(KeyCode key)
     {
         if (inputManager.IsPointerOverUI())
             return;
@@ -91,7 +91,18 @@ public class PlacementSystem : MonoBehaviour
         Vector3 mousePosition = inputManager.GetSelectedMapPosition();
         Vector3Int worldGridPosition = worldGrid.WorldToCell(mousePosition);
 
-        defenseObjectsState.OnAction(worldGridPosition);
+        switch (key)
+        {
+            case KeyCode.Mouse0:
+                defenseObjectsState.OnLeftClicked(worldGridPosition);
+                break;
+            case KeyCode.Mouse1:
+                defenseObjectsState.OnRightClicked(worldGridPosition);
+                break;
+            default:
+                Debug.Log("No Keycode!");
+                break;
+        }
     }
 
     private void StopPlacement()
@@ -101,7 +112,7 @@ public class PlacementSystem : MonoBehaviour
 
         gridVisualization.SetActive(false);
         defenseObjectsState.EndState();
-        inputManager.OnClicked -= SelectWorldGrid;
+        inputManager.OnLeftClicked += () => SelectWorldGrid(KeyCode.Mouse0);
         inputManager.OnPressR -= RotateStructure;
         inputManager.OnExit -= StopPlacement;
         lastDetectedPostion = Vector3Int.zero;
