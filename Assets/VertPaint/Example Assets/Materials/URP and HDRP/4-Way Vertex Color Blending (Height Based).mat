@@ -156,7 +156,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MAIN_AO:
-        m_Texture: {fileID: 2800000, guid: ab8f0478fe8b5b24896e0146aa445392, type: 3}
+        m_Texture: {fileID: 2800000, guid: 431f49473958bca4a8df3b98a5d42806, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MSHAO1:
@@ -180,7 +180,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main_Normal_Map:
-        m_Texture: {fileID: 2800000, guid: 5b488cb30ac31924b8e1f24a1d5a0537, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5fda0276eb621a242aa1beffc48ae91b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
@@ -320,7 +320,7 @@ Material:
     - _EnergyConservingSpecularColor: 1
     - _HdrpVersion: 2
     - _Height1Shift: 0.01
-    - _Height2Shift: 0.37
+    - _Height2Shift: 0.67
     - _Height3Shift: 1.17
     - _Height4Shift: 1.22
     - _HeightAmplitude: 0.02
@@ -340,7 +340,7 @@ Material:
     - _MaterialID: 1
     - _Metallic: 0
     - _NormalMap1Strength: 1
-    - _NormalMap1Strength_1: 0.999
+    - _NormalMap1Strength_1: 1.633
     - _NormalMap2Strength: 1
     - _NormalMap3Strength: 1
     - _NormalMap4Strength: 1.625
@@ -439,7 +439,7 @@ Material:
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _Tiling1: {r: 30, g: 30, b: 1, a: 1}
-    - _Tiling2: {r: 20, g: 20, b: 1, a: 1}
+    - _Tiling2: {r: 40, g: 40, b: 40, a: 1}
     - _Tiling3: {r: 25, g: 25, b: 1, a: 1}
     - _Tiling4: {r: 25, g: 25, b: 1, a: 1}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
