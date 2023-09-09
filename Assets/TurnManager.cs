@@ -3,6 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class EnemyPlacement
+{
+    public GameObject prefab;
+    public int amount;
+}
+
+[Serializable]
+public class EnemyWave
+{
+    public List<EnemyPlacement> enemyPlacements;
+}
+
 public class TurnManager : MonoBehaviour
 {
     [SerializeField] private GameObject gridSystem;
@@ -10,9 +23,11 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private TMPro.TMP_Text turnNumberText;
+    [SerializeField] private List<EnemyWave> enemyWaves;
+    [SerializeField] private EnemyWaveManager enemyWaveManager;
     
-    bool isTurnPhase = false;
-    float turnStartTimeInMs = 0f;
+    bool isTurnPhase;
+    float turnStartTimeInMs;
     private int turnNumber = 1;
     
     public void StartTurnPhase()
@@ -22,6 +37,7 @@ public class TurnManager : MonoBehaviour
         gridSystem.SetActive(false);
         turnStartTimeInMs = Time.time;
         timerText.SetText("00:00.000");
+        enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
         isTurnPhase = true;
     }
 
@@ -51,5 +67,10 @@ public class TurnManager : MonoBehaviour
         int seconds = (int) (timeSinceTurnStartInMs % 60f);
         int milliseconds = (int) ((timeSinceTurnStartInMs - (int) timeSinceTurnStartInMs) * 1000f);
         return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
+    }
+    
+    public void EndTurn()
+    {
+        StartPreTurnPhase();
     }
 }

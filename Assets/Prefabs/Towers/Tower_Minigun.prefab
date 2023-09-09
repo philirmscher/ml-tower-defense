@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 3088524496530091822}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6020424935142873199
 GameObject:
@@ -185,9 +185,9 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6794088983540792884, guid: 2b48497e6c238ef4abb7f74ab934fe02,
     type: 3}
   firePoint: {fileID: 7060133213386965213}
-  health: 500
+  health: 250
   fireRate: 10
-  range: 15
-  fireSpan: 10
+  range: 10
+  fireSpan: 5
   turnSpeed: 5
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}

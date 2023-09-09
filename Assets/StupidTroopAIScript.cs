@@ -2,53 +2,46 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class StupidTroopAIScript : MonoBehaviour
 {
     Transform target;
+    
+    [SerializeField] private float speed = 5f;
+    private NavMeshAgent agent;
+    
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     private void Update()
     {
-        var towers = GameObject.FindGameObjectsWithTag("Tower");
-        var closestTower = towers[0];
-        var closestDistance = Vector3.Distance(transform.position, closestTower.transform.position);
-        
-        foreach (var tower in towers)
-        {
-            var distance = Vector3.Distance(transform.position, tower.transform.position);
-            if (distance < closestDistance)
-            {
-                closestTower = tower;
-                closestDistance = distance;
-            }
-        }
-        
-        target = closestTower.transform;
-        
-        Move();
+        FindClostestEnemy();
     }
     
-    void Move()
+    void FindClostestEnemy()
     {
-        EnemyScript enemyScript = GetComponent<EnemyScript>();
-        
-        if (Vector3.Distance(transform.position, target.position) <= enemyScript.attackRange)
+        var enemies = GameObject.FindGameObjectsWithTag("Tower");
+        if (enemies.Length == 0)
         {
             return;
         }
-        
-        var direction = target.position - transform.position;
-        
-        var angle = Vector3.Angle(direction, transform.forward);
-        
-        if (angle > 5f)
+        var closestEnemy = enemies[0];
+        var closestDistance = Vector3.Distance(transform.position, closestEnemy.transform.position);
+        foreach (var enemy in enemies)
         {
-            var sign = Mathf.Sign(Vector3.Dot(transform.right, direction));
-            enemyScript.Rotate((int)sign);
+            var distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < closestDistance)
+            {
+                closestEnemy = enemy;
+                closestDistance = distance;
+            }
         }
-        else
-        {
-            enemyScript.Move(1);
-        }
+
+        target = closestEnemy.transform;
+        
+        agent.SetDestination(target.position);
     }
 }
