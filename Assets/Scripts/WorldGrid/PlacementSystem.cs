@@ -111,6 +111,7 @@ public class PlacementSystem : MonoBehaviour
             return;
 
         defenseObjectsState.EndState();
+        gridVisualization.SetActive(false);
         inputManager.OnLeftClicked -= SelectWorldGridLeftClick;
         inputManager.OnRightClicked -= SelectWorldGridRightClick;
         inputManager.OnPressR -= RotateStructure;
