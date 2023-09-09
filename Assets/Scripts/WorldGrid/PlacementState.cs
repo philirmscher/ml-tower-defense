@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlacementState : IDefenseObjectsState
 {
-    private int databaseObjectIndex = -1;
+    private int databaseObjectIndex = -1; 
+    private int worldGridObjectIndex = -1;
     int ID;
     Grid worldGrid;
     PreviewSystem previewSystem;
@@ -42,13 +43,13 @@ public class PlacementState : IDefenseObjectsState
             throw new System.Exception($"No object with ID {id}");
 
     }
-
+            
     public void EndState()
     {
         previewSystem.StopShowingPreview();
     }
 
-    public void OnAction(Vector3Int worldGridPosition)
+    public void OnLeftClicked(Vector3Int worldGridPosition)
     {
         bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex);
         if (placementValidity == false)
@@ -70,6 +71,31 @@ public class PlacementState : IDefenseObjectsState
         pointsManager.PlaceObject(databaseObjectIndex);
 
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
+    }
+    public void OnRightClicked(Vector3Int worldGridPosition)//delete Object
+    {
+        WorldGridData selectedData = null;
+        if (defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one) == false)
+        {
+            selectedData = defenseObjects;
+        }
+
+        if (selectedData == null)
+        {
+            //do something
+        }
+        else
+        {
+            worldGridObjectIndex = selectedData.GetRepresentationIndex(worldGridPosition);
+            if (worldGridObjectIndex == -1)
+                return;
+
+            pointsManager.RemoveObject(database.objectsData.FindIndex(data => data.ID == selectedData.GetIDAt(worldGridPosition)));
+            selectedData.RemoveObjectAt(worldGridPosition);
+            objectPlacer.RemoveObjectAt(worldGridObjectIndex);
+        }
+        Vector3 cellPosition = worldGrid.CellToWorld(worldGridPosition);
+        previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(worldGridPosition));
     }
     public void RotateObject(float angle)
     {
@@ -108,5 +134,10 @@ public class PlacementState : IDefenseObjectsState
         bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex);
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), placementValidity);
     }
+    private bool CheckIfSelectionIsValid(Vector3Int worldGridPosition)
+    {
+        return !defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one);
+    }
+
 
 }

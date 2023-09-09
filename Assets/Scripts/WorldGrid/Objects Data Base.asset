@@ -51,7 +51,7 @@ MonoBehaviour:
       type: 3}
   - <Name>k__BackingField: Ressource Tower
     <ID>k__BackingField: 4
-    <Size>k__BackingField: {x: 3, y: 2}
+    <Size>k__BackingField: {x: 3, y: 3}
     <Prefab>k__BackingField: {fileID: 4563234416873121898, guid: 299c7685a64def0448658a30dbb6d40d,
       type: 3}
     <hasCorner>k__BackingField: 0

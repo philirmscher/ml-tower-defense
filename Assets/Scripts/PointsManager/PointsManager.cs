@@ -86,7 +86,6 @@ public class PointsManager : MonoBehaviour
 
     public void RemoveObject(int databaseObjectIndex)
     {
-        Debug.Log(databaseObjectIndex);
         availableInstancesList[databaseObjectIndex] += 1;
         OnAvailabilityChanged?.Invoke();
     }

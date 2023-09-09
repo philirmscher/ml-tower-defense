@@ -17,6 +17,7 @@ public class PreviewSystem : MonoBehaviour
     private Material previewMaterialInstance;
 
     private Renderer cellIndicatorRenderer;
+    private Vector2Int PreviewObjectSize;
 
     private void Start()
     {
@@ -28,7 +29,8 @@ public class PreviewSystem : MonoBehaviour
     public void StartShowingPlacementPreview(GameObject prefab, Vector2Int size)
     {
         previewObject = Instantiate(prefab);
-        Vector3 offsetPosition = OffsetPreviewOnGrid(previewObject.transform.position, previewObject.transform.localScale);
+        PreviewObjectSize = size;
+        Vector3 offsetPosition = OffsetPreviewOnGrid(previewObject.transform.position, PreviewObjectSize);
         previewObject.transform.position = offsetPosition;
 
         PreparePreview(previewObject);
@@ -83,9 +85,9 @@ public class PreviewSystem : MonoBehaviour
         }
     }
 
-    public Vector3 OffsetPreviewOnGrid(Vector3 position, Vector3 scale)
+    public Vector3 OffsetPreviewOnGrid(Vector3 position, Vector2 scale)
     {
-        Vector3 halfScaleOffset = new Vector3(scale.x, 0f, scale.z);
+        Vector3 halfScaleOffset = new Vector3(scale.x / 2f, 0f, scale.y / 2f);
         position += halfScaleOffset;
         return position;
     }
@@ -134,10 +136,8 @@ public class PreviewSystem : MonoBehaviour
 
     private void MovePreview(Vector3 position)
     {
-        previewObject.transform.position = new Vector3(
-            position.x + previewObject.transform.localScale.x,
-            position.y + previewYOffset,
-            position.z + previewObject.transform.localScale.z);
+        previewObject.transform.position = OffsetPreviewOnGrid(position, PreviewObjectSize);
+
     }
 
     internal void StartShowingRemovePreview()
