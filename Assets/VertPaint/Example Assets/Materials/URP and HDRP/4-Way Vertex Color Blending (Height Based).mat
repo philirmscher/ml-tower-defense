@@ -438,7 +438,7 @@ Material:
     - _Offset4: {r: 0, g: 0, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _Tiling1: {r: 30, g: 30, b: 1, a: 1}
+    - _Tiling1: {r: 100, g: 100, b: 1, a: 1}
     - _Tiling2: {r: 40, g: 40, b: 40, a: 1}
     - _Tiling3: {r: 25, g: 25, b: 1, a: 1}
     - _Tiling4: {r: 25, g: 25, b: 1, a: 1}
