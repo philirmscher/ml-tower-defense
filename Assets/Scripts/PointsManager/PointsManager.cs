@@ -35,7 +35,7 @@ public class PointsManager : MonoBehaviour
     public void AddPoints(int points)
     {
         if(points >= 0)
-        this.points += points;
+            this.points += points;
         OnPointsChanged?.Invoke();
     }
 
@@ -55,7 +55,7 @@ public class PointsManager : MonoBehaviour
             return true;
         else
         {
-            if (database.objectsData[databaseObjectIndex].Cost > this.points)
+            if (database.objectsData[databaseObjectIndex].Cost > points)
             {
                 Debug.Log("No available Points!");
                 return false;
@@ -64,7 +64,7 @@ public class PointsManager : MonoBehaviour
         }
     }
 
-    public void PlaceObject(int databaseObjectIndex)
+    public bool PlaceObject(int databaseObjectIndex)
     {
 
         if(availableInstancesList[databaseObjectIndex] > 0)
@@ -74,19 +74,25 @@ public class PointsManager : MonoBehaviour
         }
         else
         {
-            if (database.objectsData[databaseObjectIndex].Cost > this.points)
-            {
-                Debug.Log("No available Points!");
-            }
-
-            this.points -= database.objectsData[databaseObjectIndex].Cost;
-            OnPointsChanged?.Invoke();
+            return false;
         }
+        
+        if (database.objectsData[databaseObjectIndex].Cost > points)
+        {
+            Debug.Log("No available Points!");
+            return false;
+        }
+
+        RemovePoints(database.objectsData[databaseObjectIndex].Cost);
+        return true;
     }
 
     public void RemoveObject(int databaseObjectIndex)
     {
         availableInstancesList[databaseObjectIndex] += 1;
+        
+        AddPoints(database.objectsData[databaseObjectIndex].Cost);
+        
         OnAvailabilityChanged?.Invoke();
     }
 
