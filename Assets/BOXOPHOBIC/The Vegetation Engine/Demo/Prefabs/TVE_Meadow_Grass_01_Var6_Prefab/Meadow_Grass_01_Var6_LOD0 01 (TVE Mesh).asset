@@ -1,16 +1,13 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!43 &4300000
-TVEData:
-  tve_version: 650
-  tve_type: Default
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Meadow_Grass_01_Var6_LOD0 01 (TVE Mesh)
-  serializedVersion: 10
+  serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
@@ -157,12 +154,14 @@ Mesh:
     m_Center: {x: -0.62710047, y: 0.30260748, z: 0.6808841}
     m_Extent: {x: 2.8681664, y: 0.390617, z: 3.44362}
   m_MeshUsageFlags: 0
+  m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshMetrics[0]: 5.8605404
   m_MeshMetrics[1]: 1
   m_MeshOptimizationFlags: -1
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
