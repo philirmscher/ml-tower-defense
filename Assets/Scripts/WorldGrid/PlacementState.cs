@@ -51,7 +51,8 @@ public class PlacementState : IDefenseObjectsState
 
     public void OnLeftClicked(Vector3Int worldGridPosition)
     {
-        bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex);
+        bool placementValidity = CheckPlacementValidity(worldGridPosition, databaseObjectIndex) &&
+                                 pointsManager.PlaceObject(databaseObjectIndex);
         if (placementValidity == false)
             return;
 
@@ -67,8 +68,6 @@ public class PlacementState : IDefenseObjectsState
             database.objectsData[databaseObjectIndex].Size,
             database.objectsData[databaseObjectIndex].ID,
             index);
-
-        pointsManager.PlaceObject(databaseObjectIndex);
 
         previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }

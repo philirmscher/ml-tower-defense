@@ -1,0 +1,76 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable]
+public class EnemyPlacement
+{
+    public GameObject prefab;
+    public int amount;
+}
+
+[Serializable]
+public class EnemyWave
+{
+    public List<EnemyPlacement> enemyPlacements;
+}
+
+public class TurnManager : MonoBehaviour
+{
+    [SerializeField] private GameObject gridSystem;
+    [SerializeField] private GameObject placementUI;
+    [SerializeField] private GameObject playButton;
+    [SerializeField] private TMPro.TMP_Text timerText;
+    [SerializeField] private TMPro.TMP_Text turnNumberText;
+    [SerializeField] private List<EnemyWave> enemyWaves;
+    [SerializeField] private EnemyWaveManager enemyWaveManager;
+    
+    bool isTurnPhase;
+    float turnStartTimeInMs;
+    private int turnNumber = 1;
+    
+    public void StartTurnPhase()
+    {
+        playButton.SetActive(false);
+        placementUI.SetActive(false);
+        gridSystem.SetActive(false);
+        turnStartTimeInMs = Time.time;
+        timerText.SetText("00:00.000");
+        enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
+        isTurnPhase = true;
+    }
+
+    public void StartPreTurnPhase()
+    {
+        isTurnPhase = false;
+        timerText.SetText("");
+        turnNumber++;
+        turnNumberText.SetText($"Turn {turnNumber}");
+        placementUI.SetActive(true);
+        gridSystem.SetActive(true);
+        playButton.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (isTurnPhase)
+        {
+            timerText.SetText(GetTimeSinceTurnStart());
+        }
+    }
+    
+    private string GetTimeSinceTurnStart()
+    {
+        float timeSinceTurnStartInMs = Time.time - turnStartTimeInMs;
+        int minutes = (int) (timeSinceTurnStartInMs / 60f);
+        int seconds = (int) (timeSinceTurnStartInMs % 60f);
+        int milliseconds = (int) ((timeSinceTurnStartInMs - (int) timeSinceTurnStartInMs) * 1000f);
+        return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
+    }
+    
+    public void EndTurn()
+    {
+        StartPreTurnPhase();
+    }
+}

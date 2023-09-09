@@ -110,7 +110,6 @@ public class PlacementSystem : MonoBehaviour
         if (defenseObjectsState == null)
             return;
 
-        gridVisualization.SetActive(false);
         defenseObjectsState.EndState();
         inputManager.OnLeftClicked -= SelectWorldGridLeftClick;
         inputManager.OnRightClicked -= SelectWorldGridRightClick;

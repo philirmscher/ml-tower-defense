@@ -59,6 +59,9 @@ public class EnemyScript : MonoBehaviour
     {
         var towers = GameObject.FindGameObjectsWithTag("Tower");
         
+        if(towers.Length == 0)
+            return;
+        
         var nearestTower = towers[0];
         
         foreach (var tower in towers)
