@@ -5,31 +5,38 @@ using UnityEngine;
 public class TowerScript : MonoBehaviour
 {
 
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    
-    public float health = 100f;
-    
-    public float fireRate = 1f;
-    public float range = 15f;
-    public float fireSpan = 10f;
-    public float turnSpeed = 10f;
-    
-    public Material damageMaterial;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+
+
+    [SerializeField] private float health, maxHealth = 100f;
+
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float range = 15f;
+    [SerializeField] private float fireSpan = 10f;
+    [SerializeField] private float turnSpeed = 10f;
+
+    [SerializeField] private Material damageMaterial;
+
+    [SerializeField] private HealthBar healthBar;
 
     private float fireCountdown = 0f;
     private Transform target;
     private string enemyTag = "Enemy";
-    
+    private void Awake()
+    {
+        healthBar = GetComponentInChildren<HealthBar>();
+    }
     void Start()
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        health = maxHealth;
+        healthBar.UpdateHealthBar(health, maxHealth);
     }
-    
     public void TakeDamage(float amount)
     {
         health -= amount;
-        
+        healthBar.UpdateHealthBar(health, maxHealth);
         StartCoroutine(FlashDamage());
 
         if (health <= 0f)
@@ -53,7 +60,7 @@ public class TowerScript : MonoBehaviour
     
     void Die()
     {
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
     }
     
     void UpdateTarget()
@@ -97,28 +104,19 @@ public class TowerScript : MonoBehaviour
             Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
             transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
             
-            //test if the target is within the fire span
-            Vector3 targetDir = target.position - transform.position;
-            float angle = Vector3.Angle(targetDir, transform.forward);
-            
-            Debug.Log(angle);
-            
-            if (angle < fireSpan)
+            if (fireCountdown <= 0f)
             {
-                if (fireCountdown <= 0f)
-                {
-                    Shoot();
-                    fireCountdown = 1f / fireRate;
-                }
-                
-                fireCountdown -= Time.deltaTime;
+                Shoot();
+                fireCountdown = 1f / fireRate;
             }
+            
+            fireCountdown -= Time.deltaTime;
         }
     }
     
     void Shoot()
     {
-        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         BulletScript bullet = bulletGO.GetComponent<BulletScript>();
         
         if (bullet != null)
@@ -133,9 +131,8 @@ public class TowerScript : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, range);
         
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * range + transform.right * fireSpan);
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * range - transform.right * fireSpan);
-        
+        Gizmos.DrawRay(transform.position, transform.forward * range);
+
         BulletScript bullet = bulletPrefab.GetComponent<BulletScript>();
         
         if (bullet != null)
