@@ -4,18 +4,6 @@ using UnityEngine;
 
 public class TowerScript : MonoBehaviour
 {
-<<<<<<< Updated upstream
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    
-    public float health = 100f;
-    
-    public float fireRate = 1f;
-    public float range = 15f;
-    public float turnSpeed = 10f;
-    
-    public Material damageMaterial;
-=======
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
@@ -31,7 +19,6 @@ public class TowerScript : MonoBehaviour
     [SerializeField] private Material damageMaterial;
 
     [SerializeField] private HealthBar healthBar;
->>>>>>> Stashed changes
 
     private float fireCountdown = 0f;
     private Transform target;
