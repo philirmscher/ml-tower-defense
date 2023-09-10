@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TowerScript : MonoBehaviour
 {
+<<<<<<< Updated upstream
     public GameObject bulletPrefab;
     public Transform firePoint;
     
@@ -14,20 +15,41 @@ public class TowerScript : MonoBehaviour
     public float turnSpeed = 10f;
     
     public Material damageMaterial;
+=======
+
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+
+
+    [SerializeField] private float health, maxHealth = 100f;
+
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float range = 15f;
+    [SerializeField] private float fireSpan = 10f;
+    [SerializeField] private float turnSpeed = 10f;
+
+    [SerializeField] private Material damageMaterial;
+
+    [SerializeField] private HealthBar healthBar;
+>>>>>>> Stashed changes
 
     private float fireCountdown = 0f;
     private Transform target;
     private string enemyTag = "Enemy";
-    
+    private void Awake()
+    {
+        healthBar = GetComponentInChildren<HealthBar>();
+    }
     void Start()
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        health = maxHealth;
+        healthBar.UpdateHealthBar(health, maxHealth);
     }
-    
     public void TakeDamage(float amount)
     {
         health -= amount;
-        
+        healthBar.UpdateHealthBar(health, maxHealth);
         StartCoroutine(FlashDamage());
 
         if (health <= 0f)
