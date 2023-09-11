@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: b350c0215c07b56419013b02be721ae3
+labels:
+- TVE Prefab
 PrefabImporter:
   externalObjects: {}
   userData: 

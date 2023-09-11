@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2178588519430662710}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2178588519430662710}
-  m_Mesh: {fileID: 7204961754861176449, guid: bf9fa7db0ecc48f40b0eb744e0631113, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 6fab32c39d3fa354c893bf5690075919, type: 2}
 --- !u!23 &1434085206407266918
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c1e955dd9258dae499eb9142f09530bf, type: 2}
+  - {fileID: 2100000, guid: 25edbc0534a534c48a6787ef9f0e1e3f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,7 +105,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 7204961754861176449, guid: bf9fa7db0ecc48f40b0eb744e0631113, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 6fab32c39d3fa354c893bf5690075919, type: 2}
 --- !u!1 &4565050101004243493
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2424049488502307097}
   - component: {fileID: 2572214276228738804}
+  - component: {fileID: 5731655120663140616}
   m_Layer: 0
   m_Name: Acacia_semkO_Var12
   m_TagString: Untagged
@@ -137,7 +138,7 @@ Transform:
   m_Children:
   - {fileID: 6838641006189517258}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &2572214276228738804
 LODGroup:
@@ -158,3 +159,19 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1434085206407266918}
   m_Enabled: 1
+--- !u!114 &5731655120663140616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4565050101004243493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089e7123bacb77a429df24ec08d2d672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  styledBanner: 0
+  storedPrefabBackupGUID: d3a88c845cf14854997d5222cd90fed5
+  storedPreset: Megascan/Grass
+  storedOverrides: []

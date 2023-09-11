@@ -217,3 +217,71 @@ MonoBehaviour:
       m_YScaleBool: 0
       m_ZScaleBool: 0
     name: Acacia_semkO_Var11
+  - gameObject: {fileID: 2171631613669489169, guid: 5a7eec3b49789164cafb4162e665c30c,
+      type: 3}
+    settings:
+      m_Strength: 50
+      m_RotationRangeMin: {x: 90, y: 0, z: 0}
+      m_RotationRangeMax: {x: 90, y: 360, z: 0}
+      m_ScaleRangeMin: {x: 1, y: 1, z: 1}
+      m_ScaleRangeMax: {x: 1, y: 1, z: 1}
+      m_UniformScale: {x: 0.86577183, y: 2.6107383}
+      m_UniformBool: 1
+      m_XRotationBool: 1
+      m_YRotationBool: 0
+      m_ZRotationBool: 0
+      m_XScaleBool: 0
+      m_YScaleBool: 0
+      m_ZScaleBool: 0
+    name: Buffalo Grass_Decal_1
+  - gameObject: {fileID: 597848746849647187, guid: 2d985a61a9b356b4ca8252b047c56c9d,
+      type: 3}
+    settings:
+      m_Strength: 50
+      m_RotationRangeMin: {x: 90, y: 0, z: 0}
+      m_RotationRangeMax: {x: 90, y: 360, z: 0}
+      m_ScaleRangeMin: {x: 1, y: 1, z: 1}
+      m_ScaleRangeMax: {x: 1, y: 1, z: 1}
+      m_UniformScale: {x: 0.86577183, y: 2.6107383}
+      m_UniformBool: 1
+      m_XRotationBool: 1
+      m_YRotationBool: 0
+      m_ZRotationBool: 0
+      m_XScaleBool: 0
+      m_YScaleBool: 0
+      m_ZScaleBool: 0
+    name: Buffalo Grass_Decal_2
+  - gameObject: {fileID: 2942733085153295835, guid: cb9b7f563d145124682aee08444b94a6,
+      type: 3}
+    settings:
+      m_Strength: 50
+      m_RotationRangeMin: {x: 90, y: 0, z: 0}
+      m_RotationRangeMax: {x: 90, y: 360, z: 0}
+      m_ScaleRangeMin: {x: 1, y: 1, z: 1}
+      m_ScaleRangeMax: {x: 1, y: 1, z: 1}
+      m_UniformScale: {x: 0.86577183, y: 2.6107383}
+      m_UniformBool: 1
+      m_XRotationBool: 1
+      m_YRotationBool: 0
+      m_ZRotationBool: 0
+      m_XScaleBool: 0
+      m_YScaleBool: 0
+      m_ZScaleBool: 0
+    name: Buffalo Grass_Decal_3
+  - gameObject: {fileID: 9027863017280833723, guid: 0e3d1de26449bb94586ef0f93b1e526e,
+      type: 3}
+    settings:
+      m_Strength: 50
+      m_RotationRangeMin: {x: 90, y: 0, z: 0}
+      m_RotationRangeMax: {x: 90, y: 360, z: 0}
+      m_ScaleRangeMin: {x: 1, y: 1, z: 1}
+      m_ScaleRangeMax: {x: 1, y: 1, z: 1}
+      m_UniformScale: {x: 0.86577183, y: 2.6107383}
+      m_UniformBool: 1
+      m_XRotationBool: 1
+      m_YRotationBool: 0
+      m_ZRotationBool: 0
+      m_XScaleBool: 0
+      m_YScaleBool: 0
+      m_ZScaleBool: 0
+    name: Buffalo Grass_Decal_4

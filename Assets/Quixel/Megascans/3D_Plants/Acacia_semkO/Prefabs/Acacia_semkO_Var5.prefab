@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3661853480263427449}
   - component: {fileID: 8712874123771891780}
+  - component: {fileID: 8950143058320601989}
   m_Layer: 0
   m_Name: Acacia_semkO_Var5
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   m_Children:
   - {fileID: 1723616439295900955}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &8712874123771891780
 LODGroup:
@@ -52,6 +53,22 @@ LODGroup:
     renderers:
     - renderer: {fileID: 4035783583149809353}
   m_Enabled: 1
+--- !u!114 &8950143058320601989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933407165969146081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089e7123bacb77a429df24ec08d2d672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  styledBanner: 0
+  storedPrefabBackupGUID: cfda0e9066889664db7dc5b2e478be0d
+  storedPreset: Megascan/Grass
+  storedOverrides: []
 --- !u!1 &3164160259683397014
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +95,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3164160259683397014}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -93,7 +110,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3164160259683397014}
-  m_Mesh: {fileID: -8379046598474025959, guid: 9a31c24570e3eed49b1d65097f6b5340, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 29bbd410037946948b90c6bd6105ed21, type: 2}
 --- !u!23 &4035783583149809353
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -114,7 +131,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c1e955dd9258dae499eb9142f09530bf, type: 2}
+  - {fileID: 2100000, guid: b09d3941178aed44fa6cf915c1dc6261, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -157,4 +174,4 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -8379046598474025959, guid: 9a31c24570e3eed49b1d65097f6b5340, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 29bbd410037946948b90c6bd6105ed21, type: 2}
