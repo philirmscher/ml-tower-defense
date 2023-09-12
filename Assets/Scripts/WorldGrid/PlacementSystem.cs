@@ -18,6 +18,7 @@ public class PlacementSystem : MonoBehaviour
 
     [SerializeField] private PreviewSystem preview;
     private Vector3Int lastDetectedPostion = Vector3Int.zero;
+
     private void Start()
     {
         StopPlacement();

@@ -60,6 +60,8 @@ public class PlacementState : IDefenseObjectsState
             ? database.objectsData[databaseObjectIndex].cornerPrefab
             : database.objectsData[databaseObjectIndex].Prefab;
 
+        previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
+
         int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
 
         defenseObjects.AddObjectAt(
@@ -70,7 +72,6 @@ public class PlacementState : IDefenseObjectsState
 
         pointsManager.PlaceObject(databaseObjectIndex);
 
-        previewSystem.UpdatePosition(worldGrid.CellToWorld(worldGridPosition), false);
     }
     public void OnRightClicked(Vector3Int worldGridPosition)//delete Object
     {

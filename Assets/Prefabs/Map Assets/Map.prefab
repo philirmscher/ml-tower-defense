@@ -351,7 +351,7 @@ Transform:
   - {fileID: 5739841954651287647}
   - {fileID: 4785767413260377725}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6018699684041463978
 GameObject:
@@ -700,11 +700,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4614539204848702794}
     m_Modifications:
-    - target: {fileID: 6780991270615367469, guid: d0c964442188fe34e9578dbef99af9b4,
+    - target: {fileID: 5987481665942480979, guid: d0c964442188fe34e9578dbef99af9b4,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -3679982772161117045, guid: 6fca8498f8515854a8adddaf959f82cf,
+        type: 3}
     - target: {fileID: 7133385820332026418, guid: d0c964442188fe34e9578dbef99af9b4,
         type: 3}
       propertyPath: m_Name
@@ -764,11 +765,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 6.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 8790495321741151207, guid: d0c964442188fe34e9578dbef99af9b4,
-        type: 3}
-      propertyPath: m_RenderingLayerMask
-      value: 1793
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
