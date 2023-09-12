@@ -6,6 +6,11 @@ using UnityEngine;
 public class ObjectPlacer : MonoBehaviour
 {
     [SerializeField] private List<GameObject> placedGameObjects = new();
+    
+    public List<GameObject> GetPlacedGameObjects()
+    {
+        return placedGameObjects;
+    }
 
     public int PlaceObject(GameObject prefab, Quaternion previewRotation, Vector3 previewPosition)
     {
