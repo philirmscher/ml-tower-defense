@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class GridData
+public class SerializedGridObject
 {
-    public int[] grid; // Flatten the 2D array into a 1D array
+    public string name;
+    public Vector3 position;
+    public Vector3 rotation;
 }
 
 public class SaveGridToFileScript : MonoBehaviour
@@ -14,48 +16,47 @@ public class SaveGridToFileScript : MonoBehaviour
 
     public void OnSave()
     {
-        var gridData = new GridData();
-        gridData.grid = new int[40 * 40]; // Flatten the 2D array into a 1D array
-
-        for (int i = 0; i < 40; i++)
-        {
-            for (int j = 0; j < 40; j++)
-            {
-                int index = i * 40 + j; // Calculate the 1D index
-                gridData.grid[index] = -1;
-            }
-        }
-
         var placedGameObjects = objectPlacer.GetPlacedGameObjects();
-
-        for (int i = 0; i < placedGameObjects.Count; i++)
+        List<SerializedGridObject> serializedGridObjects = new List<SerializedGridObject>();
+        
+        foreach (var placedGameObject in placedGameObjects)
         {
-            var gameObject = placedGameObjects[i];
-            if (gameObject == null)
-                continue;
-            var position = gameObject.transform.position;
-            var x = (int)position.x + 19;
-            var z = (int)position.z + 19;
-            int index = x * 40 + z; // Calculate the 1D index
-            gridData.grid[index] = 1;
+            var serializedGridObject = new SerializedGridObject();
+            serializedGridObject.name = placedGameObject.name.Substring(0, placedGameObject.name.Length - 7);
+            serializedGridObject.position = placedGameObject.transform.position;
+            serializedGridObject.rotation = placedGameObject.transform.rotation.eulerAngles;
+            serializedGridObjects.Add(serializedGridObject);
         }
-
-        Debug.Log(gridData.grid);
-
-        string json = JsonUtility.ToJson(gridData); // Serialize the entire gridData object
-
-        //save with unity file dialog
+        
+        string json = JsonUtility.ToJson(serializedGridObjects);
         string path = UnityEditor.EditorUtility.SaveFilePanel(
-            "Save grid as json",
+            "Save grid to json",
             "",
             "grid.json",
             "json");
-
-        if (path.Length != 0)
+        
+        System.IO.File.WriteAllText(path, json);
+        
+        Debug.Log(json);
+    }
+    
+    public void LoadGrid()
+    {
+        string path = UnityEditor.EditorUtility.OpenFilePanel(
+            "Load grid from json",
+            "",
+            "json");
+        
+        string json = System.IO.File.ReadAllText(path);
+        
+        List<SerializedGridObject> serializedGridObjects = JsonUtility.FromJson<List<SerializedGridObject>>(json);
+        
+        foreach (var serializedGridObject in serializedGridObjects)
         {
-            System.IO.File.WriteAllText(path, json);
+            var prefab = Resources.Load<GameObject>(serializedGridObject.name);
+            objectPlacer.PlaceObject(prefab, Quaternion.Euler(serializedGridObject.rotation.x, serializedGridObject.rotation.y, serializedGridObject.rotation.z), new Vector3(serializedGridObject.position.x, serializedGridObject.position.y, serializedGridObject.position.z));
         }
-
+        
         Debug.Log(json);
     }
 
