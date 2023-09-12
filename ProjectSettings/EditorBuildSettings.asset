@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/OutdoorsScene.unity
-    guid: 8124e5870f4fd4c779e7a5f994e84ad1
+    path: Assets/Scenes/Main_Menu.unity
+    guid: 3afc63430e72c7048ad17c900a8c4f6f
+  - enabled: 1
+    path: Assets/Scenes/Floating Island.unity
+    guid: 86d6a0deefc610c4fa5783539d64480a
   m_configObjects: {}

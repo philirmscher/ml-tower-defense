@@ -32,7 +32,7 @@ public class ObjectBtnManager : MonoBehaviour
             buttonObject.transform.SetParent(buttonContainer, false); // Set the parent while preserving local position and scale
             TMP_Text availabilityText = buttonObject.GetComponentsInChildren<TMP_Text>()[0];
             TMP_Text costText = buttonObject.GetComponentsInChildren<TMP_Text>()[1];
-            Image buttonImage = buttonObject.GetComponent<Image>();
+            Image buttonImage = buttonObject.transform.Find("Content/Icon").GetComponent<Image>();
             Button button = buttonObject.GetComponent<Button>();
 
             availabilityText.text = pointsManager.GetAvailability(objectDataIndex).ToString();
