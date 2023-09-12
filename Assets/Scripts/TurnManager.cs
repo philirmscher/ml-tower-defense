@@ -25,13 +25,15 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text turnNumberText;
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private EnemyWaveManager enemyWaveManager;
-    
+    [SerializeField] private PreviewSystem previewSystem;
+
     bool isTurnPhase;
     float turnStartTimeInMs;
     private int turnNumber = 1;
     
     public void StartTurnPhase()
     {
+        previewSystem.StopShowingPreview();
         playButton.SetActive(false);
         placementUI.SetActive(false);
         gridSystem.SetActive(false);
