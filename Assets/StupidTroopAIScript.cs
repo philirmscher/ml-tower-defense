@@ -8,12 +8,14 @@ public class StupidTroopAIScript : MonoBehaviour
 {
     Transform target;
     
-    [SerializeField] private float speed = 5f;
     private NavMeshAgent agent;
+    private EnemyScript enemyScript;
     
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        enemyScript = GetComponent<EnemyScript>();
+        agent.speed = enemyScript.GetSpeed()/10;
     }
 
     private void Update()
@@ -24,6 +26,7 @@ public class StupidTroopAIScript : MonoBehaviour
     void FindClostestEnemy()
     {
         var enemies = GameObject.FindGameObjectsWithTag("Tower");
+        agent.SetDestination(transform.position);
         if (enemies.Length == 0)
         {
             return;

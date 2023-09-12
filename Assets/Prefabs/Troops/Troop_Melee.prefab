@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4423769427682995275}
   - component: {fileID: 3514421574636192958}
   - component: {fileID: -1751145758520790846}
+  - component: {fileID: -5045153776326367704}
   m_Layer: 0
   m_Name: Troop_Melee
   m_TagString: Enemy
@@ -127,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 2.5
   turnSpeed: 100
   health: 80
   damage: 15
@@ -177,6 +178,18 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-5045153776326367704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471789225679690459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 314673ed8e0a8684b991a5f5f9d9b87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7872472019255866951
 GameObject:
   m_ObjectHideFlags: 0

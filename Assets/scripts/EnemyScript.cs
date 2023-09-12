@@ -15,6 +15,11 @@ public class EnemyScript : MonoBehaviour
     
     private float attackCountdown = 0f;
     
+    public float GetSpeed()
+    {
+        return speed;
+    }
+    
     public void Move(int direction)
     {
         transform.Translate(Vector3.forward * direction * speed * Time.deltaTime);

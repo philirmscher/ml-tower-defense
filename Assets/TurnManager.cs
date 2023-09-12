@@ -25,18 +25,25 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text turnNumberText;
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private EnemyWaveManager enemyWaveManager;
-    
+
     bool isTurnPhase;
     float turnStartTimeInMs;
     private int turnNumber = 1;
-    
+
     public void StartTurnPhase()
     {
-        playButton.SetActive(false);
-        placementUI.SetActive(false);
-        gridSystem.SetActive(false);
-        turnStartTimeInMs = Time.time;
-        timerText.SetText("00:00.000");
+        if (playButton != null)
+            playButton.SetActive(false);
+        if (gridSystem != null)
+            gridSystem.SetActive(false);
+        if (placementUI != null)
+            placementUI.SetActive(false);
+        if (timerText != null)
+        {
+            turnStartTimeInMs = Time.time;
+            timerText.SetText("00:00.000");
+        }
+
         enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
         isTurnPhase = true;
     }
@@ -44,22 +51,30 @@ public class TurnManager : MonoBehaviour
     public void StartPreTurnPhase()
     {
         isTurnPhase = false;
-        timerText.SetText("");
-        turnNumber++;
-        turnNumberText.SetText($"Turn {turnNumber}");
-        placementUI.SetActive(true);
-        gridSystem.SetActive(true);
-        playButton.SetActive(true);
+        if (timerText != null)
+            timerText.SetText("");
+        if (turnNumberText != null)
+        {
+            turnNumber++;
+            turnNumberText.SetText($"Turn {turnNumber}");
+        }
+
+        if (placementUI != null)
+            placementUI.SetActive(true);
+        if (gridSystem != null)
+            gridSystem.SetActive(true);
+        if (playButton != null)
+            playButton.SetActive(true);
     }
 
     private void Update()
     {
-        if (isTurnPhase)
+        if (isTurnPhase && timerText != null)
         {
             timerText.SetText(GetTimeSinceTurnStart());
         }
     }
-    
+
     private string GetTimeSinceTurnStart()
     {
         float timeSinceTurnStartInMs = Time.time - turnStartTimeInMs;
@@ -68,7 +83,7 @@ public class TurnManager : MonoBehaviour
         int milliseconds = (int) ((timeSinceTurnStartInMs - (int) timeSinceTurnStartInMs) * 1000f);
         return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
     }
-    
+
     public void EndTurn()
     {
         StartPreTurnPhase();

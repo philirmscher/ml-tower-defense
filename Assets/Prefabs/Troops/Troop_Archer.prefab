@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 3954895316592747037}
   - component: {fileID: 2179277850216909780}
   - component: {fileID: -3196758687151192861}
+  - component: {fileID: 7936605926403772529}
   m_Layer: 0
   m_Name: Troop_Archer
   m_TagString: Enemy
@@ -232,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 4
   turnSpeed: 200
   health: 40
   damage: 10
@@ -282,3 +283,15 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7936605926403772529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7305793360486966212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 314673ed8e0a8684b991a5f5f9d9b87c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

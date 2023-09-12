@@ -14,34 +14,32 @@ public class Vec3
 
 public class EnemyWaveManager : MonoBehaviour
 {
-    [SerializeField] private Vec3 spawnPosition = new Vec3();
     [SerializeField] private TurnManager turnManager;
     private List<GameObject> enemies = new ();
     private bool enemiesSpawned;
+    private EnemyWave enemyWave;
 
     public void StartWave(EnemyWave enemyWave)
     {
-        foreach (var enemyPlacement in enemyWave.enemyPlacements)
-        {
-            for (int i = 0; i < enemyPlacement.amount; i++)
-            {
-                var spawn = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z);
-                if (spawn != Vector3.zero)
-                {
-                    var obj = Instantiate(enemyPlacement.prefab, VariantVector(spawn), Quaternion.identity);
-                    obj.AddComponent<StupidTroopAIScript>();
-                    enemies.Add(obj);
-                }
-                else
-                {
-                    var obj = Instantiate(enemyPlacement.prefab, Vector3.zero, Quaternion.identity);
-                    obj.AddComponent<StupidTroopAIScript>();
-                    enemies.Add(obj);
-                }
-            }
-        }
+        this.enemyWave = enemyWave;
+    }
+    
+    public EnemyWave GetWave()
+    {
+        return enemyWave;
+    }
+    
+    public void SpawnEnemy(int index, Vector3 position)
+    {
+        if(!enemiesSpawned)
+            enemiesSpawned = true;
+        if(enemyWave.enemyPlacements[index].amount <= 0)
+            return;
         
-        enemiesSpawned = true;
+        enemyWave.enemyPlacements[index].amount--;
+        
+        var enemy = Instantiate(enemyWave.enemyPlacements[index].prefab, position, Quaternion.identity);
+        enemies.Add(enemy);
     }
 
     public void Update()
@@ -67,13 +65,5 @@ public class EnemyWaveManager : MonoBehaviour
             enemiesSpawned = false;
             turnManager.StartPreTurnPhase();
         }
-    }
-
-    private static Vector3 VariantVector(Vector3 vector)
-    {
-        var vec = vector;
-        vec.x += Random.Range(-0.5f, 0.5f);
-        vec.z += Random.Range(-0.5f, 0.5f);
-        return vec;
     }
 }
