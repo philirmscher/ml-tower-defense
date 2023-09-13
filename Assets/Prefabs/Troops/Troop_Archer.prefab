@@ -88,12 +88,14 @@ MonoBehaviour:
   speed: 15
   turnSpeed: 200
   health: 40
+  maxHealth: 100
   damage: 10
   attackRange: 30
   attackRate: 1
   flashDamageMeshes:
   - {fileID: 674917928335525968}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
+  healthBar: {fileID: 1538124869643296065}
 --- !u!195 &-3196758687151192861
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -385,6 +387,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ec7942b2b5ff6e47a5955976573acf2, type: 3}
+--- !u!114 &1538124869643296065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5483838131695240631, guid: 1ec7942b2b5ff6e47a5955976573acf2,
+    type: 3}
+  m_PrefabInstance: {fileID: 6431709619724720374}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995b51e8050a54842a65c910174f6ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7661368981518395411 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,

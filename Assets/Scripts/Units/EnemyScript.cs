@@ -4,23 +4,30 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public float speed = 10f;
-    public float turnSpeed = 10f;
-    public float health = 100f;
-    public float damage = 10f;
-    public float attackRange = 2f;
-    public float attackRate = 1f;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float turnSpeed = 10f;
+    [SerializeField] private float health, maxHealth = 100f;
+    [SerializeField] private float damage = 10f;
+    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float attackRate = 1f;
 
     [SerializeField] private GameObject[] flashDamageMeshes;
     private Material[] originalMaterials;
 
     public Material damageMaterial;
-    
+
+    [SerializeField] private HealthBar healthBar;
+
     private float attackCountdown = 0f;
 
+    private void Awake()
+    {
+        healthBar = GetComponentInChildren<HealthBar>();
+    }
     private void Start()
     {
         saveOriginalMaterials();
+        healthBar.UpdateHealthBar(health, maxHealth);
     }
 
     public void Move(int direction)
@@ -36,7 +43,7 @@ public class EnemyScript : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
-        
+        healthBar.UpdateHealthBar(health, maxHealth);
         StartCoroutine(FlashDamage());
 
         if (health <= 0f)
