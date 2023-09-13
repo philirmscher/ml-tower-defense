@@ -19,6 +19,8 @@ public class Building : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
 
+    [SerializeField] private GameObject[] flashDamageMeshes;
+
     [SerializeField] private ParticleSystem onDeathVfx;
     [SerializeField] private ParticleSystem projectile;
 
@@ -45,7 +47,7 @@ public class Building : MonoBehaviour
     {
         healthBar = GetComponentInChildren<HealthBar>();
         this.gameObject.tag = buildingType.ToString();
-        alivePrefab.tag = buildingType.ToString();
+        //alivePrefab.tag = buildingType.ToString();
     }
     void Start()
     {
@@ -63,15 +65,26 @@ public class Building : MonoBehaviour
 
     IEnumerator FlashDamage()
     {
-        var renderer = GetComponent<Renderer>();
+        if(flashDamageMeshes.Length != 0)
+        {
+            var originalMaterials = new Material[flashDamageMeshes.Length];
+            int index = 0;
+            foreach (GameObject flashDamageMesh in flashDamageMeshes)
+            {
+                originalMaterials[index] = flashDamageMeshes[index].GetComponent<Renderer>().material;
+                flashDamageMeshes[index].GetComponent<Renderer>().material = damageMaterial;
+                index++;
+            }
+            yield return new WaitForSeconds(0.1f);
 
-        var originalMaterial = renderer.material;
+            index = 0;
+            foreach (GameObject flashDamageMesh in flashDamageMeshes)
+            {
+                flashDamageMeshes[index].GetComponent<Renderer>().material = originalMaterials[index];
+                index++;
+            }
 
-        renderer.material = damageMaterial;
-
-        yield return new WaitForSeconds(0.1f);
-
-        renderer.material = originalMaterial;
+        }
     }
 
     void Die()

@@ -4,29 +4,17 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    [SerializeField] private float speed = 10f;
-    [SerializeField] private float turnSpeed = 10f;
-    [SerializeField] private float health, maxHealth = 100f;
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float attackRate = 1f;
-
-    [SerializeField] private HealthBar healthBar;
-
+    public float speed = 10f;
+    public float turnSpeed = 10f;
+    public float health = 100f;
+    public float damage = 10f;
+    public float attackRange = 2f;
+    public float attackRate = 1f;
+    
     public Material damageMaterial;
     
     private float attackCountdown = 0f;
-
-    private void Awake()
-    {
-        healthBar = GetComponentInChildren<HealthBar>();
-    }
-    private void Start()
-    {
-        health = maxHealth;
-        healthBar.UpdateHealthBar(health, maxHealth);
-    }
-
+    
     public void Move(int direction)
     {
         transform.Translate(Vector3.forward * direction * speed * Time.deltaTime);
@@ -40,7 +28,7 @@ public class EnemyScript : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
-        healthBar.UpdateHealthBar(health, maxHealth);
+        
         StartCoroutine(FlashDamage());
 
         if (health <= 0f)
@@ -69,20 +57,20 @@ public class EnemyScript : MonoBehaviour
     
     void Update()
     {
-        var towers = GameObject.FindGameObjectsWithTag("Tower");
+        var buildings = GameObject.FindGameObjectsWithTag("Tower");
         
-        if(towers.Length == 0)
+        if(buildings.Length == 0)
             return;
         
-        var nearestTower = towers[0];
+        var nearestTower = buildings[0];
         
-        foreach (var tower in towers)
+        foreach (var building in buildings)
         {
-            var distanceToTower = Vector3.Distance(transform.position, tower.transform.position);
+            var distanceToTower = Vector3.Distance(transform.position, building.transform.position);
             
             if (distanceToTower < Vector3.Distance(transform.position, nearestTower.transform.position))
             {
-                nearestTower = tower;
+                nearestTower = building;
             }
         }
         
@@ -101,11 +89,11 @@ public class EnemyScript : MonoBehaviour
         }
     }
     
-    void Attack(GameObject tower)
+    void Attack(GameObject building)
     {
-        var towerScript = tower.GetComponent<TowerScript>();
+        var buildingScript = building.GetComponent<Building>();
         
-        towerScript.TakeDamage(damage);
+        buildingScript.TakeDamage(damage);
     }
     
     void OnDrawGizmos()

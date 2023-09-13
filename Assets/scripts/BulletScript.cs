@@ -22,7 +22,6 @@ public class BulletScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        Debug.Log("Flash: " + flash);
         if (flash != null)
         {
             var flashInstance = Instantiate(flash, transform.position, Quaternion.identity); 

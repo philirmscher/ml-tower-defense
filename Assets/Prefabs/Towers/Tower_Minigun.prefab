@@ -76,6 +76,9 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1082213743303154, guid: 9ba98432db6fd69418ac44265ba6b6aa,
     type: 3}
   muzzlePoint: {fileID: 2490899457953572556}
+  flashDamageMeshes:
+  - {fileID: 6627957102363150405}
+  - {fileID: 7404254611295841566}
   onDeathVfx: {fileID: 3324408151218783254}
   projectile: {fileID: 0}
   hasWeaponry: 1
@@ -84,7 +87,7 @@ MonoBehaviour:
   buildingType: 2
   isAlive: 1
   fireRate: 10
-  range: 10
+  range: 38.77
   fireSpan: 5
   turnSpeed: 5
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -556,6 +559,18 @@ GameObject:
 --- !u!1 &5656264402423531047 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4563234416873121898, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8155116256499560013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6627957102363150405 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3087200885764875784, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8155116256499560013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7404254611295841566 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1724308362910057299, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
     type: 3}
   m_PrefabInstance: {fileID: 8155116256499560013}
   m_PrefabAsset: {fileID: 0}
