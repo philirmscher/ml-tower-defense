@@ -37,7 +37,6 @@ public class WorldGridData
 
     public bool CanPlaceObjectAt(Vector3Int gridPosition, Vector2Int objectSize)
     {
-        Debug.Log("Can place Object at?: " + gridPosition + "Object Size" + objectSize);
         List<Vector3Int> positionToOccupy = CalculatePositions(gridPosition, objectSize);
         foreach (var pos in positionToOccupy)
         {

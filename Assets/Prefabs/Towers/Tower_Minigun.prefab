@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 3088524496530091822}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6020424935142873199
 GameObject:
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 1069186311134223054}
   - component: {fileID: 5650776918640098455}
   - component: {fileID: 2806578769179184511}
-  - component: {fileID: 6471705071712940688}
+  - component: {fileID: 2467825930465268037}
   m_Layer: 0
   m_Name: Body
   m_TagString: Tower
@@ -171,7 +171,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6471705071712940688
+--- !u!114 &2467825930465268037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,12 +180,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6243671157005227073}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15802c16838eef644914f8090157fa5e, type: 3}
+  m_Script: {fileID: 11500000, guid: f849939b93931ae46ac7f333e51cb27f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alivePrefab: {fileID: 1317225403262561475}
+  destroyedPrefab: {fileID: 919132149155446097, guid: 75af99ca45b853f45a8297502980c74b,
+    type: 3}
   bulletPrefab: {fileID: 6794088983540792884, guid: 2b48497e6c238ef4abb7f74ab934fe02,
     type: 3}
-  firePoint: {fileID: 7060133213386965213}
+  muzzlePoint: {fileID: 7060133213386965213}
+  hasWeaponry: 1
   health: 250
   maxHealth: 250
   fireRate: 10
