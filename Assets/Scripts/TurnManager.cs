@@ -45,6 +45,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartPreTurnPhase()
     {
+        RepairBuildings();
         isTurnPhase = false;
         timerText.SetText("");
         turnNumber++;
@@ -74,5 +75,14 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         StartPreTurnPhase();
+    }
+
+    void RepairBuildings()
+    {
+        var buildings = GameObject.FindGameObjectsWithTag("Tower");
+        foreach(GameObject building in buildings)
+        {
+            building.GetComponent<Building>().Repair();
+        }
     }
 }
