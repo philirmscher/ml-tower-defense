@@ -5,13 +5,27 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
+    public enum BuildingType
+    {
+        Wall,
+        RessourceTower,
+        Tower,
+        Base
+    }
+
     [SerializeField] private GameObject alivePrefab;
     [SerializeField] private GameObject destroyedPrefab;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject gunPrefab;
+    [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
+
+    [SerializeField] private ParticleSystem onDeathVfx;
+    [SerializeField] private ParticleSystem projectile;
 
     [SerializeField] private bool hasWeaponry = true;
     [SerializeField] private float health, maxHealth = 100f;
+    [SerializeField] private BuildingType buildingType;
+    [SerializeField] private bool isAlive = true;
 
     [SerializeField] private float fireRate = 1f;
     [SerializeField] private float range = 15f;
@@ -22,7 +36,6 @@ public class Building : MonoBehaviour
 
     [SerializeField] private HealthBar healthBar;
 
-    public event Action OnHealthZero;
 
 
     private float fireCountdown = 0f;
@@ -31,6 +44,8 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         healthBar = GetComponentInChildren<HealthBar>();
+        this.gameObject.tag = buildingType.ToString();
+        alivePrefab.tag = buildingType.ToString();
     }
     void Start()
     {
@@ -61,10 +76,17 @@ public class Building : MonoBehaviour
 
     void Die()
     {
-        Vector3 deathPos = this.gameObject.transform.position;
-        Quaternion deathRot = this.gameObject.transform.rotation;
-        Destroy(this.gameObject);
-        GameObject prefabToSpawn = Instantiate(destroyedPrefab, deathPos, deathRot);
+        onDeathVfx.Play();
+        isAlive = false;
+        alivePrefab.SetActive(false);
+        destroyedPrefab.SetActive(true);
+    }
+
+    void Repair()
+    {
+        isAlive = true;
+        alivePrefab.SetActive(true);
+        destroyedPrefab.SetActive(false);
     }
 
     void UpdateTarget()
@@ -96,41 +118,53 @@ public class Building : MonoBehaviour
 
     void Update()
     {
-        if (health <= 0f)
+        if (isAlive)
         {
-            Die();
+            if (health <= 0f)
+            {
+                Die();
+            }
+
+            if (hasWeaponry)
+            {
+                if (target == null)
+                {
+                    return;
+                }
+
+                Vector3 dir = target.position - transform.position;
+                Quaternion lookRotation = Quaternion.LookRotation(dir);
+                Vector3 rotation = Quaternion.Lerp(gunPrefab.transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+
+                gunPrefab.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+
+                if (fireCountdown <= 0f)
+                {
+                    Shoot();
+                    fireCountdown = 1f / fireRate;
+                }
+
+                fireCountdown -= Time.deltaTime;
+            }
+
         }
-
-        if (true)
+        else
         {
-            if (target == null)
+            if (health > 0f)
             {
-                return;
+                Repair();
             }
-
-            Vector3 dir = target.position - transform.position;
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
-            transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-            if (fireCountdown <= 0f)
-            {
-                Shoot();
-                fireCountdown = 1f / fireRate;
-            }
-
-            fireCountdown -= Time.deltaTime;
         }
     }
 
     void Shoot()
     {
-        GameObject bulletGO = Instantiate(bulletPrefab, muzzlePoint.position, muzzlePoint.rotation);
-        BulletScript bullet = bulletGO.GetComponent<BulletScript>();
+        GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
+        BulletScript projectile = projectileGO.GetComponent<BulletScript>();
 
-        if (bullet != null)
+        if (projectile != null)
         {
-            bullet.Seek(target);
+            projectile.Seek(target);
         }
     }
 
@@ -142,7 +176,7 @@ public class Building : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, transform.forward * range);
 
-        BulletScript bullet = bulletPrefab.GetComponent<BulletScript>();
+        BulletScript bullet = projectilePrefab.GetComponent<BulletScript>();
 
         if (bullet != null)
         {

@@ -4,18 +4,43 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    public float speed = 70f;
-    public float explosionRadius = 0f;
-    public float damage = 50f;
+    [SerializeField] public float speed = 70f;
+    [SerializeField] public float explosionRadius = 0f;
+    [SerializeField] public float damage = 50f;
+    [SerializeField] private GameObject hit;
+    [SerializeField] private GameObject flash;
 
     private Transform target;
     private string enemyTag = "Enemy";
+    private Rigidbody rb;
 
-    public void Seek(Transform _target)
+    public void Seek(Transform target)
     {
-        target = _target;
+        this.target = target;
     }
-    
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        Debug.Log("Flash: " + flash);
+        if (flash != null)
+        {
+            var flashInstance = Instantiate(flash, transform.position, Quaternion.identity); 
+            flashInstance.transform.forward = target.position - transform.position; 
+            var flashPs = flashInstance.GetComponent<ParticleSystem>();
+            if (flashPs != null)
+            {
+                Destroy(flashInstance, flashPs.main.duration);
+            }
+            else
+            {
+                var flashPsParts = flashInstance.transform.GetChild(0).GetComponent<ParticleSystem>();
+                Destroy(flashInstance, flashPsParts.main.duration);
+            }
+        }
+        Destroy(gameObject, 5);
+    }
+
     void Update()
     {
         if (true)
@@ -46,6 +71,21 @@ public class BulletScript : MonoBehaviour
     
     void HitTarget()
     {
+        if (hit != null)
+        {
+            var hitInstance = Instantiate(hit, target.transform.position, target.transform.rotation);
+
+            var hitPs = hitInstance.GetComponent<ParticleSystem>();
+            if (hitPs != null)
+            {
+                Destroy(hitInstance, hitPs.main.duration);
+            }
+            else
+            {
+                var hitPsParts = hitInstance.transform.GetChild(0).GetComponent<ParticleSystem>();
+                Destroy(hitInstance, hitPsParts.main.duration);
+            }
+        }
         if (explosionRadius > 0f)
         {
             Explode();
@@ -80,4 +120,5 @@ public class BulletScript : MonoBehaviour
             enemyScript.TakeDamage(damage);
         }
     }
+
 }
