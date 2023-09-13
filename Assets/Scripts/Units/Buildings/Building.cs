@@ -118,6 +118,7 @@ public class Building : MonoBehaviour
         isAlive = false;
         alivePrefab.SetActive(false);
         destroyedPrefab.SetActive(true);
+        this.gameObject.tag = "Destroyed";
     }
 
     public void Repair()
@@ -126,6 +127,7 @@ public class Building : MonoBehaviour
         isAlive = true;
         alivePrefab.SetActive(true);
         destroyedPrefab.SetActive(false);
+        this.gameObject.tag = buildingType.ToString();
     }
 
     void UpdateTarget()

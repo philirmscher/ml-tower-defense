@@ -87,7 +87,7 @@ MonoBehaviour:
   buildingType: 2
   isAlive: 1
   fireRate: 10
-  range: 38.77
+  range: 15
   fireSpan: 5
   turnSpeed: 5
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
