@@ -18,10 +18,42 @@ public class EnemyWaveManager : MonoBehaviour
     private List<GameObject> enemies = new ();
     private bool enemiesSpawned;
     private EnemyWave enemyWave;
+    [SerializeField] private bool isDemo;
+    [SerializeField] private Vec3 spawnPosition = new Vec3();
 
-    public IEnumerator StartWave(EnemyWave enemyWave)
+    public void StartWave(EnemyWave enemyWave)
     {
         this.enemyWave = enemyWave;
+        if (!isDemo)
+            return;
+        
+        StartCoroutine(StartDemoWave());
+    }
+    
+    public IEnumerator StartDemoWave()
+    {
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            for (int i = 0; i < enemyPlacement.amount; i++)
+            {
+                var spawn = new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z);
+                if (spawn != Vector3.zero)
+                {
+                    var obj = Instantiate(enemyPlacement.prefab, VariantVector(spawn), Quaternion.identity);
+                    obj.AddComponent<StupidTroopAIScript>();
+                    enemies.Add(obj);
+                }
+                else
+                {
+                    var obj = Instantiate(enemyPlacement.prefab, Vector3.zero, Quaternion.identity);
+                    obj.AddComponent<StupidTroopAIScript>();
+                    enemies.Add(obj);
+                }
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+        
+        enemiesSpawned = true;
     }
     
     public EnemyWave GetWave()
@@ -65,5 +97,13 @@ public class EnemyWaveManager : MonoBehaviour
             enemiesSpawned = false;
             turnManager.StartPreTurnPhase();
         }
+    }
+    
+    private static Vector3 VariantVector(Vector3 vector)
+    {
+        var vec = vector;
+        vec.x += Random.Range(-3f, 3f);
+        vec.z += Random.Range(-3f, 3f);
+        return vec;
     }
 }
