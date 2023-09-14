@@ -27,7 +27,7 @@ public class EnemyWaveManager : MonoBehaviour
     private List<GameObject> enemies = new ();
     private bool allEnemiesSpawned;
     private EnemyWave enemyWave;
-    [SerializeField] private PlayType type;
+    public PlayType type;
 
     [SerializeField]
     [Tooltip("The position where the enemies will spawn")]
@@ -39,9 +39,38 @@ public class EnemyWaveManager : MonoBehaviour
     [Header("Only used in Training mode")]
     private MLTDAgent agent;
 
+    private EnemyWave CopyEnemyWave(EnemyWave enemyWave)
+    {
+        var EnemyWave = new EnemyWave();
+        EnemyWave.enemyPlacements = new List<EnemyPlacement>();
+        
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            var EnemyPlacement = new EnemyPlacement();
+            EnemyPlacement.amount = enemyPlacement.amount;
+            EnemyPlacement.prefab = enemyPlacement.prefab;
+            EnemyWave.enemyPlacements.Add(EnemyPlacement);
+        }
+        
+        return EnemyWave;
+    }
+
     public void StartWave(EnemyWave enemyWave)
     {
-        this.enemyWave = enemyWave;
+        this.enemyWave = CopyEnemyWave(enemyWave);
+        if(type == PlayType.Training)
+        {
+            var amount = 0;
+            foreach (var enemyPlacement in enemyWave.enemyPlacements)
+            {
+                enemyPlacement.amount = Random.Range(0, 10);
+                amount += enemyPlacement.amount;
+            }
+            if (amount == 5)
+            {
+                enemyWave.enemyPlacements[Random.Range(0, enemyWave.enemyPlacements.Count)].amount = 5;
+            }
+        }
         if (type != PlayType.Demo)
             return;
         
@@ -78,6 +107,13 @@ public class EnemyWaveManager : MonoBehaviour
     {
         return enemyWave;
     }
+
+    public void KillAll()
+    {
+        allEnemiesSpawned = false;
+        enemies.Clear();
+        enemies.ForEach(Destroy);
+    }
     
     public void SpawnEnemy(int index, Vector3 position)
     {
@@ -93,7 +129,8 @@ public class EnemyWaveManager : MonoBehaviour
         
         enemyWave.enemyPlacements[index].amount--;
         
-        var enemy = Instantiate(enemyWave.enemyPlacements[index].prefab, position, Quaternion.identity);
+        var enemy = Instantiate(enemyWave.enemyPlacements[index].prefab,  VariantVector(position), Quaternion.identity);
+        enemy.AddComponent<StupidTroopAIScript>();
         enemies.Add(enemy);
     }
 
@@ -117,7 +154,7 @@ public class EnemyWaveManager : MonoBehaviour
         if (allEnemiesSpawned && enemies.Count == 0)
         {
             allEnemiesSpawned = false;
-            if(type == PlayType.Training) agent.Lose();
+            if(type == PlayType.Training) agent.Win();
             turnManager.StartPreTurnPhase();
         }
     }

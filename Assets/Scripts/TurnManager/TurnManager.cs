@@ -51,7 +51,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartPreTurnPhase()
     {
-        RepairBuildings();
+        if(enemyWaveManager.type != PlayType.Training) RepairBuildings();
         isTurnPhase = false;
         if (timerText != null)
             timerText.SetText("");
@@ -105,11 +105,6 @@ public class TurnManager : MonoBehaviour
 
     public void RemoveAllEnemies()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach (GameObject enemy in enemies)
-        {
-            Destroy(enemy);
-        }
+        enemyWaveManager.KillAll();
     }
 }

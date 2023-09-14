@@ -182,7 +182,7 @@ public class EnemyScript : MonoBehaviour
     }
 
     public GameObject getNearestObject() {
-        if (underAttackBy)
+        if (underAttackBy && underAttackBy.GetComponent<Building>().IsAlive())
         {
             int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), underAttackBy.tag));
             int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), sortedGameObjects[0].tag));
@@ -266,7 +266,7 @@ public class EnemyScript : MonoBehaviour
                 return i;
             }
         }
-        return -1; // Rückgabe -1, wenn der Typ nicht in der Prioritätsliste ist.
+        return -1; // Rï¿½ckgabe -1, wenn der Typ nicht in der Prioritï¿½tsliste ist.
     }
 
     public bool getIsInAttackRange()

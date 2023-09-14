@@ -75,3 +75,39 @@ crashlytics-build.properties
 
 /venv
 Assets/Scripts.meta
+results/ppo/MLTD Behavior.onnx
+results/ppo/MLTD Behavior/checkpoint.pt
+results/ppo/MLTD Behavior/events.out.tfevents.1694533437.NONE-10.48588.0
+results/ppo/MLTD Behavior/events.out.tfevents.1694706013.NONE-10.34848.0
+results/ppo/MLTD Behavior/MLTD Behavior-1034.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-1034.pt
+results/ppo/MLTD Behavior/MLTD Behavior-11167.pt
+results/ppo/MLTD Behavior/MLTD Behavior-1137.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-1137.pt
+results/ppo/MLTD Behavior/MLTD Behavior-11907.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-11907.pt
+results/ppo/MLTD Behavior/MLTD Behavior-1267.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-1267.pt
+results/ppo/MLTD Behavior/MLTD Behavior-1287.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-1287.pt
+results/ppo/MLTD Behavior/MLTD Behavior-1547.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-1547.pt
+results/ppo/MLTD Behavior/MLTD Behavior-2225.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-2225.pt
+results/ppo/MLTD Behavior/MLTD Behavior-2797.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-2797.pt
+results/ppo/MLTD Behavior/MLTD Behavior-2917.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-2917.pt
+results/ppo/MLTD Behavior/MLTD Behavior-3200.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-3200.pt
+results/ppo/MLTD Behavior/MLTD Behavior-5124.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-5124.pt
+results/ppo/MLTD Behavior/MLTD Behavior-557.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-557.pt
+results/ppo/MLTD Behavior/MLTD Behavior-7121.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-7121.pt
+results/ppo/MLTD Behavior/MLTD Behavior-7259.onnx
+results/ppo/MLTD Behavior/MLTD Behavior-7259.pt
+results/ppo/run_logs/timers.json
+results/ppo/run_logs/training_status.json
+*.onnx

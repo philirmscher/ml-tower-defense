@@ -15,6 +15,7 @@ public class MLTDAgent : Agent
     private List<GameObject> placedGameObjects = new();
     
     private SerializedGrids serializedGrids;
+    private float timeAtStart;
 
     public void Awake()
     {
@@ -24,13 +25,21 @@ public class MLTDAgent : Agent
 
     private void Update()
     {
+        if(placedGameObjects.Count == 0) return;
         var objectsAlive = 0;
+        
+        if(Time.time - timeAtStart > 300)
+        {
+            Lose();
+        }
         
         foreach (var placedGameObject in placedGameObjects)
         {
-            if(placedGameObject.GetComponent<Building>().IsAlive()) objectsAlive++;
+            var building = placedGameObject.GetComponent<Building>();
+            if (building.IsAlive())
+                objectsAlive++;
         }
-        
+
         if (objectsAlive == 0)
         {
             Lose();
@@ -39,6 +48,16 @@ public class MLTDAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+        turnManager.StartPreTurnPhase();
+        
+        //remove all placed objects
+        foreach (var placedGameObject in placedGameObjects)
+        {
+            Destroy(placedGameObject);
+        }
+        
+        placedGameObjects.Clear();
+        
         //load random grid
         var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
         
@@ -53,10 +72,11 @@ public class MLTDAgent : Agent
             
             var rotation = Quaternion.Euler(serializedGridObject.rotation);
             var position = serializedGridObject.position;
-            var newObject = Instantiate(prefab, position, rotation);
+            var newObject = Instantiate(prefab, position + placementPlatform.transform.position, rotation);
             placedGameObjects.Add(newObject);
             
         }
+        timeAtStart = Time.time;
         turnManager.StartTurnPhase();
     }
     
@@ -91,14 +111,41 @@ public class MLTDAgent : Agent
          * 6: Tank Amount
          * 7-631: Grid with Placement Positions and Tower Types (0: None, 1: Sniper, 2: Machine Gun, 3: Morter)
          */
-        
-        sensor.AddObservation(Vector2.zero);
-        
         var wave = enemyWaveManager.GetWave();
         var enemyPlacements = wave.enemyPlacements;
         sensor.AddObservation(enemyPlacements[0].amount);
         sensor.AddObservation(enemyPlacements[1].amount);
         sensor.AddObservation(enemyPlacements[2].amount);
+        
+        var gridSize = 40;
+        var grid = new int[gridSize * gridSize];
+        foreach (var placedGameObject in placedGameObjects)
+        {
+            var building = placedGameObject.name;
+            var position = placedGameObject.transform.position;
+            var x = (int)(position.x + 20);
+            var z = (int)(position.z + 20);
+            // get index of building in prefabs
+            var index = 0;
+            foreach (var prefab in prefabs)
+            {
+                if (prefab.name == building)
+                {
+                    break;
+                }
+
+                index++;
+            }
+
+            // Convert 2D coordinates to 1D index
+            var gridIndex = x + z * gridSize;
+            grid[gridIndex] = index;
+        }
+        
+        foreach (var gridValue in grid)
+        {
+            sensor.AddObservation(gridValue);
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -117,9 +164,7 @@ public class MLTDAgent : Agent
         var continuousActions = actions.ContinuousActions;
 
         var towerType = discreteActions[0];
-        
-        Debug.Log($"Tower Type: {towerType}");
-        
+
         if (towerType == 0)
         {
             return;
@@ -128,54 +173,55 @@ public class MLTDAgent : Agent
         var zScale = placementPlatform.transform.localScale.z;
         var side = discreteActions[1];
         
-        Debug.Log($"Side: {side}");
-        
         var position = Vector3.zero;
         switch (side)
         {
             case 0:
-                position = new Vector3(-xScale / 2 + placementPlatform.transform.position.x, 1, 0);
+                position = new Vector3(-xScale / 2, 1, 0);
                 break;
             case 1:
-                position = new Vector3(xScale / 2 + placementPlatform.transform.position.x, 1, 0);
+                position = new Vector3(xScale / 2, 1, 0);
                 break;
             case 2:
-                position = new Vector3(0, 1, -zScale / 2 + placementPlatform.transform.position.z);
+                position = new Vector3(0, 1, -zScale / 2);
                 break;
             case 3:
-                position = new Vector3(0, 1, zScale / 2 + placementPlatform.transform.position.z);
+                position = new Vector3(0, 1, zScale / 2);
                 break;
         }
         
         var otherCoordinate = continuousActions[0]; //value between -1 and 1
-        Debug.Log($"otherCoordinate: {otherCoordinate}");
         
         if (side == 0 || side == 1)
         {
-            position.z = otherCoordinate * zScale / 2 + placementPlatform.transform.position.z;
+            position.z = otherCoordinate * zScale / 2;
         }
         else
         {
-            position.x = otherCoordinate * xScale / 2 + placementPlatform.transform.position.x;
+            position.x = otherCoordinate * xScale / 2;
         }
 
-        enemyWaveManager.SpawnEnemy(towerType - 1, position);
+        enemyWaveManager.SpawnEnemy(towerType - 1, position + placementPlatform.transform.position);
     }
     
     public void KilledBuilding()
     {
         AddReward(+1f);
+        Debug.Log("Killed Building");
     }
     
     public void Win()
     {
-        AddReward(10f);
+        AddReward(10);
+        AddReward((300 - (Time.time - timeAtStart)) / 50);
+        Debug.Log("Won " + GetCumulativeReward());
         EndEpisode();
     }
     
     public void Lose()
     {
         AddReward(-1f);
+        Debug.Log("Lost " + GetCumulativeReward());
         EndEpisode();
     }
 }
