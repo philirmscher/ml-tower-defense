@@ -13,26 +13,14 @@ MonoBehaviour:
   m_Name: Objects Data Base
   m_EditorClassIdentifier: 
   objectsData:
-  - <Name>k__BackingField: Tower
-    <ID>k__BackingField: 1
-    <Size>k__BackingField: {x: 2, y: 2}
-    <Prefab>k__BackingField: {fileID: 4563234416873121898, guid: ae8e3eb6ba58c8945b9912d7114f87c8,
-      type: 3}
-    <hasCorner>k__BackingField: 0
-    <Cost>k__BackingField: 5
-    <AvailableInstances>k__BackingField: 5
-    <MaxAvailableInstances>k__BackingField: 20
-    <cornerPrefab>k__BackingField: {fileID: 0}
-    <icon>k__BackingField: {fileID: 21300000, guid: a5dd2108e4be0934ea769174fb9be062,
-      type: 3}
   - <Name>k__BackingField: Wall
     <ID>k__BackingField: 2
     <Size>k__BackingField: {x: 2, y: 2}
-    <Prefab>k__BackingField: {fileID: 5688392115560976595, guid: c267f6ae6ccaf9a4cb580b4586b3f9fd,
+    <Prefab>k__BackingField: {fileID: 3190951224371716530, guid: a68e55b002f24a3478101dce53bf426b,
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 1
-    <AvailableInstances>k__BackingField: 5
+    <AvailableInstances>k__BackingField: 10
     <MaxAvailableInstances>k__BackingField: 30
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: 5d07e234a28c5294b8c54c297c33b91c,
@@ -44,7 +32,7 @@ MonoBehaviour:
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 2
-    <AvailableInstances>k__BackingField: 2
+    <AvailableInstances>k__BackingField: 4
     <MaxAvailableInstances>k__BackingField: 10
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: a12791859ce5e81479615fd3343621bc,
@@ -61,6 +49,18 @@ MonoBehaviour:
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: ccc6f5562ab217f41a3e28e72de77d7e,
       type: 3}
+  - <Name>k__BackingField: Tower MG
+    <ID>k__BackingField: -209
+    <Size>k__BackingField: {x: 2, y: 2}
+    <Prefab>k__BackingField: {fileID: 1317225403262561475, guid: 2f43fec325bac4f49a7711c542221367,
+      type: 3}
+    <hasCorner>k__BackingField: 0
+    <Cost>k__BackingField: 5
+    <AvailableInstances>k__BackingField: 5
+    <MaxAvailableInstances>k__BackingField: 20
+    <cornerPrefab>k__BackingField: {fileID: 0}
+    <icon>k__BackingField: {fileID: 21300000, guid: a5dd2108e4be0934ea769174fb9be062,
+      type: 3}
   - <Name>k__BackingField: Sniper
     <ID>k__BackingField: 5
     <Size>k__BackingField: {x: 2, y: 2}
@@ -68,8 +68,8 @@ MonoBehaviour:
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 5
-    <AvailableInstances>k__BackingField: 99
-    <MaxAvailableInstances>k__BackingField: 99
+    <AvailableInstances>k__BackingField: 5
+    <MaxAvailableInstances>k__BackingField: 20
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: a5dd2108e4be0934ea769174fb9be062,
       type: 3}
@@ -80,20 +80,8 @@ MonoBehaviour:
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 5
-    <AvailableInstances>k__BackingField: 99
-    <MaxAvailableInstances>k__BackingField: 99
-    <cornerPrefab>k__BackingField: {fileID: 0}
-    <icon>k__BackingField: {fileID: 21300000, guid: a5dd2108e4be0934ea769174fb9be062,
-      type: 3}
-  - <Name>k__BackingField: Minigun
-    <ID>k__BackingField: 7
-    <Size>k__BackingField: {x: 2, y: 2}
-    <Prefab>k__BackingField: {fileID: 1317225403262561475, guid: 2f43fec325bac4f49a7711c542221367,
-      type: 3}
-    <hasCorner>k__BackingField: 0
-    <Cost>k__BackingField: 5
-    <AvailableInstances>k__BackingField: 99
-    <MaxAvailableInstances>k__BackingField: 99
+    <AvailableInstances>k__BackingField: 5
+    <MaxAvailableInstances>k__BackingField: 20
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: a5dd2108e4be0934ea769174fb9be062,
       type: 3}

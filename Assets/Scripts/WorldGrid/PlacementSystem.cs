@@ -18,6 +18,7 @@ public class PlacementSystem : MonoBehaviour
 
     [SerializeField] private PreviewSystem preview;
     private Vector3Int lastDetectedPostion = Vector3Int.zero;
+
     private void Start()
     {
         StopPlacement();
@@ -111,6 +112,7 @@ public class PlacementSystem : MonoBehaviour
             return;
 
         defenseObjectsState.EndState();
+        gridVisualization.SetActive(false);
         inputManager.OnLeftClicked -= SelectWorldGridLeftClick;
         inputManager.OnRightClicked -= SelectWorldGridRightClick;
         inputManager.OnPressR -= RotateStructure;
