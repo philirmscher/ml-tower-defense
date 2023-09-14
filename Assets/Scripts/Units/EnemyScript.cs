@@ -23,7 +23,13 @@ public class EnemyScript : MonoBehaviour
 
     private float attackCountdown = 0f;
     private List<GameObject> sortedGameObjects = new List<GameObject>();
-    private GameObject goToAttack;
+    private GameObject gameObjectToAttack;
+    private bool isInAttackRange = false;
+
+    private GameObject underAttackBy;
+    [SerializeField] private float moveToAttackerTime = 1;
+    private bool isResettingUnderAttackBy = false;
+    private Coroutine resetCoroutine;
 
     private void Awake()
     {
@@ -34,7 +40,54 @@ public class EnemyScript : MonoBehaviour
         saveOriginalMaterials();
         healthBar.UpdateHealthBar(health, maxHealth);
         SortGameObjectsByDistance();
-        goToAttack = FindHighestPriorityInAttackRange();
+        gameObjectToAttack = FindHighestPriorityInAttackRange();
+    }
+    void Update()
+    {
+        SortGameObjectsByDistance();
+        gameObjectToAttack = FindHighestPriorityInAttackRange();
+
+        if (gameObjectToAttack == null)
+        {
+            if (sortedGameObjects.Count > 0)
+            {
+                isInAttackRange = false;
+                return;
+            }
+            else
+            {
+                Debug.Log("No enemy to attack! " + this.gameObject);
+                return;
+            }
+        }
+        float distance;
+        if (underAttackBy)
+        {
+            distance = Vector3.Distance(transform.position, underAttackBy.transform.position);
+        }
+        else
+        {
+            distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
+        }
+        
+
+        if (distance <= attackRange)
+        {
+            isInAttackRange = true;
+            if (attackCountdown <= 0f)
+            {
+                //Debug.Log("Attacking from Distanz: " + distance + " Attack Range is: " + attackRange);
+                Attack(gameObjectToAttack);
+                attackCountdown = 1f / attackRate;
+            }
+
+            attackCountdown -= Time.deltaTime;
+        }
+        else
+        {
+            //Debug.Log("Moving to: " + goToAttack + " Range is: " + distance);
+            isInAttackRange = false;
+        }
     }
 
     public void Move(int direction)
@@ -47,8 +100,9 @@ public class EnemyScript : MonoBehaviour
         transform.Rotate(Vector3.up * direction * turnSpeed * Time.deltaTime);
     }
     
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, GameObject attacker)
     {
+        underAttackBy = attacker;
         health -= amount;
         healthBar.UpdateHealthBar(health, maxHealth);
         StartCoroutine(FlashDamage());
@@ -57,6 +111,14 @@ public class EnemyScript : MonoBehaviour
         {
             Die();
         }
+    }
+    private IEnumerator ResetUnderAttackBy()
+    {
+        Debug.Log("Start Coroutine");
+        isResettingUnderAttackBy = true;
+        yield return new WaitForSeconds(moveToAttackerTime);
+        underAttackBy = null;
+        isResettingUnderAttackBy = false;
     }
 
     IEnumerator FlashDamage()
@@ -111,27 +173,6 @@ public class EnemyScript : MonoBehaviour
         Destroy(gameObject);
     }
     
-    void Update()
-    {
-        SortGameObjectsByDistance();
-        goToAttack = FindHighestPriorityInAttackRange();
-
-        if (goToAttack == null)
-            return;
-        
-        var distance = Vector3.Distance(transform.position, goToAttack.transform.position);
-            
-        if (distance <= attackRange)
-        {
-            if (attackCountdown <= 0f)
-            {
-                Attack(goToAttack);
-                attackCountdown = 1f / attackRate;
-            }
-                
-            attackCountdown -= Time.deltaTime;
-        }
-    }
     
     void Attack(GameObject building)
     {
@@ -141,13 +182,40 @@ public class EnemyScript : MonoBehaviour
     }
 
     public GameObject getNearestObject() {
+        if (underAttackBy)
+        {
+            int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), underAttackBy.tag));
+            int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), sortedGameObjects[0].tag));
+
+            if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priorety
+            {
+                if (isResettingUnderAttackBy)
+                {
+                    StopCoroutine(resetCoroutine);
+                }
+                resetCoroutine = StartCoroutine(ResetUnderAttackBy());
+                return underAttackBy;
+            }
+            else
+            {
+                if (sortedGameObjects.Count > 0)
+                {
+                    return sortedGameObjects[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         if (sortedGameObjects.Count > 0)
         {
             return sortedGameObjects[0];
         }
         else
         {
-            return null; // Oder eine geeignete Alternative, wenn die Liste leer ist.
+            return null;
         }
     }
 
@@ -199,6 +267,12 @@ public class EnemyScript : MonoBehaviour
             }
         }
         return -1; // Rückgabe -1, wenn der Typ nicht in der Prioritätsliste ist.
+    }
+
+    public bool getIsInAttackRange()
+    {
+
+        return isInAttackRange;
     }
 
     void OnDrawGizmos()

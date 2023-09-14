@@ -89,6 +89,7 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         Debug.Log("Ending TURN!");
+        RemoveAllEnemies();
         StartPreTurnPhase();
     }
 
