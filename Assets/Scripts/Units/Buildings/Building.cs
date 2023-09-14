@@ -219,6 +219,11 @@ public class Building : MonoBehaviour
             projectile.Seek(target, this.gameObject);
         }
     }
+    
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
 
     void OnDrawGizmos()
     {

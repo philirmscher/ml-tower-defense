@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,14 +13,71 @@ public class Vec3
     public float z;
 }
 
+[Serializable]
+public enum PlayType
+{
+    Demo,
+    Training,
+    Play
+}
+
 public class EnemyWaveManager : MonoBehaviour
 {
-    [SerializeField] private Vec3 spawnPosition = new Vec3();
     [SerializeField] private TurnManager turnManager;
     private List<GameObject> enemies = new ();
-    private bool enemiesSpawned;
+    private bool allEnemiesSpawned;
+    private EnemyWave enemyWave;
+    public PlayType type;
 
-    public IEnumerator StartWave(EnemyWave enemyWave)
+    [SerializeField]
+    [Tooltip("The position where the enemies will spawn")]
+    [Header("Only used in Demo mode")]
+    private Vec3 spawnPosition = new Vec3();
+
+    [SerializeField]
+    [Tooltip("The agent that will be used in the demo")]
+    [Header("Only used in Training mode")]
+    private MLTDAgent agent;
+
+    private EnemyWave CopyEnemyWave(EnemyWave enemyWave)
+    {
+        var EnemyWave = new EnemyWave();
+        EnemyWave.enemyPlacements = new List<EnemyPlacement>();
+        
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            var EnemyPlacement = new EnemyPlacement();
+            EnemyPlacement.amount = enemyPlacement.amount;
+            EnemyPlacement.prefab = enemyPlacement.prefab;
+            EnemyWave.enemyPlacements.Add(EnemyPlacement);
+        }
+        
+        return EnemyWave;
+    }
+
+    public void StartWave(EnemyWave enemyWave)
+    {
+        this.enemyWave = CopyEnemyWave(enemyWave);
+        if(type == PlayType.Training)
+        {
+            var amount = 0;
+            foreach (var enemyPlacement in enemyWave.enemyPlacements)
+            {
+                enemyPlacement.amount = Random.Range(0, 10);
+                amount += enemyPlacement.amount;
+            }
+            if (amount == 5)
+            {
+                enemyWave.enemyPlacements[Random.Range(0, enemyWave.enemyPlacements.Count)].amount = 5;
+            }
+        }
+        if (type != PlayType.Demo)
+            return;
+        
+        StartCoroutine(StartDemoWave());
+    }
+    
+    public IEnumerator StartDemoWave()
     {
         foreach (var enemyPlacement in enemyWave.enemyPlacements)
         {
@@ -42,13 +100,42 @@ public class EnemyWaveManager : MonoBehaviour
             }
         }
         
-        enemiesSpawned = true;
+        allEnemiesSpawned = true;
+    }
+    
+    public EnemyWave GetWave()
+    {
+        return enemyWave;
+    }
+
+    public void KillAll()
+    {
+        allEnemiesSpawned = false;
+        enemies.Clear();
+        enemies.ForEach(Destroy);
+    }
+    
+    public void SpawnEnemy(int index, Vector3 position)
+    {
+        var troopCount = 0;
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            troopCount += enemyPlacement.amount;
+        }
+        
+        if(!allEnemiesSpawned || enemies.Count >= troopCount) allEnemiesSpawned = true;
+        if(enemyWave.enemyPlacements[index].amount <= 0)
+            return;
+        
+        enemyWave.enemyPlacements[index].amount--;
+        
+        var enemy = Instantiate(enemyWave.enemyPlacements[index].prefab,  VariantVector(position), Quaternion.identity);
+        enemy.AddComponent<StupidTroopAIScript>();
+        enemies.Add(enemy);
     }
 
     public void Update()
     {
-        if(!enemiesSpawned)
-            return;
         for (var i = 0; i < enemies.Count; i++)
         {
             if (enemies.Count <= i || enemies.Count == 0)
@@ -59,17 +146,19 @@ public class EnemyWaveManager : MonoBehaviour
             if (enemies[i] == null)
             {
                 enemies.RemoveAt(i);
+                if(type == PlayType.Training) agent.KilledBuilding();
                 i--;
             }
         }
         
-        if (enemies.Count == 0)
+        if (allEnemiesSpawned && enemies.Count == 0)
         {
-            enemiesSpawned = false;
+            allEnemiesSpawned = false;
+            if(type == PlayType.Training) agent.Win();
             turnManager.StartPreTurnPhase();
         }
     }
-
+    
     private static Vector3 VariantVector(Vector3 vector)
     {
         var vec = vector;

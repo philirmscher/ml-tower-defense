@@ -30,39 +30,53 @@ public class TurnManager : MonoBehaviour
     bool isTurnPhase;
     float turnStartTimeInMs;
     private int turnNumber = 1;
-    
+
     public void StartTurnPhase()
     {
-        previewSystem.StopShowingPreview();
-        playButton.SetActive(false);
-        placementUI.SetActive(false);
-        gridSystem.SetActive(false);
-        turnStartTimeInMs = Time.time;
-        timerText.SetText("00:00.000");
-        StartCoroutine(enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]));
+        if (playButton != null)
+            playButton.SetActive(false);
+        if (gridSystem != null)
+            gridSystem.SetActive(false);
+        if (placementUI != null)
+            placementUI.SetActive(false);
+        if (timerText != null)
+        {
+            turnStartTimeInMs = Time.time;
+            timerText.SetText("00:00.000");
+        }
+
+        enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
         isTurnPhase = true;
     }
 
     public void StartPreTurnPhase()
     {
-        RepairBuildings();
+        if(enemyWaveManager.type != PlayType.Training) RepairBuildings();
         isTurnPhase = false;
-        timerText.SetText("");
-        turnNumber++;
-        turnNumberText.SetText($"Turn {turnNumber}");
-        placementUI.SetActive(true);
-        gridSystem.SetActive(true);
-        playButton.SetActive(true);
+        if (timerText != null)
+            timerText.SetText("");
+        if (turnNumberText != null)
+        {
+            turnNumber++;
+            turnNumberText.SetText($"Turn {turnNumber}");
+        }
+
+        if (placementUI != null)
+            placementUI.SetActive(true);
+        if (gridSystem != null)
+            gridSystem.SetActive(true);
+        if (playButton != null)
+            playButton.SetActive(true);
     }
 
     private void Update()
     {
-        if (isTurnPhase)
+        if (isTurnPhase && timerText != null)
         {
             timerText.SetText(GetTimeSinceTurnStart());
         }
     }
-    
+
     private string GetTimeSinceTurnStart()
     {
         float timeSinceTurnStartInMs = Time.time - turnStartTimeInMs;
@@ -71,7 +85,7 @@ public class TurnManager : MonoBehaviour
         int milliseconds = (int) ((timeSinceTurnStartInMs - (int) timeSinceTurnStartInMs) * 1000f);
         return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
     }
-    
+
     public void EndTurn()
     {
         Debug.Log("Ending TURN!");
@@ -91,11 +105,6 @@ public class TurnManager : MonoBehaviour
 
     public void RemoveAllEnemies()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach (GameObject enemy in enemies)
-        {
-            Destroy(enemy);
-        }
+        enemyWaveManager.KillAll();
     }
 }
