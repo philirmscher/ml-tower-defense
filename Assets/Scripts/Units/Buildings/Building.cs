@@ -260,11 +260,6 @@ public class Building : MonoBehaviour
         return isAlive;
     }
 
-    public bool IsAlive()
-    {
-        return isAlive;
-    }
-
     void OnDrawGizmos()
     {
         if (hasWeaponry)
