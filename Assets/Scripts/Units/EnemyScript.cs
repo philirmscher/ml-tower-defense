@@ -125,6 +125,7 @@ public class EnemyScript : MonoBehaviour
         {
             if (attackCountdown <= 0f)
             {
+                Debug.Log("Attacking from Distanz: " + distance + " Attack Range is: " + attackRange);
                 Attack(goToAttack);
                 attackCountdown = 1f / attackRate;
             }

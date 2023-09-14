@@ -33,7 +33,12 @@ public class StupidTroopAIScript : MonoBehaviour
             Debug.Log("No building found: " + this.gameObject + " Objekt to Attack: " + goToAttack);
             GameObject gameManager = GameObject.Find("GameManager");
             if (gameManager)
+            {
                 gameManager.GetComponent<TurnManager>().EndTurn();
+                return;
+            }
+
+            Debug.Log("Error: No game manager found");
             return;
         }
 
