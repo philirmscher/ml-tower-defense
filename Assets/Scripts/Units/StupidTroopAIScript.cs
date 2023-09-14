@@ -10,10 +10,14 @@ public class StupidTroopAIScript : MonoBehaviour
     
     [SerializeField] private float speed = 5f;
     private NavMeshAgent agent;
-    
+    private GameObject goToAttack;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+    private void Start()
+    {
+        goToAttack = this.GetComponent<EnemyScript>().getNearestObject();
     }
 
     private void Update()
@@ -23,24 +27,17 @@ public class StupidTroopAIScript : MonoBehaviour
     
     void FindClostestEnemy()
     {
-        var enemies = GameObject.FindGameObjectsWithTag("Tower");
-        if (enemies.Length == 0)
+        goToAttack = this.GetComponent<EnemyScript>().getNearestObject();
+        if (goToAttack == null)
         {
+            Debug.Log("No building found: " + this.gameObject + " Objekt to Attack: " + goToAttack);
+            GameObject gameManager = GameObject.Find("GameManager");
+            if (gameManager)
+                gameManager.GetComponent<TurnManager>().EndTurn();
             return;
         }
-        var closestEnemy = enemies[0];
-        var closestDistance = Vector3.Distance(transform.position, closestEnemy.transform.position);
-        foreach (var enemy in enemies)
-        {
-            var distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < closestDistance)
-            {
-                closestEnemy = enemy;
-                closestDistance = distance;
-            }
-        }
 
-        target = closestEnemy.transform;
+        target = goToAttack.transform;
         
         agent.SetDestination(target.position);
     }

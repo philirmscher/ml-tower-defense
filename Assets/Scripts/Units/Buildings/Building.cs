@@ -2,7 +2,6 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Building : MonoBehaviour
 {
     public enum BuildingType
@@ -114,7 +113,9 @@ public class Building : MonoBehaviour
 
     void Die()
     {
-        onDeathVfx.Play();
+        if(onDeathVfx)
+            onDeathVfx.Play();
+
         isAlive = false;
         alivePrefab.SetActive(false);
         destroyedPrefab.SetActive(true);

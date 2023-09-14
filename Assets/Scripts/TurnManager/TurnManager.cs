@@ -39,7 +39,7 @@ public class TurnManager : MonoBehaviour
         gridSystem.SetActive(false);
         turnStartTimeInMs = Time.time;
         timerText.SetText("00:00.000");
-        enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
+        StartCoroutine(enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]));
         isTurnPhase = true;
     }
 
@@ -74,15 +74,27 @@ public class TurnManager : MonoBehaviour
     
     public void EndTurn()
     {
+        Debug.Log("Ending TURN!");
         StartPreTurnPhase();
     }
 
     void RepairBuildings()
     {
-        var buildings = GameObject.FindGameObjectsWithTag("Tower");
+        Debug.Log("Rapair buildings!");
+        var buildings = GameObject.FindGameObjectsWithTag("Destroyed");
         foreach(GameObject building in buildings)
         {
             building.GetComponent<Building>().Repair();
+        }
+    }
+
+    public void RemoveAllEnemies()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
         }
     }
 }

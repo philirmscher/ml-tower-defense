@@ -126,6 +126,7 @@ MonoBehaviour:
   damage: 15
   attackRange: 5
   attackRate: 1.5
+  attackPrioList: 02000000010000000300000000000000
   flashDamageMeshes:
   - {fileID: 7461140141120658880}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -171,8 +172,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.233058, z: 1}
-  m_Center: {x: 0, y: -0.1165292, z: 0}
+  m_Size: {x: 4.8559065, y: 1.221806, z: 7.0538507}
+  m_Center: {x: 0.05239582, y: -0.12215519, z: 0.23039222}
 --- !u!1001 &2859647391695120378
 PrefabInstance:
   m_ObjectHideFlags: 0

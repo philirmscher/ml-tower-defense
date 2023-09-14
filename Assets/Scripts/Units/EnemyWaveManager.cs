@@ -19,7 +19,7 @@ public class EnemyWaveManager : MonoBehaviour
     private List<GameObject> enemies = new ();
     private bool enemiesSpawned;
 
-    public void StartWave(EnemyWave enemyWave)
+    public IEnumerator StartWave(EnemyWave enemyWave)
     {
         foreach (var enemyPlacement in enemyWave.enemyPlacements)
         {
@@ -38,6 +38,7 @@ public class EnemyWaveManager : MonoBehaviour
                     obj.AddComponent<StupidTroopAIScript>();
                     enemies.Add(obj);
                 }
+                yield return new WaitForSeconds(0.3f);
             }
         }
         
@@ -72,8 +73,8 @@ public class EnemyWaveManager : MonoBehaviour
     private static Vector3 VariantVector(Vector3 vector)
     {
         var vec = vector;
-        vec.x += Random.Range(-0.5f, 0.5f);
-        vec.z += Random.Range(-0.5f, 0.5f);
+        vec.x += Random.Range(-3f, 3f);
+        vec.z += Random.Range(-3f, 3f);
         return vec;
     }
 }
