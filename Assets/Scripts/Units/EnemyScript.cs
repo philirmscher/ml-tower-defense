@@ -19,6 +19,8 @@ public class EnemyScript : MonoBehaviour
 
     public Material damageMaterial;
 
+    [SerializeField] private ParticleSystem onDeathVfx;
+
     [SerializeField] private HealthBar healthBar;
 
     private float attackCountdown = 0f;
@@ -168,9 +170,15 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    void Die()
+    private void Die()
     {
+        if (onDeathVfx) {   
+        ParticleSystem vfxInst = Instantiate(onDeathVfx, transform.position, transform.rotation);
+
+        Destroy(vfxInst, vfxInst.main.duration);
         Destroy(gameObject);
+
+        }
     }
     
     
@@ -182,7 +190,7 @@ public class EnemyScript : MonoBehaviour
     }
 
     public GameObject getNearestObject() {
-        if (underAttackBy)
+        if (underAttackBy && underAttackBy.GetComponent<Building>().IsAlive())
         {
             int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), underAttackBy.tag));
             int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), sortedGameObjects[0].tag));
