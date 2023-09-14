@@ -57,7 +57,7 @@ MonoBehaviour:
   - {fileID: 6880439886976016273}
   onDeathVfx: {fileID: 0}
   projectile: {fileID: 0}
-  hasWeaponry: 1
+  hasWeaponry: 0
   health: 300
   maxHealth: 300
   buildingType: 0

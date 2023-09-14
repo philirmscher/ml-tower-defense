@@ -13,10 +13,12 @@ public class BulletScript : MonoBehaviour
     private Transform target;
     private string enemyTag = "Enemy";
     private Rigidbody rb;
+    private GameObject projectileOrigin;
 
-    public void Seek(Transform target)
+    public void Seek(Transform target, GameObject projectileOrigin)
     {
         this.target = target;
+        this.projectileOrigin = projectileOrigin;
     }
 
     void Start()
@@ -116,7 +118,7 @@ public class BulletScript : MonoBehaviour
         
         if (enemyScript != null)
         {
-            enemyScript.TakeDamage(damage);
+            enemyScript.TakeDamage(damage,projectileOrigin);
         }
     }
 

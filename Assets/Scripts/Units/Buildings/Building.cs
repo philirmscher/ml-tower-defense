@@ -206,24 +206,26 @@ public class Building : MonoBehaviour
 
         if (projectile != null)
         {
-            projectile.Seek(target);
+            projectile.Seek(target, this.gameObject);
         }
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, transform.forward * range);
-
-        BulletScript bullet = projectilePrefab.GetComponent<BulletScript>();
-
-        if (bullet != null)
+        if (hasWeaponry)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, bullet.explosionRadius);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, range);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(transform.position, transform.forward * range);
+            BulletScript bullet = projectilePrefab.GetComponent<BulletScript>();
+
+            if (bullet != null)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(transform.position, bullet.explosionRadius);
+            }
         }
     }
 }
