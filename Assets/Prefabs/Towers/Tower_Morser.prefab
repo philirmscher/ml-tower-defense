@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 968822583276138519}
   - component: {fileID: 4141606330722982573}
   - component: {fileID: 4335734575782616133}
-  - component: {fileID: 820177482636242208}
-  - component: {fileID: 5906783110761472383}
   m_Layer: 0
   m_Name: Body
   m_TagString: Tower
@@ -87,50 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &820177482636242208
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473774313131498179}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5906783110761472383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 473774313131498179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15802c16838eef644914f8090157fa5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6794088983540792884, guid: fe0bf15071b9c2a408e04bd67035d413,
-    type: 3}
-  firePoint: {fileID: 4816106167724278582}
-  health: 500
-  maxHealth: 100
-  fireRate: 0.2
-  range: 15
-  fireSpan: 5
-  turnSpeed: 1
-  damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
-  healthBar: {fileID: 2769441932300768945}
 --- !u!1 &2236609413541101829
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,6 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4073129751171053454}
+  - component: {fileID: 3373820855402393910}
   m_Layer: 0
   m_Name: Tower_Morser
   m_TagString: Tower
@@ -192,8 +147,24 @@ Transform:
   m_Children:
   - {fileID: 968822583276138519}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &3373820855402393910
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5254891572220670329}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 3.995, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &7671188698678170374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,18 +303,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ec7942b2b5ff6e47a5955976573acf2, type: 3}
---- !u!114 &2769441932300768945 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5483838131695240631, guid: 1ec7942b2b5ff6e47a5955976573acf2,
-    type: 3}
-  m_PrefabInstance: {fileID: 7671188698678170374}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 995b51e8050a54842a65c910174f6ebd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &6441601949208552419 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,

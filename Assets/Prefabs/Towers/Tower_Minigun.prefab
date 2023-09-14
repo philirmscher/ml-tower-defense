@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 71434023292422949}
   - component: {fileID: 4871056870381698080}
   - component: {fileID: 6274340327311528713}
+  - component: {fileID: 847453229965437919}
   m_Layer: 0
   m_Name: Tower_Minigun
   m_TagString: Tower
@@ -92,6 +93,22 @@ MonoBehaviour:
   turnSpeed: 5
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   healthBar: {fileID: 8670666891226453589}
+--- !u!208 &847453229965437919
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317225403262561475}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 3.995, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &3233613548283267806
 PrefabInstance:
   m_ObjectHideFlags: 0

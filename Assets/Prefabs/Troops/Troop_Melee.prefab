@@ -131,6 +131,7 @@ MonoBehaviour:
   - {fileID: 7461140141120658880}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   healthBar: {fileID: 7761113515111473741}
+  moveToAttackerTime: 1
 --- !u!195 &-1751145758520790846
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -140,7 +141,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1471789225679690459}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5000001
+  m_Radius: 0.62
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -149,8 +150,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
+  m_Height: 0.66
+  m_BaseOffset: 0.02
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!65 &3990804359336707236

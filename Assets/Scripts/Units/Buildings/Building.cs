@@ -2,6 +2,8 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 public class Building : MonoBehaviour
 {
     public enum BuildingType
@@ -120,6 +122,10 @@ public class Building : MonoBehaviour
         alivePrefab.SetActive(false);
         destroyedPrefab.SetActive(true);
         this.gameObject.tag = "Destroyed";
+        this.gameObject.GetComponent<BoxCollider>().enabled = false;
+
+        if(this.gameObject.GetComponent<NavMeshObstacle>()) 
+            this.gameObject.GetComponent<NavMeshObstacle>().enabled = false;
     }
 
     public void Repair()
@@ -129,6 +135,10 @@ public class Building : MonoBehaviour
         alivePrefab.SetActive(true);
         destroyedPrefab.SetActive(false);
         this.gameObject.tag = buildingType.ToString();
+        this.gameObject.GetComponent<BoxCollider>().enabled = true;
+
+        if (this.gameObject.GetComponent<NavMeshObstacle>())
+            this.gameObject.GetComponent<NavMeshObstacle>().enabled = true;
     }
 
     void UpdateTarget()
