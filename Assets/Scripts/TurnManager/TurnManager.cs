@@ -45,6 +45,8 @@ public class TurnManager : MonoBehaviour
             timerText.SetText("00:00.000");
         }
 
+        previewSystem.StopShowingPreview();
+
         enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
         isTurnPhase = true;
     }
