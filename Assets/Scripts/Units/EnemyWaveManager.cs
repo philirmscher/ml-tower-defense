@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,19 +13,36 @@ public class Vec3
     public float z;
 }
 
+[Serializable]
+public enum PlayType
+{
+    Demo,
+    Training,
+    Play
+}
+
 public class EnemyWaveManager : MonoBehaviour
 {
     [SerializeField] private TurnManager turnManager;
     private List<GameObject> enemies = new ();
-    private bool enemiesSpawned;
+    private bool allEnemiesSpawned;
     private EnemyWave enemyWave;
-    [SerializeField] private bool isDemo;
-    [SerializeField] private Vec3 spawnPosition = new Vec3();
+    [SerializeField] private PlayType type;
+
+    [SerializeField]
+    [Tooltip("The position where the enemies will spawn")]
+    [Header("Only used in Demo mode")]
+    private Vec3 spawnPosition = new Vec3();
+
+    [SerializeField]
+    [Tooltip("The agent that will be used in the demo")]
+    [Header("Only used in Training mode")]
+    private MLTDAgent agent;
 
     public void StartWave(EnemyWave enemyWave)
     {
         this.enemyWave = enemyWave;
-        if (!isDemo)
+        if (type != PlayType.Demo)
             return;
         
         StartCoroutine(StartDemoWave());
@@ -53,7 +71,7 @@ public class EnemyWaveManager : MonoBehaviour
             }
         }
         
-        enemiesSpawned = true;
+        allEnemiesSpawned = true;
     }
     
     public EnemyWave GetWave()
@@ -63,8 +81,13 @@ public class EnemyWaveManager : MonoBehaviour
     
     public void SpawnEnemy(int index, Vector3 position)
     {
-        if(!enemiesSpawned)
-            enemiesSpawned = true;
+        var troopCount = 0;
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            troopCount += enemyPlacement.amount;
+        }
+        
+        if(!allEnemiesSpawned || enemies.Count >= troopCount) allEnemiesSpawned = true;
         if(enemyWave.enemyPlacements[index].amount <= 0)
             return;
         
@@ -76,8 +99,6 @@ public class EnemyWaveManager : MonoBehaviour
 
     public void Update()
     {
-        if(!enemiesSpawned)
-            return;
         for (var i = 0; i < enemies.Count; i++)
         {
             if (enemies.Count <= i || enemies.Count == 0)
@@ -88,13 +109,15 @@ public class EnemyWaveManager : MonoBehaviour
             if (enemies[i] == null)
             {
                 enemies.RemoveAt(i);
+                if(type == PlayType.Training) agent.KilledBuilding();
                 i--;
             }
         }
         
-        if (enemies.Count == 0)
+        if (allEnemiesSpawned && enemies.Count == 0)
         {
-            enemiesSpawned = false;
+            allEnemiesSpawned = false;
+            if(type == PlayType.Training) agent.Lose();
             turnManager.StartPreTurnPhase();
         }
     }

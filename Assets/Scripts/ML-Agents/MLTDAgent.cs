@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
@@ -10,10 +11,66 @@ public class MLTDAgent : Agent
     [SerializeField] private GameObject placementPlatform;
     [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private TurnManager turnManager;
+    [SerializeField] private GameObject[] prefabs;
+    private List<GameObject> placedGameObjects = new();
     
+    private SerializedGrids serializedGrids;
+
+    public void Awake()
+    {
+        var saveGridToFileScript = GetComponent<SaveGridToFileScript>();
+        serializedGrids = saveGridToFileScript.GetGrids();
+    }
+
+    private void Update()
+    {
+        var objectsAlive = 0;
+        
+        foreach (var placedGameObject in placedGameObjects)
+        {
+            if(placedGameObject.GetComponent<Building>().IsAlive()) objectsAlive++;
+        }
+        
+        if (objectsAlive == 0)
+        {
+            Lose();
+        }
+    }
+
     public override void OnEpisodeBegin()
     {
+        //load random grid
+        var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
+        
+        foreach (var serializedGridObject in randomGrid.gridObjects)
+        {
+            var prefab = GetPrefabByName(serializedGridObject.name);
+            if (prefab == null)
+            {
+                Debug.LogError($"Prefab with name {serializedGridObject.name} not found!");
+                continue;
+            }
+            
+            var rotation = Quaternion.Euler(serializedGridObject.rotation);
+            var position = serializedGridObject.position;
+            var newObject = Instantiate(prefab, position, rotation);
+            placedGameObjects.Add(newObject);
+            
+        }
         turnManager.StartTurnPhase();
+    }
+    
+    private GameObject GetPrefabByName(string name)
+    {
+        foreach (var prefab in prefabs)
+        {
+            if (prefab.name == name)
+            {
+                return prefab;
+            }
+        }
+
+        return null;
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -101,8 +158,24 @@ public class MLTDAgent : Agent
         {
             position.x = otherCoordinate * xScale / 2 + placementPlatform.transform.position.x;
         }
-        
-        
+
         enemyWaveManager.SpawnEnemy(towerType - 1, position);
+    }
+    
+    public void KilledBuilding()
+    {
+        AddReward(+1f);
+    }
+    
+    public void Win()
+    {
+        AddReward(10f);
+        EndEpisode();
+    }
+    
+    public void Lose()
+    {
+        AddReward(-1f);
+        EndEpisode();
     }
 }
