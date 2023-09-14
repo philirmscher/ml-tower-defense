@@ -16,17 +16,25 @@ public class Building : MonoBehaviour
 
     [SerializeField] private GameObject alivePrefab;
     [SerializeField] private GameObject destroyedPrefab;
-    [SerializeField] private GameObject gunPrefab;
+
+    [SerializeField] private bool hasWeaponry = true;
+    [SerializeField] private bool hasMortar = false;
+
+    [SerializeField] private float mortarProjectileHeight = 10f;
+    private Vector3 cannonStartPosition;
+    private Vector3 cannonTargetPosition;
+
+    [SerializeField] private GameObject topPart;
+    [SerializeField] private GameObject cannon;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
+
 
     [SerializeField] private GameObject[] flashDamageMeshes;
     private Material[] originalMaterials;
 
     [SerializeField] private ParticleSystem onDeathVfx;
-    [SerializeField] private ParticleSystem projectile;
 
-    [SerializeField] private bool hasWeaponry = true;
     [SerializeField] private float health, maxHealth = 100f;
     [SerializeField] private BuildingType buildingType;
     [SerializeField] private bool isAlive = true;
@@ -45,6 +53,8 @@ public class Building : MonoBehaviour
     private float fireCountdown = 0f;
     private Transform target;
     private string enemyTag = "Enemy";
+
+    private BulletScript lastFiredBulletScript;
     private void Awake()
     {
         healthBar = GetComponentInChildren<HealthBar>();
@@ -57,7 +67,70 @@ public class Building : MonoBehaviour
         health = maxHealth;
         healthBar.UpdateHealthBar(health, maxHealth);
         saveOriginalMaterials();
-        
+
+    }
+
+    void Update()
+    {
+        if (isAlive)
+        {
+            if (health <= 0f)
+            {
+                Die();
+            }
+
+            if (hasWeaponry)
+            {
+                if (target == null)
+                {
+                    return;
+                }
+
+                Vector3 dir1 = target.position - transform.position;
+                Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
+                Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
+
+                topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
+
+                if (hasMortar)
+                {
+                    Vector3 firstParabolaPoint = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, 0.01f);
+                    float heightDifference = firstParabolaPoint.y - cannon.transform.position.y;
+                    float horizontalDistance = Vector3.Distance(new Vector3(firstParabolaPoint.x, cannon.transform.position.y, firstParabolaPoint.z), cannon.transform.position);
+                    float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+
+                    Quaternion currentRotation = cannon.transform.localRotation;
+                    Quaternion desiredRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+                    Quaternion smoothRotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime * turnSpeed);
+                    cannon.transform.localRotation = smoothRotation;
+
+                }
+                else
+                {
+                    float heightDifference = target.position.y - cannon.transform.position.y;
+                    float horizontalDistance = Vector3.Distance(new Vector3(target.position.x, cannon.transform.position.y, target.position.z), cannon.transform.position);
+                    float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+
+                    cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+
+                }
+                if (fireCountdown <= 0f)
+                {
+                    Shoot();
+                    fireCountdown = 1f / fireRate;
+                }
+
+                fireCountdown -= Time.deltaTime;
+            }
+
+        }
+        else
+        {
+            if (health > 0f)
+            {
+                Repair();
+            }
+        }
     }
     public void TakeDamage(float amount)
     {
@@ -161,51 +234,12 @@ public class Building : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= range)
         {
             target = nearestEnemy.transform;
+            cannonStartPosition = muzzlePoint.position; // oder wo immer der Startpunkt des Geschosses sein sollte
+            cannonTargetPosition = target.position;
         }
         else
         {
             target = null;
-        }
-    }
-
-    void Update()
-    {
-        if (isAlive)
-        {
-            if (health <= 0f)
-            {
-                Die();
-            }
-
-            if (hasWeaponry)
-            {
-                if (target == null)
-                {
-                    return;
-                }
-
-                Vector3 dir = target.position - transform.position;
-                Quaternion lookRotation = Quaternion.LookRotation(dir);
-                Vector3 rotation = Quaternion.Lerp(gunPrefab.transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
-
-                gunPrefab.transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-                if (fireCountdown <= 0f)
-                {
-                    Shoot();
-                    fireCountdown = 1f / fireRate;
-                }
-
-                fireCountdown -= Time.deltaTime;
-            }
-
-        }
-        else
-        {
-            if (health > 0f)
-            {
-                Repair();
-            }
         }
     }
 
@@ -217,9 +251,15 @@ public class Building : MonoBehaviour
         if (projectile != null)
         {
             projectile.Seek(target, this.gameObject);
+            lastFiredBulletScript = projectile;
         }
     }
     
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
+
     public bool IsAlive()
     {
         return isAlive;

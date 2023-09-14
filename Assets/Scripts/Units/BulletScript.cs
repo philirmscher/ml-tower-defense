@@ -9,11 +9,16 @@ public class BulletScript : MonoBehaviour
     [SerializeField] public float damage = 50f;
     [SerializeField] private GameObject hit;
     [SerializeField] private GameObject flash;
+    [SerializeField] private bool isMortarProjectile = false;
+    [SerializeField] private float mortarProjectileHeight = 10;
 
     private Transform target;
     private string enemyTag = "Enemy";
     private Rigidbody rb;
     private GameObject projectileOrigin;
+    private Vector3 startPos;
+    private Vector3 targetStartPosition;
+    private float Animation;
 
     public void Seek(Transform target, GameObject projectileOrigin)
     {
@@ -21,8 +26,23 @@ public class BulletScript : MonoBehaviour
         this.projectileOrigin = projectileOrigin;
     }
 
+    private void parabola()
+    {
+        Animation += Time.deltaTime;
+        Animation = Animation % 5;
+
+        transform.position = MathParabola.Parabola(startPos, targetStartPosition, mortarProjectileHeight, Animation / 2);
+        Debug.Log(transform.position);
+    }
+    public Vector3 GetFirstParabolaPoint()
+    {
+        return MathParabola.Parabola(startPos, targetStartPosition, mortarProjectileHeight, 0.01f);
+    }
+
     void Start()
     {
+        startPos = transform.position;
+        targetStartPosition = target.position;
         rb = GetComponent<Rigidbody>();
         if (flash != null)
         {
@@ -44,37 +64,45 @@ public class BulletScript : MonoBehaviour
 
     void Update()
     {
-        if (true)
+        if (target == null)
         {
-            if (target == null)
+            Destroy(gameObject);
+            return;
+        }
+
+        if (isMortarProjectile)
+        {
+            parabola();
+            float distanceToTarget = Vector3.Distance(transform.position, targetStartPosition);
+            if (distanceToTarget < 0.1f)
             {
-                Destroy(gameObject);
+                HitTarget(targetStartPosition,Quaternion.identity);
                 return;
             }
-            
-            Vector3 direction = target.position - transform.position;
-            float distanceThisFrame = speed * Time.deltaTime;
-            
-            if (direction.magnitude <= distanceThisFrame)
-            {
-                HitTarget();
-                return;
-            }
-            
-            transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-            transform.LookAt(target);
         }
         else
         {
-            Destroy(this);
+            Vector3 direction = target.position - transform.position;
+            float distanceThisFrame = speed * Time.deltaTime;
+
+            if (direction.magnitude <= distanceThisFrame)
+            {
+                HitTarget(target.position,target.rotation);
+                return;
+            }
+
+            transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+            transform.LookAt(target);
         }
     }
+
+
     
-    void HitTarget()
+    void HitTarget(Vector3 targetPos,Quaternion targetRot)
     {
         if (hit != null)
         {
-            var hitInstance = Instantiate(hit, target.transform.position, target.transform.rotation);
+            var hitInstance = Instantiate(hit, targetPos, targetRot);
 
             var hitPs = hitInstance.GetComponent<ParticleSystem>();
             if (hitPs != null)
