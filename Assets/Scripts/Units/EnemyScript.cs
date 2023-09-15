@@ -23,8 +23,8 @@ public class EnemyScript : MonoBehaviour
     // Attack Settings
     [Header("Attack")]
     [SerializeField] private float damage = 10f;
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float attackRate = 1f;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float attackRange = 15f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
     private float attackCountdown = 0f;
     private GameObject gameObjectToAttack;
@@ -52,13 +52,15 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private GameObject cannon;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
-    [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float range = 15f;
     [SerializeField] private bool hasFlamethrower = false;
     [SerializeField] private ParticleSystem flamethrowerEffect;
     [SerializeField] private float flamethrowerRange = 10f;
     [SerializeField] private float flamethrowerAngle = 45f;
     private float fireCountdown = 0f;
+
+    private List<GameObject> sortedGameObjects = new List<GameObject>();
+
+
 
     private void Awake()
     {
