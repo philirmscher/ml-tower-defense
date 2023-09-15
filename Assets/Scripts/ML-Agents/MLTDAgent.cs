@@ -118,34 +118,44 @@ public class MLTDAgent : Agent
         sensor.AddObservation(enemyPlacements[2].amount);
         
         var gridSize = 40;
-        var grid = new int[gridSize * gridSize];
+        var grid = new int[40][];
+        for (var i = 0; i < gridSize; i++)
+        {
+            grid[i] = new int[gridSize];
+        }
+        
         foreach (var placedGameObject in placedGameObjects)
         {
-            var building = placedGameObject.name;
-            var position = placedGameObject.transform.position;
-            var x = (int)(position.x + 20);
-            var z = (int)(position.z + 20);
-            // get index of building in prefabs
-            var index = 0;
-            foreach (var prefab in prefabs)
-            {
-                if (prefab.name == building)
-                {
-                    break;
-                }
-
-                index++;
-            }
-
-            // Convert 2D coordinates to 1D index
-            var gridIndex = x + z * gridSize;
-            grid[gridIndex] = index;
+            var building = placedGameObject.GetComponent<Building>();
+            var position = placedGameObject.transform.localPosition;
+            var x = (int) (position.x + 20 - placementPlatform.transform.position.x);
+            var z = (int) (position.z + 20 - placementPlatform.transform.position.z);
+            grid[x][z] = GetTowerType(placedGameObject) + 1;
         }
         
         foreach (var gridValue in grid)
         {
-            sensor.AddObservation(gridValue);
+            foreach (var value in gridValue)
+            {
+                sensor.AddObservation(value);
+            }
         }
+    }
+    
+    private int GetTowerType(GameObject gameObject)
+    {
+        var index = 0;
+        foreach (var prefab in prefabs)
+        {
+            if (prefab == gameObject)
+            {
+                return index;
+            }
+
+            index++;
+        }
+        
+        return -1;
     }
 
     public override void OnActionReceived(ActionBuffers actions)
