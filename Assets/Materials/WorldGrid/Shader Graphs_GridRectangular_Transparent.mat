@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Shader Graphs_GridRectangular_Transparent
-  m_Shader: {fileID: -6465566751694194690, guid: 61c621abf9a2b25498b1f0dffe002b02,
+  m_Shader: {fileID: -6465566751694194690, guid: edf43f69be015454b8c80a507c85d563,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -66,6 +66,7 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _OpaqueCullMode: 2
+    - _Radius: 0.26
     - _RayTracing: 0
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
@@ -86,6 +87,7 @@ Material:
     - _SupportDecals: 0
     - _SurfaceType: 1
     - _Thickness: 0.0224
+    - _Transition: 1.5
     - _Transparancy: 0
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
@@ -104,6 +106,7 @@ Material:
     - _DefaultScale: {r: 10, g: 10, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MousePos: {r: 0.6652508, g: 0.0019114191, b: 0, a: 0}
     - _Size: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1188989978683422858
