@@ -138,14 +138,20 @@ public class BulletScript : MonoBehaviour
             }
         }
     }
-    
-    void Damage(Transform enemy)
+
+    void Damage(Transform hitTarget)
     {
-        EnemyScript enemyScript = enemy.GetComponent<EnemyScript>();
-        
+        EnemyScript enemyScript = hitTarget.GetComponent<EnemyScript>();
         if (enemyScript != null)
         {
-            enemyScript.TakeDamage(damage,projectileOrigin);
+            enemyScript.TakeDamage(damage, projectileOrigin);
+            return;
+        }
+
+        Building buildingScript = hitTarget.GetComponent<Building>();
+        if (buildingScript != null)
+        {
+            buildingScript.TakeDamage(damage);
         }
     }
 

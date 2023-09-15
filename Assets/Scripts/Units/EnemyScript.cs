@@ -16,15 +16,31 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float alertRadius = 1f;
     [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
 
-
     [SerializeField] private GameObject[] flashDamageMeshes;
     private Material[] originalMaterials;
 
     public Material damageMaterial;
 
-    [SerializeField] private ParticleSystem onDeathVfx;
+    [SerializeField] private ParticleSystem onDeathVfx1;
+    [SerializeField] private ParticleSystem onDeathVfx2;
 
     [SerializeField] private HealthBar healthBar;
+
+    [SerializeField] private GameObject topPart;
+    [SerializeField] private GameObject cannon;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform muzzlePoint;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float range = 15f;
+
+    [Header("Weaponry")]
+    [SerializeField] private bool hasFlamethrower = false;
+    [SerializeField] private ParticleSystem flamethrowerEffect;
+
+    private float fireCountdown = 0f;
+    private Transform target;
+    private string buildingTag = "Building"; // Assuming buildings have this tag
+
 
     private float attackCountdown = 0f;
     private List<GameObject> sortedGameObjects = new List<GameObject>();
@@ -36,6 +52,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float moveToAttackerTime = 1;
     private bool isResettingUnderAttackBy = false;
     private Coroutine resetCoroutine;
+    public bool isAlive = true;
 
     private void Awake()
     {
@@ -50,51 +67,87 @@ public class EnemyScript : MonoBehaviour
     }
     void Update()
     {
-        SortGameObjectsByDistance();
-        gameObjectToAttack = FindHighestPriorityInAttackRange();
-
-        if (gameObjectToAttack == null)
+        if (isAlive)
         {
-            if (sortedGameObjects.Count > 0)
+            SortGameObjectsByDistance();
+            gameObjectToAttack = FindHighestPriorityInAttackRange();
+
+            if (gameObjectToAttack == null || !gameObjectToAttack.GetComponent<Building>().IsAlive())
             {
                 isInAttackRange = false;
+                if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+                {
+                    flamethrowerEffect.Stop();
+                }
                 return;
+            }
+
+            float distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
+
+            if (distance <= attackRange)
+            {
+                isInAttackRange = true;
+
+                if (hasFlamethrower)
+                {
+                    // If the enemy has a flamethrower, directly damage the building
+                    if (attackCountdown <= 0f)
+                    {
+                        Attack(gameObjectToAttack);
+                        attackCountdown = 1f / attackRate;
+                    }
+
+                    // Activate the flamethrower effect
+                    if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying)
+                    {
+                        flamethrowerEffect.Play();
+                    }
+                }
+                else
+                {
+                    // If the enemy doesn't have a flamethrower, use projectiles
+                    if (fireCountdown <= 0f)
+                    {
+                        Shoot();
+                        fireCountdown = 1f / fireRate;
+                    }
+
+                    // Deactivate the flamethrower effect, if it's playing
+                    if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+                    {
+                        flamethrowerEffect.Stop();
+                    }
+                }
+
+                attackCountdown -= Time.deltaTime;
+                fireCountdown -= Time.deltaTime;
+
             }
             else
             {
-                Debug.Log("No enemy to attack! " + this.gameObject);
-                return;
-            }
-        }
-        float distance;
+                isInAttackRange = false;
 
-        if (underAttackBy)
-        {
-            distance = Vector3.Distance(transform.position, underAttackBy.transform.position);
-        }
-        else
-        {
-            distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
+                // Deactivate the flamethrower effect if the enemy is out of attack range
+                if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+                {
+                    flamethrowerEffect.Stop();
+                }
+            }
+
+            if (isInAttackRange)
+            {
+                Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
+                Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
+                Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
+                topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
+
+                float heightDifference = gameObjectToAttack.transform.position.y - cannon.transform.position.y;
+                float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
+                float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+                cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+            }
         }
         
-
-        if (distance <= attackRange)
-        {
-            isInAttackRange = true;
-            if (attackCountdown <= 0f)
-            {
-                //Debug.Log("Attacking from Distanz: " + distance + " Attack Range is: " + attackRange);
-                Attack(gameObjectToAttack);
-                attackCountdown = 1f / attackRate;
-            }
-
-            attackCountdown -= Time.deltaTime;
-        }
-        else
-        {
-            //Debug.Log("Moving to: " + goToAttack + " Range is: " + distance);
-            isInAttackRange = false;
-        }
     }
 
     public void Move(int direction)
@@ -177,20 +230,63 @@ public class EnemyScript : MonoBehaviour
 
     private void Die()
     {
-        if (onDeathVfx) {   
-        ParticleSystem vfxInst = Instantiate(onDeathVfx, transform.position, transform.rotation);
+        if (!isAlive)
+            return;
 
-        Destroy(vfxInst, vfxInst.main.duration);
-        Destroy(gameObject);
+        isAlive = false;
+        this.tag = "Destroyed";
 
+        if (onDeathVfx1 && onDeathVfx2)
+        {
+            StartCoroutine(HandleDeathEffects());
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
-    
-    
+
+    private IEnumerator HandleDeathEffects()
+    {
+        // Start the first effect
+        ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
+        psInst1.Play();
+        Destroy(psInst1.gameObject, psInst1.main.duration);
+        yield return new WaitForSeconds(psInst1.main.duration);
+
+        // Deactivate the renderer after the first effect
+        DisableAllRenderers();
+
+        // Start the second effect
+        ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
+        psInst2.Play();
+        Destroy(psInst2.gameObject, psInst2.main.duration);
+        yield return new WaitForSeconds(psInst2.main.duration);
+
+        // Finally, destroy the enemy object
+        Destroy(gameObject);
+    }
+    private void DisableAllRenderers()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+    }
+
+    void Shoot()
+    {
+        GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
+        BulletScript projectile = projectileGO.GetComponent<BulletScript>();
+        if (projectile != null)
+        {
+            projectile.Seek(gameObjectToAttack.transform, this.gameObject);
+        }
+    }
     void Attack(GameObject building)
     {
         var buildingScript = building.GetComponent<Building>();
-        
         buildingScript.TakeDamage(damage);
     }
 

@@ -28,9 +28,16 @@ public class StupidTroopAIScript : MonoBehaviour
     
     void FindClostestEnemy()
     {
+
         if(enemyScript == null)
         {
             enemyScript = this.GetComponent<EnemyScript>();
+        }
+
+        if (enemyScript.isAlive == false)
+        {
+            agent.isStopped = true;
+            return;
         }
 
         gameObjectToAttack = enemyScript.getNearestObject();
