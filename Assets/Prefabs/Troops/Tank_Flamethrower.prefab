@@ -121,6 +121,8 @@ MonoBehaviour:
   range: 15
   hasFlamethrower: 1
   flamethrowerEffect: {fileID: 7387677347412381837}
+  flamethrowerRange: 9.28
+  flamethrowerAngle: 44.4
   underAttackBy: {fileID: 0}
   isWarned: 0
   moveToAttackerTime: 1

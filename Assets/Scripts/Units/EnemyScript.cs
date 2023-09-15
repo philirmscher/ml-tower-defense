@@ -6,53 +6,59 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    // Movement Settings
+    [Header("Movement")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float turnSpeed = 10f;
-    [SerializeField] private float health, maxHealth = 100f;
+
+    // Health Settings
+    [Header("Health")]
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private GameObject[] flashDamageMeshes;
+    private Material[] originalMaterials;
+    public Material damageMaterial;
+
+    // Attack Settings
+    [Header("Attack")]
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float attackRate = 1f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
-    [SerializeField] private float alertRadius = 1f;
-    [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
-
-    [SerializeField] private GameObject[] flashDamageMeshes;
-    private Material[] originalMaterials;
-
-    public Material damageMaterial;
-
-    [SerializeField] private ParticleSystem onDeathVfx1;
-    [SerializeField] private ParticleSystem onDeathVfx2;
-
-    [SerializeField] private HealthBar healthBar;
-
-    [SerializeField] private GameObject topPart;
-    [SerializeField] private GameObject cannon;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform muzzlePoint;
-    [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float range = 15f;
-
-    [Header("Weaponry")]
-    [SerializeField] private bool hasFlamethrower = false;
-    [SerializeField] private ParticleSystem flamethrowerEffect;
-
-    private float fireCountdown = 0f;
-    private Transform target;
-    private string buildingTag = "Building"; // Assuming buildings have this tag
-
-
     private float attackCountdown = 0f;
-    private List<GameObject> sortedGameObjects = new List<GameObject>();
     private GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
 
+    // Alert Settings
+    [Header("Alert")]
+    [SerializeField] private float alertRadius = 1f;
+    [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
     public GameObject underAttackBy;
     public bool isWarned = false;
     [SerializeField] private float moveToAttackerTime = 1;
     private bool isResettingUnderAttackBy = false;
     private Coroutine resetCoroutine;
     public bool isAlive = true;
+
+    // VFX Settings
+    [Header("Visual Effects")]
+    [SerializeField] private ParticleSystem onDeathVfx1;
+    [SerializeField] private ParticleSystem onDeathVfx2;
+
+    // Weaponry Settings
+    [Header("Weaponry")]
+    [SerializeField] private GameObject topPart;
+    [SerializeField] private GameObject cannon;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform muzzlePoint;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float range = 15f;
+    [SerializeField] private bool hasFlamethrower = false;
+    [SerializeField] private ParticleSystem flamethrowerEffect;
+    [SerializeField] private float flamethrowerRange = 10f;
+    [SerializeField] private float flamethrowerAngle = 45f;
+    private float fireCountdown = 0f;
 
     private void Awake()
     {
@@ -67,87 +73,88 @@ public class EnemyScript : MonoBehaviour
     }
     void Update()
     {
-        if (isAlive)
+        if (!isAlive) return;
+
+        UpdateTarget();
+        HandleAttackLogic();
+        HandleRotationTowardsTarget();
+    }
+
+    private void UpdateTarget()
+    {
+        SortGameObjectsByDistance();
+        gameObjectToAttack = FindHighestPriorityInAttackRange();
+
+        if (gameObjectToAttack == null || !gameObjectToAttack.GetComponent<Building>().IsAlive())
         {
-            SortGameObjectsByDistance();
-            gameObjectToAttack = FindHighestPriorityInAttackRange();
-
-            if (gameObjectToAttack == null || !gameObjectToAttack.GetComponent<Building>().IsAlive())
+            isInAttackRange = false;
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
             {
-                isInAttackRange = false;
-                if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
-                {
-                    flamethrowerEffect.Stop();
-                }
-                return;
-            }
-
-            float distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
-
-            if (distance <= attackRange)
-            {
-                isInAttackRange = true;
-
-                if (hasFlamethrower)
-                {
-                    // If the enemy has a flamethrower, directly damage the building
-                    if (attackCountdown <= 0f)
-                    {
-                        Attack(gameObjectToAttack);
-                        attackCountdown = 1f / attackRate;
-                    }
-
-                    // Activate the flamethrower effect
-                    if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying)
-                    {
-                        flamethrowerEffect.Play();
-                    }
-                }
-                else
-                {
-                    // If the enemy doesn't have a flamethrower, use projectiles
-                    if (fireCountdown <= 0f)
-                    {
-                        Shoot();
-                        fireCountdown = 1f / fireRate;
-                    }
-
-                    // Deactivate the flamethrower effect, if it's playing
-                    if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
-                    {
-                        flamethrowerEffect.Stop();
-                    }
-                }
-
-                attackCountdown -= Time.deltaTime;
-                fireCountdown -= Time.deltaTime;
-
-            }
-            else
-            {
-                isInAttackRange = false;
-
-                // Deactivate the flamethrower effect if the enemy is out of attack range
-                if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
-                {
-                    flamethrowerEffect.Stop();
-                }
-            }
-
-            if (isInAttackRange)
-            {
-                Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
-                Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
-                Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
-                topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
-
-                float heightDifference = gameObjectToAttack.transform.position.y - cannon.transform.position.y;
-                float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
-                float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
-                cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+                flamethrowerEffect.Stop();
             }
         }
-        
+        else
+        {
+            float distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
+            isInAttackRange = distance <= attackRange;
+        }
+    }
+
+    private void HandleAttackLogic()
+    {
+        if (!isInAttackRange)
+        {
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Stop();
+            }
+            return;
+        }
+
+        if (hasFlamethrower)
+        {
+            // If the enemy has a flamethrower, apply cone damage
+            ApplyFlamethrowerDamage();
+
+            // Activate the flamethrower effect
+            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Play();
+            }
+        }
+        else
+        {
+            // If the enemy doesn't have a flamethrower, use projectiles
+            if (fireCountdown <= 0f)
+            {
+                Shoot();
+                fireCountdown = 1f / fireRate;
+            }
+
+            // Deactivate the flamethrower effect, if it's playing
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Stop();
+            }
+        }
+
+        attackCountdown -= Time.deltaTime;
+        fireCountdown -= Time.deltaTime;
+    }
+
+    private void HandleRotationTowardsTarget()
+    {
+        if (!isInAttackRange) return;
+
+        Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
+        Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
+        Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
+        topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
+
+        float heightDifference = gameObjectToAttack.transform.position.y - cannon.transform.position.y;
+        float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
+        float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+        cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
     }
 
     public void Move(int direction)
@@ -224,6 +231,29 @@ public class EnemyScript : MonoBehaviour
             {
                 originalMaterials[index] = flashDamageMeshes[index].GetComponent<Renderer>().material;
                 index++;
+            }
+        }
+    }
+    void ApplyFlamethrowerDamage()
+    {
+        Collider[] colliders = Physics.OverlapSphere(muzzlePoint.position, flamethrowerRange);
+
+        foreach (Collider collider in colliders)
+        {
+            // Überprüfen Sie, ob das Objekt innerhalb des Kegelwinkels liegt
+            Vector3 directionToTarget = collider.transform.position - muzzlePoint.position;
+            float angleToTarget = Vector3.Angle(muzzlePoint.forward, directionToTarget);
+
+            if (angleToTarget < flamethrowerAngle / 2) // /2, da der Winkel in beide Richtungen vom Mittelpunkt aus geht
+            {
+                if (Enum.IsDefined(typeof(Building.BuildingType), collider.tag))
+                {
+                    Building building = collider.GetComponent<Building>();
+                    if (building)
+                    {
+                        building.TakeDamage(damage * Time.deltaTime);
+                    }
+                }
             }
         }
     }
@@ -444,6 +474,19 @@ public class EnemyScript : MonoBehaviour
         isWarned = false;
         underAttackBy = null;
     }
+    void DrawConeGizmo(Vector3 position, Vector3 direction, float angle, float range, Color color)
+    {
+        Gizmos.color = color;
+
+        float halfAngle = angle / 2.0f;
+
+        Vector3 line1 = Quaternion.LookRotation(direction) * Quaternion.Euler(0, halfAngle, 0) * Vector3.forward;
+        Vector3 line2 = Quaternion.LookRotation(direction) * Quaternion.Euler(0, -halfAngle, 0) * Vector3.forward;
+
+        Gizmos.DrawRay(position, line1 * range);
+        Gizmos.DrawRay(position, line2 * range);
+        Gizmos.DrawLine(position + line1 * range, position + line2 * range);
+    }
 
     void OnDrawGizmos()
     {
@@ -454,5 +497,8 @@ public class EnemyScript : MonoBehaviour
         // Alert Radius
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, alertRadius);
+
+        // Flamethrower Cone
+        DrawConeGizmo(muzzlePoint.position, muzzlePoint.forward, flamethrowerAngle, flamethrowerRange, Color.magenta);
     }
 }
