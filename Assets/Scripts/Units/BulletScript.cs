@@ -32,7 +32,6 @@ public class BulletScript : MonoBehaviour
         Animation = Animation % 5;
 
         transform.position = MathParabola.Parabola(startPos, targetStartPosition, mortarProjectileHeight, Animation / 2);
-        Debug.Log(transform.position);
     }
     public Vector3 GetFirstParabolaPoint()
     {
@@ -73,7 +72,7 @@ public class BulletScript : MonoBehaviour
         if (isMortarProjectile)
         {
             parabola();
-            float distanceToTarget = Vector3.Distance(transform.position, targetStartPosition);
+            float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(targetStartPosition.x, targetStartPosition.z));
             if (distanceToTarget < 0.1f)
             {
                 HitTarget(targetStartPosition,Quaternion.identity);

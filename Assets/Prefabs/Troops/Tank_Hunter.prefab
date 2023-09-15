@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4322418517478224291}
   - component: {fileID: 8266251067188513509}
-  - component: {fileID: 7805323737856640638}
   - component: {fileID: 3954895316592747037}
   - component: {fileID: -3196758687151192861}
   - component: {fileID: 6268043741453109627}
@@ -46,33 +45,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7305793360486966212}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &7805323737856640638
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7305793360486966212}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!114 &3954895316592747037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,12 +65,16 @@ MonoBehaviour:
   attackRange: 12
   attackRate: 1
   attackPrioList: 02000000010000000300000000000000
+  alertRadius: 5
+  alertDuration: 2
   flashDamageMeshes:
   - {fileID: 674917928335525968}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   onDeathVfx: {fileID: 198856239026640498, guid: 9bba9cf244c53c5439505dfc96fdd11c,
     type: 3}
   healthBar: {fileID: 1538124869643296065}
+  underAttackBy: {fileID: 0}
+  isWarned: 0
   moveToAttackerTime: 1
 --- !u!195 &-3196758687151192861
 NavMeshAgent:

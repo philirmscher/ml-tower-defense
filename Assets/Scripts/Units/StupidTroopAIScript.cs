@@ -34,6 +34,14 @@ public class StupidTroopAIScript : MonoBehaviour
         }
 
         gameObjectToAttack = enemyScript.getNearestObject();
+
+        if (enemyScript.isWarned && enemyScript.underAttackBy)
+        {
+            agent.isStopped = false;
+            agent.SetDestination(enemyScript.underAttackBy.transform.position);
+            return;
+        }
+
         if (gameObjectToAttack == null)
         {
             Debug.Log("No building found: " + this.gameObject + " Objekt to Attack: " + gameObjectToAttack);

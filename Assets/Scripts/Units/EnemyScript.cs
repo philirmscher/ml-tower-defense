@@ -13,6 +13,9 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float attackRate = 1f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
+    [SerializeField] private float alertRadius = 1f;
+    [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
+
 
     [SerializeField] private GameObject[] flashDamageMeshes;
     private Material[] originalMaterials;
@@ -28,7 +31,8 @@ public class EnemyScript : MonoBehaviour
     private GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
 
-    private GameObject underAttackBy;
+    public GameObject underAttackBy;
+    public bool isWarned = false;
     [SerializeField] private float moveToAttackerTime = 1;
     private bool isResettingUnderAttackBy = false;
     private Coroutine resetCoroutine;
@@ -63,6 +67,7 @@ public class EnemyScript : MonoBehaviour
             }
         }
         float distance;
+
         if (underAttackBy)
         {
             distance = Vector3.Distance(transform.position, underAttackBy.transform.position);
@@ -197,6 +202,7 @@ public class EnemyScript : MonoBehaviour
 
             if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priorety
             {
+                AlertNearbyUnits();
                 if (isResettingUnderAttackBy)
                 {
                     StopCoroutine(resetCoroutine);
@@ -274,7 +280,7 @@ public class EnemyScript : MonoBehaviour
                 return i;
             }
         }
-        return -1; // R�ckgabe -1, wenn der Typ nicht in der Priorit�tsliste ist.
+        return -1; 
     }
 
     public bool getIsInAttackRange()
@@ -282,10 +288,75 @@ public class EnemyScript : MonoBehaviour
 
         return isInAttackRange;
     }
+    private void AlertNearbyUnits()
+    {
+        // Find all enemy units in alertRange
+        Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, alertRadius);
+        foreach (var enemyCollider in enemiesInRange)
+        {
+            // Check if the game object has the "Enemy" tag
+            if (enemyCollider.CompareTag("Enemy"))
+            {
+                EnemyScript enemy = enemyCollider.GetComponent<EnemyScript>();
+                if (enemy != null && enemy != this) // Avoid self-warning
+                {
+                    enemy.AlertFromOtherUnit(underAttackBy); // Informs other unity about attacker
+                }
+            }
+        }
+    }
+
+    public void AlertFromOtherUnit(GameObject target)
+    {
+        if (target == null || target.tag == "Destroyed")
+        {
+            Debug.LogError("Received alert for a non-existing or destroyed building.");
+            return;
+        }
+
+        if (!isWarned)
+        {
+            if (gameObjectToAttack == null)
+            {
+                isWarned = true;
+                this.underAttackBy = target;
+                StartCoroutine(ResetWarningAfterDuration());
+                return;
+            }
+            else
+            {
+                if (target.tag == "Destroyed")
+                {
+                    return;
+                }
+                int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
+                int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
+
+                if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priority
+                {
+                    isWarned = true;
+                    this.underAttackBy = target;
+                    StartCoroutine(ResetWarningAfterDuration());
+                }
+            }
+        }
+    }
+
+    private IEnumerator ResetWarningAfterDuration()
+    {
+        yield return new WaitForSeconds(alertDuration);
+        isWarned = false;
+        underAttackBy = null;
+    }
 
     void OnDrawGizmos()
     {
+        // Attackrange radius
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        // Alert Radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, alertRadius);
     }
 }
