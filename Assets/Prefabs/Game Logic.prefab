@@ -1,53 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &60624691517535849
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6812092132582486846}
-  - component: {fileID: 7987456315059674104}
-  m_Layer: 0
-  m_Name: InputManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6812092132582486846
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60624691517535849}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1089877069217211971}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7987456315059674104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60624691517535849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02118094821565e41a4ab050aade80ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneCamera: {fileID: 666289813189196093}
-  placementLayermask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &279875488665996592
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +271,7 @@ Transform:
   - {fileID: 2072345477383365135}
   - {fileID: 8701078386636325718}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2845817079749174224
 GameObject:
@@ -468,6 +420,7 @@ GameObject:
   - component: {fileID: 5288879644279894081}
   - component: {fileID: 4546436000346566219}
   - component: {fileID: 3669038544992975640}
+  - component: {fileID: 3096913284469572330}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -566,11 +519,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25ef798183fd794db10d264ea6fac1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnManager: {fileID: 4546436000346566219}
+  type: 0
   spawnPosition:
     x: -15
     y: 2
     z: -15
-  turnManager: {fileID: 4546436000346566219}
+  agent: {fileID: 0}
+--- !u!114 &3096913284469572330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4152768964794823100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02118094821565e41a4ab050aade80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneCamera: {fileID: 666289813189196093}
+  placementLayermask:
+    serializedVersion: 2
+    m_Bits: 8
+  objectMaterial: {fileID: 2100000, guid: 6bfd90dd1c285dd4da6b4e9fb4e9ffd5, type: 2}
+  hoverLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &5570648490819606605
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,7 +838,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6812092132582486846}
   - {fileID: 1345680308970293949}
   - {fileID: 7638819315673624184}
   - {fileID: 598719115468440452}
@@ -1212,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd1fcc65b2719742a61ee81a673d5f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputManager: {fileID: 7987456315059674104}
+  inputManager: {fileID: 3096913284469572330}
   worldGrid: {fileID: 3415354686118048532}
   database: {fileID: 11400000, guid: ab5248326a0bb9f4eb20edf9e961a4b7, type: 2}
   gridVisualization: {fileID: 6624313877390460108}
@@ -4695,11 +4669,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7372604073771081179, guid: 9349bd35a97875647995a92a15228c95,
-        type: 3}
-      propertyPath: inputManager
-      value: 
-      objectReference: {fileID: 7987456315059674104}
     - target: {fileID: 7524998995820436605, guid: 9349bd35a97875647995a92a15228c95,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -5240,11 +5209,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8451627942397058252, guid: 9349bd35a97875647995a92a15228c95,
-        type: 3}
-      propertyPath: inputManager
-      value: 
-      objectReference: {fileID: 7987456315059674104}
     - target: {fileID: 8452809498594985162, guid: 9349bd35a97875647995a92a15228c95,
         type: 3}
       propertyPath: m_SizeDelta.y

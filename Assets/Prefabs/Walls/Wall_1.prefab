@@ -51,20 +51,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alivePrefab: {fileID: 6880439886976016273}
   destroyedPrefab: {fileID: 180795702770758351}
-  gunPrefab: {fileID: 0}
+  hasWeaponry: 0
+  hasMortar: 0
+  mortarProjectileHeight: 10
+  topPart: {fileID: 0}
+  cannon: {fileID: 0}
   projectilePrefab: {fileID: 0}
   muzzlePoint: {fileID: 0}
   flashDamageMeshes:
   - {fileID: 6880439886976016273}
   onDeathVfx: {fileID: 0}
-  projectile: {fileID: 0}
-  hasWeaponry: 0
   health: 300
   maxHealth: 300
   buildingType: 0
   isAlive: 1
   fireRate: 0
-  range: 0
+  attackRange: 15
   fireSpan: 0
   turnSpeed: 0
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -88,8 +90,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0229945, y: 2.3910818, z: 0.53847647}
-  m_Center: {x: 0, y: 1.1879168, z: 0.0025268793}
+  m_Size: {x: 2.0229945, y: 2.3910818, z: 1.0217733}
+  m_Center: {x: 0, y: 1.1879168, z: -0.0032266378}
 --- !u!208 &8693116852888599050
 NavMeshObstacle:
   m_ObjectHideFlags: 0

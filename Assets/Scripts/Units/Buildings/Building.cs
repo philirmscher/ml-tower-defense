@@ -40,7 +40,7 @@ public class Building : MonoBehaviour
     [SerializeField] private bool isAlive = true;
 
     [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float range = 15f;
+    [SerializeField] public float attackRange = 15f;
     [SerializeField] private float fireSpan = 10f;
     [SerializeField] private float turnSpeed = 10f;
 
@@ -55,15 +55,18 @@ public class Building : MonoBehaviour
     private string enemyTag = "Enemy";
 
     private BulletScript lastFiredBulletScript;
+    private Vector3 meshCenterLocal;
     private void Awake()
     {
         healthBar = GetComponentInChildren<HealthBar>();
         this.gameObject.tag = buildingType.ToString();
-        //alivePrefab.tag = buildingType.ToString();
+        CalculateMeshCenter();
     }
     void Start()
     {
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        if(hasWeaponry)
+            InvokeRepeating("UpdateTarget", 0f, 0.5f);
+
         health = maxHealth;
         healthBar.UpdateHealthBar(health, maxHealth);
         saveOriginalMaterials();
@@ -231,7 +234,7 @@ public class Building : MonoBehaviour
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= range)
+        if (nearestEnemy != null && shortestDistance <= attackRange)
         {
             target = nearestEnemy.transform;
             cannonStartPosition = muzzlePoint.position; // oder wo immer der Startpunkt des Geschosses sein sollte
@@ -259,16 +262,42 @@ public class Building : MonoBehaviour
     {
         return isAlive;
     }
+    private void CalculateMeshCenter()
+    {
+        MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+        Vector3 totalCenter = Vector3.zero;
+
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            totalCenter += meshRenderer.bounds.center;
+        }
+
+        meshCenterLocal = totalCenter / meshRenderers.Length;
+    }
+
+    public Vector3 GetMeshCenterInWorld()
+    {
+        Collider collider = GetComponent<Collider>();
+        if (collider)
+        {
+            return collider.bounds.center;
+        }
+        else
+        {
+            Debug.LogWarning("No Collider found on the GameObject! Using local mesh center instead.");
+            return transform.TransformPoint(meshCenterLocal);
+        }
+    }
 
     void OnDrawGizmos()
     {
         if (hasWeaponry)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, range);
+            Gizmos.DrawWireSphere(transform.position, attackRange);
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, transform.forward * range);
+            Gizmos.DrawRay(transform.position, transform.forward * attackRange);
             BulletScript bullet = projectilePrefab.GetComponent<BulletScript>();
 
             if (bullet != null)

@@ -6,32 +6,62 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
+    // Movement Settings
+    [Header("Movement")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float turnSpeed = 10f;
-    [SerializeField] private float health, maxHealth = 100f;
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float attackRange = 2f;
-    [SerializeField] private float attackRate = 1f;
-    [SerializeField] private Building.BuildingType[] attackPrioList;
 
+    // Health Settings
+    [Header("Health")]
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private HealthBar healthBar;
     [SerializeField] private GameObject[] flashDamageMeshes;
     private Material[] originalMaterials;
-
     public Material damageMaterial;
 
-    [SerializeField] private ParticleSystem onDeathVfx;
-
-    [SerializeField] private HealthBar healthBar;
-
+    // Attack Settings
+    [Header("Attack")]
+    [Header("Attack")]
+    [SerializeField] private float damage = 10f;
+    [SerializeField] private float secondsBetweenShots = 1f;  // Previously fireRate
+    [SerializeField] public float attackRange = 15f;
+    [SerializeField] private Building.BuildingType[] attackPrioList;
+    private float timeUntilNextShot = 0f;  // Previously fireCountdown
     private float attackCountdown = 0f;
-    private List<GameObject> sortedGameObjects = new List<GameObject>();
     private GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
 
-    private GameObject underAttackBy;
+    // Alert Settings
+    [Header("Alert")]
+    [SerializeField] private float alertRadius = 1f;
+    [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
+    public GameObject underAttackBy;
+    public bool isWarned = false;
     [SerializeField] private float moveToAttackerTime = 1;
     private bool isResettingUnderAttackBy = false;
     private Coroutine resetCoroutine;
+    public bool isAlive = true;
+
+    // VFX Settings
+    [Header("Visual Effects")]
+    [SerializeField] private ParticleSystem onDeathVfx1;
+    [SerializeField] private ParticleSystem onDeathVfx2;
+
+    // Weaponry Settings
+    [Header("Weaponry")]
+    [SerializeField] private GameObject topPart;
+    [SerializeField] private GameObject cannon;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform muzzlePoint;
+    [SerializeField] private bool hasFlamethrower = false;
+    [SerializeField] private ParticleSystem flamethrowerEffect;
+    [SerializeField] private float flamethrowerRange = 10f;
+    [SerializeField] private float flamethrowerAngle = 45f;
+
+    private List<GameObject> sortedGameObjects = new List<GameObject>();
+    private Vector3 meshCenterLocal;
+
 
     private void Awake()
     {
@@ -39,6 +69,7 @@ public class EnemyScript : MonoBehaviour
     }
     private void Start()
     {
+        CalculateMeshCenter();
         saveOriginalMaterials();
         healthBar.UpdateHealthBar(health, maxHealth);
         SortGameObjectsByDistance();
@@ -46,50 +77,87 @@ public class EnemyScript : MonoBehaviour
     }
     void Update()
     {
+        if (!isAlive) return;
+
+        UpdateTarget();
+        HandleAttackLogic();
+        HandleRotationTowardsTarget();
+    }
+
+    private void UpdateTarget()
+    {
         SortGameObjectsByDistance();
         gameObjectToAttack = FindHighestPriorityInAttackRange();
 
-        if (gameObjectToAttack == null)
+        if (gameObjectToAttack == null || !gameObjectToAttack.GetComponent<Building>().IsAlive())
         {
-            if (sortedGameObjects.Count > 0)
-            {
-                isInAttackRange = false;
-                return;
-            }
-            else
-            {
-                Debug.Log("No enemy to attack! " + this.gameObject);
-                return;
-            }
-        }
-        float distance;
-        if (underAttackBy)
-        {
-            distance = Vector3.Distance(transform.position, underAttackBy.transform.position);
-        }
-        else
-        {
-            distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
-        }
-        
-
-        if (distance <= attackRange)
-        {
-            isInAttackRange = true;
-            if (attackCountdown <= 0f)
-            {
-                //Debug.Log("Attacking from Distanz: " + distance + " Attack Range is: " + attackRange);
-                Attack(gameObjectToAttack);
-                attackCountdown = 1f / attackRate;
-            }
-
-            attackCountdown -= Time.deltaTime;
-        }
-        else
-        {
-            //Debug.Log("Moving to: " + goToAttack + " Range is: " + distance);
             isInAttackRange = false;
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Stop();
+            }
         }
+        else
+        {
+            float distance = Vector3.Distance(transform.position, gameObjectToAttack.transform.position);
+            isInAttackRange = distance <= attackRange;
+        }
+    }
+
+    private void HandleAttackLogic()
+    {
+        if (!isInAttackRange)
+        {
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Stop();
+            }
+            return;
+        }
+
+        if (hasFlamethrower)
+        {
+            // If the enemy has a flamethrower, apply cone damage
+            ApplyFlamethrowerDamage();
+
+            // Activate the flamethrower effect
+            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Play();
+            }
+        }
+        else
+        {
+            // If the enemy doesn't have a flamethrower, use projectiles
+            if (timeUntilNextShot <= 0f)
+            {
+                Shoot();
+                timeUntilNextShot = secondsBetweenShots;
+            }
+
+            // Deactivate the flamethrower effect, if it's playing
+            if (flamethrowerEffect != null && flamethrowerEffect.isPlaying)
+            {
+                flamethrowerEffect.Stop();
+            }
+        }
+
+        timeUntilNextShot -= Time.deltaTime;
+    }
+
+    private void HandleRotationTowardsTarget()
+    {
+        if (!isInAttackRange) return;
+
+        Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
+        Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
+        Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
+        topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
+
+        float heightDifference = gameObjectToAttack.transform.position.y - cannon.transform.position.y;
+        float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
+        float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+        cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
     }
 
     public void Move(int direction)
@@ -169,23 +237,90 @@ public class EnemyScript : MonoBehaviour
             }
         }
     }
+    void ApplyFlamethrowerDamage()
+    {
+        Collider[] colliders = Physics.OverlapSphere(muzzlePoint.position, flamethrowerRange);
+
+        foreach (Collider collider in colliders)
+        {
+            // Überprüfen Sie, ob das Objekt innerhalb des Kegelwinkels liegt
+            Vector3 directionToTarget = collider.transform.position - muzzlePoint.position;
+            float angleToTarget = Vector3.Angle(muzzlePoint.forward, directionToTarget);
+
+            if (angleToTarget < flamethrowerAngle / 2) // /2, da der Winkel in beide Richtungen vom Mittelpunkt aus geht
+            {
+                if (Enum.IsDefined(typeof(Building.BuildingType), collider.tag))
+                {
+                    Building building = collider.GetComponent<Building>();
+                    if (building)
+                    {
+                        building.TakeDamage(damage * Time.deltaTime);
+                    }
+                }
+            }
+        }
+    }
 
     private void Die()
     {
-        if (onDeathVfx) {   
-        ParticleSystem vfxInst = Instantiate(onDeathVfx, transform.position, transform.rotation);
+        if (!isAlive)
+            return;
 
-        Destroy(vfxInst, vfxInst.main.duration);
-        Destroy(gameObject);
+        isAlive = false;
+        this.tag = "Destroyed";
 
+        if (onDeathVfx1 && onDeathVfx2)
+        {
+            StartCoroutine(HandleDeathEffects());
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
-    
-    
+
+    private IEnumerator HandleDeathEffects()
+    {
+        // Start the first effect
+        ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
+        psInst1.Play();
+        Destroy(psInst1.gameObject, psInst1.main.duration);
+        yield return new WaitForSeconds(psInst1.main.duration);
+
+        // Deactivate the renderer after the first effect
+        DisableAllRenderers();
+
+        // Start the second effect
+        ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
+        psInst2.Play();
+        Destroy(psInst2.gameObject, psInst2.main.duration);
+        yield return new WaitForSeconds(psInst2.main.duration);
+
+        // Finally, destroy the enemy object
+        Destroy(gameObject);
+    }
+    private void DisableAllRenderers()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+    }
+
+    void Shoot()
+    {
+        Vector3 targetMeshCenter = gameObjectToAttack.GetComponent<Building>()?.GetMeshCenterInWorld() ?? gameObjectToAttack.transform.position;
+        GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
+        BulletScript projectile = projectileGO.GetComponent<BulletScript>();
+        if (projectile != null)
+        {
+            projectile.Seek(gameObjectToAttack.transform, targetMeshCenter, this.gameObject);
+        }
+    }
     void Attack(GameObject building)
     {
         var buildingScript = building.GetComponent<Building>();
-        
         buildingScript.TakeDamage(damage);
     }
 
@@ -197,6 +332,7 @@ public class EnemyScript : MonoBehaviour
 
             if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priorety
             {
+                AlertNearbyUnits();
                 if (isResettingUnderAttackBy)
                 {
                     StopCoroutine(resetCoroutine);
@@ -274,7 +410,7 @@ public class EnemyScript : MonoBehaviour
                 return i;
             }
         }
-        return -1; // R�ckgabe -1, wenn der Typ nicht in der Priorit�tsliste ist.
+        return -1; 
     }
 
     public bool getIsInAttackRange()
@@ -282,10 +418,118 @@ public class EnemyScript : MonoBehaviour
 
         return isInAttackRange;
     }
+    private void AlertNearbyUnits()
+    {
+        // Find all enemy units in alertRange
+        Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, alertRadius);
+        foreach (var enemyCollider in enemiesInRange)
+        {
+            // Check if the game object has the "Enemy" tag
+            if (enemyCollider.CompareTag("Enemy"))
+            {
+                EnemyScript enemy = enemyCollider.GetComponent<EnemyScript>();
+                if (enemy != null && enemy != this) // Avoid self-warning
+                {
+                    enemy.AlertFromOtherUnit(underAttackBy); // Informs other unity about attacker
+                }
+            }
+        }
+    }
+
+    public void AlertFromOtherUnit(GameObject target)
+    {
+        if (target == null || target.tag == "Destroyed")
+        {
+            Debug.LogError("Received alert for a non-existing or destroyed building.");
+            return;
+        }
+
+        if (!isWarned)
+        {
+            if (gameObjectToAttack == null)
+            {
+                isWarned = true;
+                this.underAttackBy = target;
+                StartCoroutine(ResetWarningAfterDuration());
+                return;
+            }
+            else
+            {
+                if (target.tag == "Destroyed")
+                {
+                    return;
+                }
+                int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
+                int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
+
+                if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priority
+                {
+                    isWarned = true;
+                    this.underAttackBy = target;
+                    StartCoroutine(ResetWarningAfterDuration());
+                }
+            }
+        }
+    }
+
+    private IEnumerator ResetWarningAfterDuration()
+    {
+        yield return new WaitForSeconds(alertDuration);
+        isWarned = false;
+        underAttackBy = null;
+    }
+    Vector3 GetMeshCenter(GameObject target)
+    {
+        MeshRenderer meshRenderer = target.GetComponent<MeshRenderer>();
+        if (meshRenderer)
+        {
+            return meshRenderer.bounds.center;
+        }
+        return target.transform.position;
+    }
+
+    private void CalculateMeshCenter()
+    {
+        MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+        Vector3 totalCenter = Vector3.zero;
+
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            totalCenter += meshRenderer.bounds.center;
+        }
+
+        meshCenterLocal = totalCenter / meshRenderers.Length;
+    }
+    public Vector3 GetMeshCenterInWorld()
+    {
+        return transform.TransformPoint(meshCenterLocal);
+    }
+
+    void DrawConeGizmo(Vector3 position, Vector3 direction, float angle, float range, Color color)
+    {
+        Gizmos.color = color;
+
+        float halfAngle = angle / 2.0f;
+
+        Vector3 line1 = Quaternion.LookRotation(direction) * Quaternion.Euler(0, halfAngle, 0) * Vector3.forward;
+        Vector3 line2 = Quaternion.LookRotation(direction) * Quaternion.Euler(0, -halfAngle, 0) * Vector3.forward;
+
+        Gizmos.DrawRay(position, line1 * range);
+        Gizmos.DrawRay(position, line2 * range);
+        Gizmos.DrawLine(position + line1 * range, position + line2 * range);
+    }
 
     void OnDrawGizmos()
     {
+        // Attackrange radius
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        // Alert Radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, alertRadius);
+
+        // Flamethrower Cone
+        DrawConeGizmo(muzzlePoint.position, muzzlePoint.forward, flamethrowerAngle, flamethrowerRange, Color.magenta);
     }
 }

@@ -23,19 +23,19 @@ MonoBehaviour:
     <AvailableInstances>k__BackingField: 10
     <MaxAvailableInstances>k__BackingField: 30
     <cornerPrefab>k__BackingField: {fileID: 0}
-    <icon>k__BackingField: {fileID: 21300000, guid: 5d07e234a28c5294b8c54c297c33b91c,
+    <icon>k__BackingField: {fileID: 21300000, guid: eb496d01d3490114dbefe993b0a54256,
       type: 3}
   - <Name>k__BackingField: WallCorner
     <ID>k__BackingField: 3
     <Size>k__BackingField: {x: 2, y: 2}
-    <Prefab>k__BackingField: {fileID: 288089230879727120, guid: be1356ac9e336af4ca9b22d6acd8af38,
+    <Prefab>k__BackingField: {fileID: 3190951224371716530, guid: 09de6142b1b9d5b4f818d3d2ccb31f93,
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 2
     <AvailableInstances>k__BackingField: 4
     <MaxAvailableInstances>k__BackingField: 10
     <cornerPrefab>k__BackingField: {fileID: 0}
-    <icon>k__BackingField: {fileID: 21300000, guid: a12791859ce5e81479615fd3343621bc,
+    <icon>k__BackingField: {fileID: 21300000, guid: 0ffaaa8cb33fdba459a2940a54aaa85d,
       type: 3}
   - <Name>k__BackingField: Ressource Tower
     <ID>k__BackingField: 4
