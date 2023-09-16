@@ -176,4 +176,13 @@ public class BulletScript : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == target.gameObject && collision.contacts.Length > 0)
+        {
+            Vector3 explosionPoint = collision.contacts[0].point;
+            HitTarget(explosionPoint, Quaternion.identity);
+        }
+    }
+
 }
