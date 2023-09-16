@@ -93,7 +93,7 @@ MonoBehaviour:
   buildingType: 2
   isAlive: 1
   fireRate: 0.2
-  range: 25
+  attackRange: 30
   fireSpan: 5
   turnSpeed: 0.2
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -127,7 +127,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetParticleSystem: {fileID: 5623217597396388010}
-  displayRadius: 5
 --- !u!1001 &1290389666939817688
 PrefabInstance:
   m_ObjectHideFlags: 0

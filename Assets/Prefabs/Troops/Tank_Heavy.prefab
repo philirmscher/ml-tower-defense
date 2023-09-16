@@ -103,8 +103,8 @@ MonoBehaviour:
   - {fileID: 3436178944905077764}
   - {fileID: 4914370326681716426}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
-  damage: 20
-  fireRate: 1
+  damage: 30
+  secondsBetweenShots: 3
   attackRange: 10
   attackPrioList: 02000000010000000300000000000000
   alertRadius: 5
@@ -182,7 +182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetParticleSystem: {fileID: 4694729652156931635}
-  displayRadius: 5
 --- !u!1001 &2957725474760727662
 PrefabInstance:
   m_ObjectHideFlags: 0

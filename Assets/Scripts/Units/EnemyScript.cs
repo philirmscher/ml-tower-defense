@@ -22,10 +22,12 @@ public class EnemyScript : MonoBehaviour
 
     // Attack Settings
     [Header("Attack")]
+    [Header("Attack")]
     [SerializeField] private float damage = 10f;
-    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float secondsBetweenShots = 1f;  // Previously fireRate
     [SerializeField] public float attackRange = 15f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
+    private float timeUntilNextShot = 0f;  // Previously fireCountdown
     private float attackCountdown = 0f;
     private GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
@@ -56,7 +58,6 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private ParticleSystem flamethrowerEffect;
     [SerializeField] private float flamethrowerRange = 10f;
     [SerializeField] private float flamethrowerAngle = 45f;
-    private float fireCountdown = 0f;
 
     private List<GameObject> sortedGameObjects = new List<GameObject>();
 
@@ -127,10 +128,10 @@ public class EnemyScript : MonoBehaviour
         else
         {
             // If the enemy doesn't have a flamethrower, use projectiles
-            if (fireCountdown <= 0f)
+            if (timeUntilNextShot <= 0f)
             {
                 Shoot();
-                fireCountdown = 1f / fireRate;
+                timeUntilNextShot = secondsBetweenShots;
             }
 
             // Deactivate the flamethrower effect, if it's playing
@@ -140,8 +141,7 @@ public class EnemyScript : MonoBehaviour
             }
         }
 
-        attackCountdown -= Time.deltaTime;
-        fireCountdown -= Time.deltaTime;
+        timeUntilNextShot -= Time.deltaTime;
     }
 
     private void HandleRotationTowardsTarget()
