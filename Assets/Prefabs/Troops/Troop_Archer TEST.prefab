@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 3954895316592747037}
   - component: {fileID: -3196758687151192861}
   - component: {fileID: 6268043741453109627}
-  m_Layer: 0
+  - component: {fileID: 963009251425965122}
+  m_Layer: 7
   m_Name: Troop_Archer TEST
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -89,15 +90,30 @@ MonoBehaviour:
   turnSpeed: 200
   health: 40
   maxHealth: 100
-  damage: 10
-  attackRange: 12
-  attackRate: 1
-  attackPrioList: 02000000010000000300000000000000
+  healthBar: {fileID: 1538124869643296065}
   flashDamageMeshes:
   - {fileID: 674917928335525968}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
-  healthBar: {fileID: 1538124869643296065}
+  damage: 10
+  fireRate: 1
+  attackRange: 12
+  attackPrioList: 02000000010000000300000000000000
+  alertRadius: 1
+  alertDuration: 1
+  underAttackBy: {fileID: 0}
+  isWarned: 0
   moveToAttackerTime: 1
+  isAlive: 1
+  onDeathVfx1: {fileID: 0}
+  onDeathVfx2: {fileID: 0}
+  topPart: {fileID: 0}
+  cannon: {fileID: 0}
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
+  hasFlamethrower: 0
+  flamethrowerEffect: {fileID: 0}
+  flamethrowerRange: 10
+  flamethrowerAngle: 45
 --- !u!195 &-3196758687151192861
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -141,6 +157,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1986145, y: 0.3265115, z: 1.7653196}
   m_Center: {x: 0.015968502, y: 0.16720438, z: 0.110979676}
+--- !u!114 &963009251425965122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7305793360486966212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deac796f0d29b7f498efc768f66eb07d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetParticleSystem: {fileID: 8233548025751305382, guid: 54b5c4051f7893d40a4400ebd5858e04,
+    type: 3}
+  displayRadius: 5
 --- !u!1001 &404377932521698561
 PrefabInstance:
   m_ObjectHideFlags: 0

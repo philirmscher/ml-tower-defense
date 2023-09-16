@@ -9,13 +9,17 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
     [SerializeField] private LayerMask placementLayermask;
     [SerializeField] private Material objectMaterial; // Das Material des 3D-Objekts, das den Shader verwendet.
-
+    [SerializeField] private LayerMask hoverLayerMask; // LayerMask to specify which objects can be hovered over to show the radius
     private Vector3 lastPosition;
 
     public event Action OnLeftClicked, OnRightClicked, OnExit, OnPressR, OnTabPressed;
+    private RadiusVisualizer lastHoveredObject;
 
     private void Update()
     {
+        HandleHover();
+        UpdateShaderUVCoordinates();
+
         if (Input.GetMouseButtonDown(0))
             OnLeftClicked?.Invoke();
         if (Input.GetMouseButtonDown(1))
@@ -26,8 +30,49 @@ public class InputManager : MonoBehaviour
             OnPressR?.Invoke();
         if (Input.GetKeyDown(KeyCode.Tab))
             OnTabPressed?.Invoke();
+    }
 
-        UpdateShaderUVCoordinates();
+    private void HandleHover()
+    {
+        if (IsPointerOverUI())
+            return;
+
+        Ray ray = sceneCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, hoverLayerMask))
+        {
+            RadiusVisualizer hoveredObject = hit.collider.GetComponent<RadiusVisualizer>();
+
+            if (hoveredObject != null)
+            {
+                if (lastHoveredObject != hoveredObject)
+                {
+                    if (lastHoveredObject != null)
+                    {
+                        lastHoveredObject.HideRadius();
+                    }
+                    hoveredObject.ShowRadius();
+                    lastHoveredObject = hoveredObject;
+                }
+            }
+            else
+            {
+                if (lastHoveredObject != null)
+                {
+                    lastHoveredObject.HideRadius();
+                    lastHoveredObject = null;
+                }
+            }
+        }
+        else
+        {
+            if (lastHoveredObject != null)
+            {
+                lastHoveredObject.HideRadius();
+                lastHoveredObject = null;
+            }
+        }
     }
 
     public bool IsPointerOverUI()

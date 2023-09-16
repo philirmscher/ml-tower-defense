@@ -40,7 +40,7 @@ public class Building : MonoBehaviour
     [SerializeField] private bool isAlive = true;
 
     [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float range = 15f;
+    [SerializeField] public float attackRange = 15f;
     [SerializeField] private float fireSpan = 10f;
     [SerializeField] private float turnSpeed = 10f;
 
@@ -63,7 +63,9 @@ public class Building : MonoBehaviour
     }
     void Start()
     {
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        if(hasWeaponry)
+            InvokeRepeating("UpdateTarget", 0f, 0.5f);
+
         health = maxHealth;
         healthBar.UpdateHealthBar(health, maxHealth);
         saveOriginalMaterials();
@@ -231,7 +233,7 @@ public class Building : MonoBehaviour
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= range)
+        if (nearestEnemy != null && shortestDistance <= attackRange)
         {
             target = nearestEnemy.transform;
             cannonStartPosition = muzzlePoint.position; // oder wo immer der Startpunkt des Geschosses sein sollte
@@ -265,10 +267,10 @@ public class Building : MonoBehaviour
         if (hasWeaponry)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, range);
+            Gizmos.DrawWireSphere(transform.position, attackRange);
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, transform.forward * range);
+            Gizmos.DrawRay(transform.position, transform.forward * attackRange);
             BulletScript bullet = projectilePrefab.GetComponent<BulletScript>();
 
             if (bullet != null)

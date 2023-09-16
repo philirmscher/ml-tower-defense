@@ -24,7 +24,7 @@ public class EnemyScript : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float damage = 10f;
     [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float attackRange = 15f;
+    [SerializeField] public float attackRange = 15f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
     private float attackCountdown = 0f;
     private GameObject gameObjectToAttack;
