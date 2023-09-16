@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trainingGround: {fileID: 2103790700}
-  amount: 6
+  amount: 1
   speed: 1
 --- !u!4 &527178027
 Transform:
@@ -4125,6 +4125,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 4652288592741410570, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     - {fileID: 3613580129125017993, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
+    - {fileID: 5893224641724910256, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     m_RemovedGameObjects:
     - {fileID: 319565205725055429, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     - {fileID: 5675032753339220670, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}

@@ -262,6 +262,12 @@ public class Building : MonoBehaviour
     {
         return isAlive;
     }
+    
+    public bool HasWeaponry()
+    {
+        return hasWeaponry;
+    }
+    
     private void CalculateMeshCenter()
     {
         MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();

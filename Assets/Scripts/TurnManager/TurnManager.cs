@@ -54,6 +54,7 @@ public class TurnManager : MonoBehaviour
 
     public void StartPreTurnPhase()
     {
+        RemoveAllEnemies();
         if(enemyWaveManager.type != PlayType.Training) RepairBuildings();
         isTurnPhase = false;
         if (timerText != null)
@@ -87,13 +88,6 @@ public class TurnManager : MonoBehaviour
         int seconds = (int) (timeSinceTurnStartInMs % 60f);
         int milliseconds = (int) ((timeSinceTurnStartInMs - (int) timeSinceTurnStartInMs) * 1000f);
         return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
-    }
-
-    public void EndTurn()
-    {
-        Debug.Log("Ending TURN!");
-        RemoveAllEnemies();
-        StartPreTurnPhase();
     }
 
     void RepairBuildings()

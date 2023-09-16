@@ -111,3 +111,18 @@ results/ppo/MLTD Behavior/MLTD Behavior-7259.pt
 results/ppo/run_logs/timers.json
 results/ppo/run_logs/training_status.json
 *.onnx
+results/ppo/MLTD Behavior.onnx
+results/ppo/MLTD Behavior/checkpoint.pt
+results/ppo/MLTD Behavior/events.out.tfevents.1694533437.NONE-10.48588.0
+results/ppo/MLTD Behavior/events.out.tfevents.1694883748.NONE-10.10048.0
+results/ppo/MLTD Behavior/MLTD Behavior-11159.pt
+results/ppo/MLTD Behavior/MLTD Behavior-17833.pt
+results/ppo/MLTD Behavior/MLTD Behavior-2411.pt
+results/ppo/MLTD Behavior/MLTD Behavior-2607.pt
+results/ppo/MLTD Behavior/MLTD Behavior-4348.pt
+results/ppo/MLTD Behavior/MLTD Behavior-4873.pt
+results/ppo/run_logs/timers.json
+results/ppo/run_logs/training_status.json
+*.onnx
+*.pt
+*.0

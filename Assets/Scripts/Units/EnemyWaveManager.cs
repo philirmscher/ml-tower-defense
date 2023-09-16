@@ -111,8 +111,8 @@ public class EnemyWaveManager : MonoBehaviour
     public void KillAll()
     {
         allEnemiesSpawned = false;
-        enemies.Clear();
         enemies.ForEach(Destroy);
+        enemies.Clear();
     }
     
     public void SpawnEnemy(int index, Vector3 position)
@@ -146,7 +146,6 @@ public class EnemyWaveManager : MonoBehaviour
             if (enemies[i] == null)
             {
                 enemies.RemoveAt(i);
-                if(type == PlayType.Training) agent.KilledBuilding();
                 i--;
             }
         }
@@ -154,7 +153,7 @@ public class EnemyWaveManager : MonoBehaviour
         if (allEnemiesSpawned && enemies.Count == 0)
         {
             allEnemiesSpawned = false;
-            if(type == PlayType.Training) agent.Win();
+            if(type == PlayType.Training) agent.Lose();
             turnManager.StartPreTurnPhase();
         }
     }

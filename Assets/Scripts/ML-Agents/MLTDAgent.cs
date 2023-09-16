@@ -13,7 +13,7 @@ public class MLTDAgent : Agent
     [SerializeField] private TurnManager turnManager;
     [SerializeField] private GameObject[] prefabs;
     private List<GameObject> placedGameObjects = new();
-    
+
     private SerializedGrids serializedGrids;
     private float timeAtStart;
 
@@ -25,42 +25,53 @@ public class MLTDAgent : Agent
 
     private void Update()
     {
-        if(placedGameObjects.Count == 0) return;
-        var objectsAlive = 0;
-        
-        if(Time.time - timeAtStart > 300)
+        if (Time.time - timeAtStart > 300)
         {
             Lose();
         }
         
+        var weaponsAlive = 0;
+
         foreach (var placedGameObject in placedGameObjects)
         {
             var building = placedGameObject.GetComponent<Building>();
             if (building.IsAlive())
-                objectsAlive++;
+            {
+                if (building.HasWeaponry())
+                    weaponsAlive++;
+            }
+            else if (building.HasWeaponry())
+            {
+                KilledBuilding();
+                placedGameObjects.Remove(placedGameObject);
+            }
+            else
+            {
+                placedGameObjects.Remove(placedGameObject);
+            }
         }
 
-        if (objectsAlive == 0)
+        if (weaponsAlive == 0)
         {
-            Lose();
+            Win();
         }
     }
 
     public override void OnEpisodeBegin()
     {
-        turnManager.StartPreTurnPhase();
-        
         //remove all placed objects
         foreach (var placedGameObject in placedGameObjects)
         {
             Destroy(placedGameObject);
         }
-        
+
         placedGameObjects.Clear();
         
+        turnManager.StartPreTurnPhase();
+
         //load random grid
         var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
-        
+
         foreach (var serializedGridObject in randomGrid.gridObjects)
         {
             var prefab = GetPrefabByName(serializedGridObject.name);
@@ -69,17 +80,17 @@ public class MLTDAgent : Agent
                 Debug.LogError($"Prefab with name {serializedGridObject.name} not found!");
                 continue;
             }
-            
+
             var rotation = Quaternion.Euler(serializedGridObject.rotation);
             var position = serializedGridObject.position;
             var newObject = Instantiate(prefab, position + placementPlatform.transform.position, rotation);
             placedGameObjects.Add(newObject);
-            
         }
+
         timeAtStart = Time.time;
         turnManager.StartTurnPhase();
     }
-    
+
     private GameObject GetPrefabByName(string name)
     {
         foreach (var prefab in prefabs)
@@ -98,9 +109,11 @@ public class MLTDAgent : Agent
         ActionSegment<float> continuousActions = actionsOut.ContinuousActions;
         continuousActions[0] = Input.GetAxis("Horizontal");
         ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
-        discreteActions[0] = Input.GetKey(KeyCode.Alpha1) ? 1 : Input.GetKey(KeyCode.Alpha2) ? 2 : Input.GetKey(KeyCode.Alpha3) ? 3 : 0;
+        discreteActions[0] = Input.GetKey(KeyCode.Alpha1) ? 1 :
+            Input.GetKey(KeyCode.Alpha2) ? 2 :
+            Input.GetKey(KeyCode.Alpha3) ? 3 : 0;
     }
-    
+
     public override void CollectObservations(VectorSensor sensor)
     {
         /*
@@ -116,23 +129,24 @@ public class MLTDAgent : Agent
         sensor.AddObservation(enemyPlacements[0].amount);
         sensor.AddObservation(enemyPlacements[1].amount);
         sensor.AddObservation(enemyPlacements[2].amount);
-        
+
         var gridSize = 40;
         var grid = new int[40][];
         for (var i = 0; i < gridSize; i++)
         {
             grid[i] = new int[gridSize];
         }
-        
+
         foreach (var placedGameObject in placedGameObjects)
         {
             var building = placedGameObject.GetComponent<Building>();
+            if (!building.IsAlive()) continue;
             var position = placedGameObject.transform.localPosition;
             var x = (int) (position.x + 20 - placementPlatform.transform.position.x);
             var z = (int) (position.z + 20 - placementPlatform.transform.position.z);
             grid[x][z] = GetTowerType(placedGameObject) + 1;
         }
-        
+
         foreach (var gridValue in grid)
         {
             foreach (var value in gridValue)
@@ -141,7 +155,7 @@ public class MLTDAgent : Agent
             }
         }
     }
-    
+
     private int GetTowerType(GameObject gameObject)
     {
         var index = 0;
@@ -154,7 +168,7 @@ public class MLTDAgent : Agent
 
             index++;
         }
-        
+
         return -1;
     }
 
@@ -169,7 +183,7 @@ public class MLTDAgent : Agent
          * Continuous Action
          * Placement Position
          */
-        
+
         var discreteActions = actions.DiscreteActions;
         var continuousActions = actions.ContinuousActions;
 
@@ -179,10 +193,11 @@ public class MLTDAgent : Agent
         {
             return;
         }
+
         var xScale = placementPlatform.transform.localScale.x;
         var zScale = placementPlatform.transform.localScale.z;
         var side = discreteActions[1];
-        
+
         var position = Vector3.zero;
         switch (side)
         {
@@ -199,9 +214,9 @@ public class MLTDAgent : Agent
                 position = new Vector3(0, 1, zScale / 2);
                 break;
         }
-        
+
         var otherCoordinate = continuousActions[0]; //value between -1 and 1
-        
+
         if (side == 0 || side == 1)
         {
             position.z = otherCoordinate * zScale / 2;
@@ -213,13 +228,13 @@ public class MLTDAgent : Agent
 
         enemyWaveManager.SpawnEnemy(towerType - 1, position + placementPlatform.transform.position);
     }
-    
+
     public void KilledBuilding()
     {
         AddReward(+1f);
         Debug.Log("Killed Building");
     }
-    
+
     public void Win()
     {
         AddReward(10);
@@ -227,10 +242,10 @@ public class MLTDAgent : Agent
         Debug.Log("Won " + GetCumulativeReward());
         EndEpisode();
     }
-    
+
     public void Lose()
     {
-        AddReward(-1f);
+        AddReward(-10f);
         Debug.Log("Lost " + GetCumulativeReward());
         EndEpisode();
     }
