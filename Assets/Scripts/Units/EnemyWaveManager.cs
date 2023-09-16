@@ -56,6 +56,11 @@ public class EnemyWaveManager : MonoBehaviour
         return EnemyWave;
     }
 
+    public void TrainingTurn()
+    {
+        turnManager.TrainingTurn();
+    }
+
     public void StartWave(EnemyWave enemyWave)
     {
         Debug.Log("Starting wave");
@@ -156,31 +161,51 @@ public class EnemyWaveManager : MonoBehaviour
         if (allEnemiesSpawned && enemies.Count == 0)
         {
             Debug.Log("All enemies killed!");
-            if(type == PlayType.Training) agent.Lose();
-            else turnManager.StartPreTurnPhase();
-            allEnemiesSpawned = false;
+            EndTurn(true);
         }
 
         if (turnManager.isTurnPhase)
         {
             var stillAlive = false;
-            foreach (var building in objectPlacer.GetPlacedGameObjects())
+            var buildings = type == PlayType.Training ? agent.placedGameObjects : objectPlacer.GetPlacedGameObjects();
+            foreach (var building in buildings)
             {
                 var buildingScript = building.GetComponent<Building>();
+                Debug.Log("Checking building");
                 if (buildingScript.HasWeaponry())
                 {
-                    if(buildingScript.IsAlive())
+                    Debug.Log("Building has weaponry");
+                    if (buildingScript.IsAlive())
+                    {
                         stillAlive = true;
+                        Debug.Log("Building is alive");
+                    }
                     else if(type == PlayType.Training) agent.KilledBuilding();
                 }
             }
 
             if (stillAlive || !allEnemiesSpawned) return;
             Debug.Log("All buildings destroyed!");
-            if(type == PlayType.Training) agent.Win(Time.time - turnManager.turnStartTimeInMs);
-            else turnManager.StartPreTurnPhase();
-            allEnemiesSpawned = false;
+            EndTurn(false);
         }
+        
+        if(180f < Time.time - turnManager.turnStartTimeInMs)
+        {
+            Debug.Log("Time ran out!");
+            EndTurn(true);
+        }
+    }
+    
+    private void EndTurn(bool win)
+    {
+        if (type == PlayType.Training)
+        {
+            if(!win) agent.Win(Time.time - turnManager.turnStartTimeInMs);
+            else agent.Lose();
+        }
+        
+        turnManager.StartPreTurnPhase();
+        allEnemiesSpawned = false;
     }
     
     private static Vector3 VariantVector(Vector3 vector)

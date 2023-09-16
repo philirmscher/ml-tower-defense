@@ -30,6 +30,11 @@ public class TurnManager : MonoBehaviour
     public bool isTurnPhase { get; private set; }
     public float turnStartTimeInMs { get; private set; }
     private int turnNumber = 1;
+    
+    public void TrainingTurn()
+    {
+        StartTurnPhase();
+    }
 
     public void StartTurnPhase()
     {

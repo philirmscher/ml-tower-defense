@@ -10,14 +10,13 @@ public class MLTDAgent : Agent
 {
     [SerializeField] private GameObject placementPlatform;
     [SerializeField] private EnemyWaveManager enemyWaveManager;
-    [SerializeField] private TurnManager turnManager;
     [SerializeField] private GameObject[] prefabs;
     [Header("Reward Settings")]
     [SerializeField] private float rewardPerKill = .1f;
-    [SerializeField] private float timeRewardDivisor = 100f;
+    [SerializeField] private float timeRewardDivisor = 63f;
     [SerializeField] private float winReward = 3f;
     [SerializeField] private float loseReward = -5f;
-    private List<GameObject> placedGameObjects = new();
+    public List<GameObject> placedGameObjects = new ();
 
     private SerializedGrids serializedGrids;
 
@@ -37,8 +36,6 @@ public class MLTDAgent : Agent
 
         placedGameObjects.Clear();
         
-        turnManager.StartPreTurnPhase();
-        Debug.Log("Episode Started");
 
         //load random grid
         var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
@@ -58,7 +55,7 @@ public class MLTDAgent : Agent
             placedGameObjects.Add(newObject);
         }
         
-        turnManager.StartTurnPhase();
+        enemyWaveManager.TrainingTurn();
     }
 
     private GameObject GetPrefabByName(string name)

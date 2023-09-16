@@ -184,7 +184,6 @@ public class EnemyScript : MonoBehaviour
     }
     private IEnumerator ResetUnderAttackBy()
     {
-        Debug.Log("Start Coroutine");
         isResettingUnderAttackBy = true;
         yield return new WaitForSeconds(moveToAttackerTime);
         underAttackBy = null;
