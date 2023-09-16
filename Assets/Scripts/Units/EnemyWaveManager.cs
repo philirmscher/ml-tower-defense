@@ -24,6 +24,7 @@ public enum PlayType
 public class EnemyWaveManager : MonoBehaviour
 {
     [SerializeField] private TurnManager turnManager;
+    [SerializeField] private ObjectPlacer objectPlacer;
     private List<GameObject> enemies = new ();
     private bool allEnemiesSpawned;
     private EnemyWave enemyWave;
@@ -57,6 +58,8 @@ public class EnemyWaveManager : MonoBehaviour
 
     public void StartWave(EnemyWave enemyWave)
     {
+        Debug.Log("Starting wave");
+        if(!turnManager.isTurnPhase) return;
         this.enemyWave = CopyEnemyWave(enemyWave);
         if(type == PlayType.Training)
         {
@@ -149,12 +152,34 @@ public class EnemyWaveManager : MonoBehaviour
                 i--;
             }
         }
-        
+
         if (allEnemiesSpawned && enemies.Count == 0)
         {
-            allEnemiesSpawned = false;
+            Debug.Log("All enemies killed!");
             if(type == PlayType.Training) agent.Lose();
-            turnManager.StartPreTurnPhase();
+            else turnManager.StartPreTurnPhase();
+            allEnemiesSpawned = false;
+        }
+
+        if (turnManager.isTurnPhase)
+        {
+            var stillAlive = false;
+            foreach (var building in objectPlacer.GetPlacedGameObjects())
+            {
+                var buildingScript = building.GetComponent<Building>();
+                if (buildingScript.HasWeaponry())
+                {
+                    if(buildingScript.IsAlive())
+                        stillAlive = true;
+                    else if(type == PlayType.Training) agent.KilledBuilding();
+                }
+            }
+
+            if (stillAlive || !allEnemiesSpawned) return;
+            Debug.Log("All buildings destroyed!");
+            if(type == PlayType.Training) agent.Win(Time.time - turnManager.turnStartTimeInMs);
+            else turnManager.StartPreTurnPhase();
+            allEnemiesSpawned = false;
         }
     }
     

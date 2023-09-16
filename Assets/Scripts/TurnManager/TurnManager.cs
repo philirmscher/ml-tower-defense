@@ -27,21 +27,23 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private PreviewSystem previewSystem;
 
-    bool isTurnPhase;
-    float turnStartTimeInMs;
+    public bool isTurnPhase { get; private set; }
+    public float turnStartTimeInMs { get; private set; }
     private int turnNumber = 1;
 
     public void StartTurnPhase()
     {
+        if(isTurnPhase) return;
+        isTurnPhase = true;
         if (playButton != null)
             playButton.SetActive(false);
         if (gridSystem != null)
             gridSystem.SetActive(false);
         if (placementUI != null)
             placementUI.SetActive(false);
+        turnStartTimeInMs = Time.time;
         if (timerText != null)
         {
-            turnStartTimeInMs = Time.time;
             timerText.SetText("00:00.000");
         }
 
@@ -49,14 +51,14 @@ public class TurnManager : MonoBehaviour
             previewSystem.StopShowingPreview();
 
         enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
-        isTurnPhase = true;
     }
 
     public void StartPreTurnPhase()
     {
+        if(!isTurnPhase) return;
+        isTurnPhase = false;
         RemoveAllEnemies();
         if(enemyWaveManager.type != PlayType.Training) RepairBuildings();
-        isTurnPhase = false;
         if (timerText != null)
             timerText.SetText("");
         if (turnNumberText != null)

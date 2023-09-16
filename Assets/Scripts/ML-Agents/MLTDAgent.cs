@@ -12,49 +12,19 @@ public class MLTDAgent : Agent
     [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private TurnManager turnManager;
     [SerializeField] private GameObject[] prefabs;
+    [Header("Reward Settings")]
+    [SerializeField] private float rewardPerKill = .1f;
+    [SerializeField] private float timeRewardDivisor = 100f;
+    [SerializeField] private float winReward = 3f;
+    [SerializeField] private float loseReward = -5f;
     private List<GameObject> placedGameObjects = new();
 
     private SerializedGrids serializedGrids;
-    private float timeAtStart;
 
     public void Awake()
     {
         var saveGridToFileScript = GetComponent<SaveGridToFileScript>();
         serializedGrids = saveGridToFileScript.GetGrids();
-    }
-
-    private void Update()
-    {
-        if (Time.time - timeAtStart > 300)
-        {
-            Lose();
-        }
-        
-        var weaponsAlive = 0;
-
-        foreach (var placedGameObject in placedGameObjects)
-        {
-            var building = placedGameObject.GetComponent<Building>();
-            if (building.IsAlive())
-            {
-                if (building.HasWeaponry())
-                    weaponsAlive++;
-            }
-            else if (building.HasWeaponry())
-            {
-                KilledBuilding();
-                placedGameObjects.Remove(placedGameObject);
-            }
-            else
-            {
-                placedGameObjects.Remove(placedGameObject);
-            }
-        }
-
-        if (weaponsAlive == 0)
-        {
-            Win();
-        }
     }
 
     public override void OnEpisodeBegin()
@@ -68,6 +38,7 @@ public class MLTDAgent : Agent
         placedGameObjects.Clear();
         
         turnManager.StartPreTurnPhase();
+        Debug.Log("Episode Started");
 
         //load random grid
         var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
@@ -86,8 +57,7 @@ public class MLTDAgent : Agent
             var newObject = Instantiate(prefab, position + placementPlatform.transform.position, rotation);
             placedGameObjects.Add(newObject);
         }
-
-        timeAtStart = Time.time;
+        
         turnManager.StartTurnPhase();
     }
 
@@ -231,21 +201,21 @@ public class MLTDAgent : Agent
 
     public void KilledBuilding()
     {
-        AddReward(+1f);
+        AddReward(rewardPerKill);
         Debug.Log("Killed Building");
     }
 
-    public void Win()
+    public void Win(float timeTaken)
     {
-        AddReward(10);
-        AddReward((300 - (Time.time - timeAtStart)) / 50);
+        AddReward(winReward);
+        AddReward(timeRewardDivisor / timeTaken);
         Debug.Log("Won " + GetCumulativeReward());
         EndEpisode();
     }
 
     public void Lose()
     {
-        AddReward(-10f);
+        AddReward(loseReward);
         Debug.Log("Lost " + GetCumulativeReward());
         EndEpisode();
     }
