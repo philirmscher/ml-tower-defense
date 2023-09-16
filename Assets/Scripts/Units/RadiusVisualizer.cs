@@ -24,7 +24,6 @@ public class RadiusVisualizer : MonoBehaviour
     {
         UpdateRadius();
         targetParticleSystem.Play();
-        Debug.Log("Showing radius for object: " + this.name);
     }
 
     public void HideRadius()
@@ -69,14 +68,12 @@ public class RadiusVisualizer : MonoBehaviour
             return buildingScript.attackRange;
         }
 
-        // Prüfen, ob ein EnemyScript angehängt ist
         EnemyScript enemyScript = gameObject.GetComponent<EnemyScript>();
         if (enemyScript != null)
         {
-            Debug.Log("EnemyScript detected on: " + gameObject.name + " with attackRange: " + enemyScript.attackRange);
             return enemyScript.attackRange;
         }
 
-        return 0f; // Standardwert, wenn weder Building noch EnemyScript angehängt ist
+        return 0f; 
     }
 }
