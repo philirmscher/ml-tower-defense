@@ -66,7 +66,7 @@ MonoBehaviour:
   buildingType: 0
   isAlive: 1
   fireRate: 0
-  range: 0
+  attackRange: 15
   fireSpan: 0
   turnSpeed: 0
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -90,8 +90,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.0229945, y: 2.3910818, z: 0.53847647}
-  m_Center: {x: 0, y: 1.1879168, z: 0.0025268793}
+  m_Size: {x: 2.0229945, y: 2.3910818, z: 2.022131}
+  m_Center: {x: 0, y: 1.1879168, z: -0.00069874525}
 --- !u!208 &8693116852888599050
 NavMeshObstacle:
   m_ObjectHideFlags: 0

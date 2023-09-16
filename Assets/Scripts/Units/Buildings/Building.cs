@@ -55,11 +55,12 @@ public class Building : MonoBehaviour
     private string enemyTag = "Enemy";
 
     private BulletScript lastFiredBulletScript;
+    private Vector3 meshCenterLocal;
     private void Awake()
     {
         healthBar = GetComponentInChildren<HealthBar>();
         this.gameObject.tag = buildingType.ToString();
-        //alivePrefab.tag = buildingType.ToString();
+        CalculateMeshCenter();
     }
     void Start()
     {
@@ -260,6 +261,32 @@ public class Building : MonoBehaviour
     public bool IsAlive()
     {
         return isAlive;
+    }
+    private void CalculateMeshCenter()
+    {
+        MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+        Vector3 totalCenter = Vector3.zero;
+
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            totalCenter += meshRenderer.bounds.center;
+        }
+
+        meshCenterLocal = totalCenter / meshRenderers.Length;
+    }
+
+    public Vector3 GetMeshCenterInWorld()
+    {
+        Collider collider = GetComponent<Collider>();
+        if (collider)
+        {
+            return collider.bounds.center;
+        }
+        else
+        {
+            Debug.LogWarning("No Collider found on the GameObject! Using local mesh center instead.");
+            return transform.TransformPoint(meshCenterLocal);
+        }
     }
 
     void OnDrawGizmos()

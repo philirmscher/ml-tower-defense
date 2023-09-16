@@ -60,7 +60,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float flamethrowerAngle = 45f;
 
     private List<GameObject> sortedGameObjects = new List<GameObject>();
-
+    private Vector3 meshCenterLocal;
 
 
     private void Awake()
@@ -69,6 +69,7 @@ public class EnemyScript : MonoBehaviour
     }
     private void Start()
     {
+        CalculateMeshCenter();
         saveOriginalMaterials();
         healthBar.UpdateHealthBar(health, maxHealth);
         SortGameObjectsByDistance();
@@ -309,11 +310,12 @@ public class EnemyScript : MonoBehaviour
 
     void Shoot()
     {
+        Vector3 targetMeshCenter = gameObjectToAttack.GetComponent<Building>()?.GetMeshCenterInWorld() ?? gameObjectToAttack.transform.position;
         GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
         BulletScript projectile = projectileGO.GetComponent<BulletScript>();
         if (projectile != null)
         {
-            projectile.Seek(gameObjectToAttack.transform, this.gameObject);
+            projectile.Seek(gameObjectToAttack.transform, targetMeshCenter, this.gameObject);
         }
     }
     void Attack(GameObject building)
@@ -476,6 +478,33 @@ public class EnemyScript : MonoBehaviour
         isWarned = false;
         underAttackBy = null;
     }
+    Vector3 GetMeshCenter(GameObject target)
+    {
+        MeshRenderer meshRenderer = target.GetComponent<MeshRenderer>();
+        if (meshRenderer)
+        {
+            return meshRenderer.bounds.center;
+        }
+        return target.transform.position;
+    }
+
+    private void CalculateMeshCenter()
+    {
+        MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+        Vector3 totalCenter = Vector3.zero;
+
+        foreach (MeshRenderer meshRenderer in meshRenderers)
+        {
+            totalCenter += meshRenderer.bounds.center;
+        }
+
+        meshCenterLocal = totalCenter / meshRenderers.Length;
+    }
+    public Vector3 GetMeshCenterInWorld()
+    {
+        return transform.TransformPoint(meshCenterLocal);
+    }
+
     void DrawConeGizmo(Vector3 position, Vector3 direction, float angle, float range, Color color)
     {
         Gizmos.color = color;

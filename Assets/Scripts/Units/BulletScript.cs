@@ -20,9 +20,19 @@ public class BulletScript : MonoBehaviour
     private Vector3 targetStartPosition;
     private float Animation;
 
-    public void Seek(Transform target, GameObject projectileOrigin)
+    private Vector3 targetPoint;
+
+    public void Seek(Transform _target, GameObject projectileOrigin)
     {
-        this.target = target;
+        this.target = _target;
+        this.targetPoint = _target.position;
+        this.projectileOrigin = projectileOrigin;
+    }
+
+    public void Seek(Transform _target, Vector3 targetMesh, GameObject projectileOrigin)
+    {
+        this.target = _target;
+        this.targetPoint = targetMesh;
         this.projectileOrigin = projectileOrigin;
     }
 
@@ -41,23 +51,27 @@ public class BulletScript : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        targetStartPosition = target.position;
-        rb = GetComponent<Rigidbody>();
-        if (flash != null)
+        if (target != null)
         {
-            var flashInstance = Instantiate(flash, transform.position, Quaternion.identity); 
-            flashInstance.transform.forward = target.position - transform.position; 
-            var flashPs = flashInstance.GetComponent<ParticleSystem>();
-            if (flashPs != null)
+            targetStartPosition = target.position;
+
+            if (flash != null)
             {
-                Destroy(flashInstance, flashPs.main.duration);
-            }
-            else
-            {
-                var flashPsParts = flashInstance.transform.GetChild(0).GetComponent<ParticleSystem>();
-                Destroy(flashInstance, flashPsParts.main.duration);
+                var flashInstance = Instantiate(flash, transform.position, Quaternion.identity);
+                flashInstance.transform.forward = target.position - transform.position;
+                var flashPs = flashInstance.GetComponent<ParticleSystem>();
+                if (flashPs != null)
+                {
+                    Destroy(flashInstance, flashPs.main.duration);
+                }
+                else
+                {
+                    var flashPsParts = flashInstance.transform.GetChild(0).GetComponent<ParticleSystem>();
+                    Destroy(flashInstance, flashPsParts.main.duration);
+                }
             }
         }
+        rb = GetComponent<Rigidbody>();
         Destroy(gameObject, 5);
     }
 
@@ -65,6 +79,7 @@ public class BulletScript : MonoBehaviour
     {
         if (target == null)
         {
+            Debug.Log("Projektil zerstört wegen fehlendem Ziel.");
             Destroy(gameObject);
             return;
         }
@@ -75,23 +90,29 @@ public class BulletScript : MonoBehaviour
             float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(targetStartPosition.x, targetStartPosition.z));
             if (distanceToTarget < 0.1f)
             {
-                HitTarget(targetStartPosition,Quaternion.identity);
+                HitTarget(targetStartPosition, Quaternion.identity);
                 return;
             }
         }
         else
         {
-            Vector3 direction = target.position - transform.position;
+            if (targetPoint == Vector3.zero)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Vector3 direction = targetPoint - transform.position;
             float distanceThisFrame = speed * Time.deltaTime;
 
             if (direction.magnitude <= distanceThisFrame)
             {
-                HitTarget(target.position,target.rotation);
+                HitTarget(targetPoint, Quaternion.identity); // Hier verwenden wir targetPoint statt target.position
                 return;
             }
 
             transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-            transform.LookAt(target);
+            transform.LookAt(targetPoint); // Auch hier verwenden wir targetPoint statt target
         }
     }
 
