@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public class EnemyPlacement
@@ -16,45 +17,192 @@ public class EnemyWave
     public List<EnemyPlacement> enemyPlacements;
 }
 
+[Serializable]
+public enum PlayType
+{
+    Demo,
+    Training,
+    Play
+}
+
 public class TurnManager : MonoBehaviour
 {
+    [SerializeField] private PlayType type;
     [SerializeField] private GameObject gridSystem;
     [SerializeField] private GameObject placementUI;
     [SerializeField] private GameObject playButton;
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private TMPro.TMP_Text turnNumberText;
     [SerializeField] private List<EnemyWave> enemyWaves;
-    [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private PreviewSystem previewSystem;
+    [SerializeField] private ObjectPlacer objectPlacer;
+    
+    [SerializeField] private float maxTurnTime = 180f;
+    
+    public UnityEvent<Building, int> onBuildingDestroyed;
+    public UnityEvent<EnemyScript> onEnemyKilled;
+    public UnityEvent<bool, float> onTurnEnd;
 
-    bool isTurnPhase;
-    float turnStartTimeInMs;
+    public EnemyWave currentEnemyWave;
+    private List<GameObject> enemies = new ();
+    private List<Building> buildings = new ();
+
+    public bool isTurnPhase { get; private set; }
+    public float turnStartTimeInMs { get; private set; }
     private int turnNumber = 1;
+    
+    public void EnemyKilled(EnemyScript enemyScript)
+    {
+        if(!isTurnPhase) return;
+        enemies.Remove(enemyScript.gameObject);
+        onEnemyKilled.Invoke(enemyScript);
+        
+        Debug.Log(enemies.Count);
+        Debug.Log(GetTroopCount());
+        
+        if (enemies.Count == 0 && GetTroopCount() == 0)
+        {
+            EndTurn(true);
+        }
+    }
+    
+    public void BuildingDestroyed(Building building)
+    {
+        if(!isTurnPhase) return;
+        var weaponsLeft = buildings.FindAll(b => b.GetBuildingType() == Building.BuildingType.Tower && b.IsAlive()).Count;
+        
+        onBuildingDestroyed.Invoke(building, weaponsLeft);
+        
+        if(building.GetBuildingType() == Building.BuildingType.Base) EndTurn(false);
+    }
+    
+    private void Update() {
+        if (isTurnPhase && Time.time - turnStartTimeInMs > maxTurnTime)
+        {
+            EndTurn(true);
+        }
+        if (isTurnPhase && timerText != null)
+        {
+            timerText.SetText(GetTimeSinceTurnStart());
+        }
+    }
+    
+    private void EndTurn(bool win)
+    {
+        if (win)
+        {
+            Debug.Log("You win!");
+        }
+        else
+        {
+            Debug.Log("You lose!");
+        }
+        StartPreTurnPhase();
+        buildings.Clear();
+        enemies.Clear();
+        onTurnEnd.Invoke(!win, Time.time - turnStartTimeInMs);
+    }
+    
+    public void RegisterBuilding(Building building)
+    {
+        building.turnManager = this;
+        buildings.Add(building);
+    }
+
+    public void SpawnEnemy(int index, Vector3 position)
+    {
+        if(currentEnemyWave == null) return;
+        
+        if(currentEnemyWave.enemyPlacements[index].amount <= 0)
+            return;
+        
+        currentEnemyWave.enemyPlacements[index].amount--;
+        
+        var enemy = Instantiate(currentEnemyWave.enemyPlacements[index].prefab,  position, Quaternion.identity);
+        enemy.AddComponent<StupidTroopAIScript>();
+        enemy.GetComponent<EnemyScript>().turnManager = this;
+        enemies.Add(enemy);
+    }
+    
+    private int GetTroopCount()
+    {
+        var troopCount = 0;
+        foreach (var enemyPlacement in currentEnemyWave.enemyPlacements)
+        {
+            troopCount += enemyPlacement.amount;
+        }
+
+        return troopCount;
+    }
 
     public void StartTurnPhase()
     {
+        if(isTurnPhase) return;
         if (playButton != null)
             playButton.SetActive(false);
         if (gridSystem != null)
             gridSystem.SetActive(false);
         if (placementUI != null)
             placementUI.SetActive(false);
+        turnStartTimeInMs = Time.time;
         if (timerText != null)
         {
-            turnStartTimeInMs = Time.time;
             timerText.SetText("00:00.000");
         }
 
-        previewSystem.StopShowingPreview();
+        if(previewSystem != null)
+            previewSystem.StopShowingPreview();
 
-        enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
+        if (objectPlacer != null)
+        {
+            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building.GetComponent<Building>()));
+            buildings.ForEach(building => building.turnManager = this);
+        }
+        
+        currentEnemyWave = type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave();
         isTurnPhase = true;
+        if (type == PlayType.Demo) StartDemoTurn();
+    }
+    
+    private void StartDemoTurn()
+    {
+        var index = 0;
+        foreach (var enemyPlacement in currentEnemyWave.enemyPlacements)
+        {
+            var amount = enemyPlacement.amount;
+            for (var i = 0; i < amount; i++)
+            {
+                SpawnEnemy(index, new Vector3(-15, 0, -15));
+            }
+            index++;
+        }
     }
 
-    public void StartPreTurnPhase()
+    private EnemyWave GenerateRandomEnemyWave()
     {
-        if(enemyWaveManager.type != PlayType.Training) RepairBuildings();
+        var enemyWave = new EnemyWave();
+        enemyWave.enemyPlacements = new List<EnemyPlacement>();
+        var amount = 0;
+        foreach (var enemyPlacement in enemyWaves[0].enemyPlacements)
+        {
+            var a = UnityEngine.Random.Range(0, 10);
+            enemyWave.enemyPlacements.Add(new EnemyPlacement
+            {
+                prefab = enemyPlacement.prefab,
+                amount = a
+            });
+            amount += a;
+        }
+        if(amount < 5) enemyWave.enemyPlacements[UnityEngine.Random.Range(0, enemyWaves[0].enemyPlacements.Count)].amount++;
+        return enemyWave;
+    }
+
+    private void StartPreTurnPhase()
+    {
+        if(!isTurnPhase) return;
         isTurnPhase = false;
+        RemoveAllEnemies();
+        if(type != PlayType.Training) RepairBuildings();
         if (timerText != null)
             timerText.SetText("");
         if (turnNumberText != null)
@@ -71,14 +219,6 @@ public class TurnManager : MonoBehaviour
             playButton.SetActive(true);
     }
 
-    private void Update()
-    {
-        if (isTurnPhase && timerText != null)
-        {
-            timerText.SetText(GetTimeSinceTurnStart());
-        }
-    }
-
     private string GetTimeSinceTurnStart()
     {
         float timeSinceTurnStartInMs = Time.time - turnStartTimeInMs;
@@ -88,25 +228,17 @@ public class TurnManager : MonoBehaviour
         return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
     }
 
-    public void EndTurn()
-    {
-        Debug.Log("Ending TURN!");
-        RemoveAllEnemies();
-        StartPreTurnPhase();
-    }
-
     void RepairBuildings()
     {
         Debug.Log("Rapair buildings!");
-        var buildings = GameObject.FindGameObjectsWithTag("Destroyed");
-        foreach(GameObject building in buildings)
+        foreach(var building in buildings)
         {
-            building.GetComponent<Building>().Repair();
+            building.Repair();
         }
     }
 
     public void RemoveAllEnemies()
     {
-        enemyWaveManager.KillAll();
+        enemies.ForEach(Destroy);
     }
 }
