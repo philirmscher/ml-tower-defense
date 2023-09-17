@@ -123,6 +123,7 @@ MonoBehaviour:
   flamethrowerEffect: {fileID: 7387677347412381837}
   flamethrowerRange: 9.28
   flamethrowerAngle: 44.4
+  turnManager: {fileID: 0}
 --- !u!195 &-1751145758520790846
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -178,7 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deac796f0d29b7f498efc768f66eb07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetParticleSystem: {fileID: 4404834008361398146}
+  maxRadiusParticleSystem: {fileID: 4404834008361398146}
+  minRadiusParticleSystem: {fileID: 0}
 --- !u!1001 &1941434743422168180
 PrefabInstance:
   m_ObjectHideFlags: 0

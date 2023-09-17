@@ -37,6 +37,7 @@ public class Building : MonoBehaviour
 
     [SerializeField] private float fireRate = 1f;
     [SerializeField] public float attackRange = 15f;
+    [SerializeField] public float minAttackRange = 0f;
     [SerializeField] private float fireSpan = 10f;
     [SerializeField] private float turnSpeed = 10f;
 
@@ -176,17 +177,17 @@ public class Building : MonoBehaviour
         {
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
 
-            if (distanceToEnemy < shortestDistance)
+            if (distanceToEnemy < shortestDistance && distanceToEnemy > minAttackRange) 
             {
                 shortestDistance = distanceToEnemy;
                 nearestEnemy = enemy;
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= attackRange)
+        if (nearestEnemy != null && shortestDistance <= attackRange) 
         {
             target = nearestEnemy.transform;
-            cannonStartPosition = muzzlePoint.position; // oder wo immer der Startpunkt des Geschosses sein sollte
+            cannonStartPosition = muzzlePoint.position;
             cannonTargetPosition = target.position;
         }
         else
@@ -194,6 +195,7 @@ public class Building : MonoBehaviour
             target = null;
         }
     }
+
 
     void Shoot()
     {
@@ -253,8 +255,11 @@ public class Building : MonoBehaviour
     {
         if (hasWeaponry)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, attackRange);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, minAttackRange);
 
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(transform.position, transform.forward * attackRange);

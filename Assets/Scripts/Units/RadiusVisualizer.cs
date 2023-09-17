@@ -3,55 +3,83 @@ using UnityEngine;
 
 public class RadiusVisualizer : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem targetParticleSystem;
+    [SerializeField] private ParticleSystem maxRadiusParticleSystem;
+    [SerializeField] private ParticleSystem minRadiusParticleSystem;
 
-    private ParticleSystem.MainModule mainModule;
-    private float displayRadius;
+    private ParticleSystem.MainModule mainModuleMax;
+    private ParticleSystem.MainModule mainModuleMin;
+    private float displayMaxRadius;
+    private float displayMinRadius;
     private void Awake()
     {
-        mainModule = targetParticleSystem.main;
+        mainModuleMax = maxRadiusParticleSystem.main;
+        mainModuleMin = minRadiusParticleSystem.main;
 
-        displayRadius = GetDisplayRadiusFromAttachedScripts();
-        if (displayRadius > 0)
+        GetDisplayRadiusFromAttachedScripts();
+
+        if (displayMaxRadius > 0)
         {
-            SetRadius(displayRadius);
+            SetRadius(mainModuleMax, displayMaxRadius);
+            HideRadius(maxRadiusParticleSystem);
         }
+        if (displayMinRadius > 0)
+        {
+            SetRadius(mainModuleMin, displayMinRadius);
+            HideRadius(minRadiusParticleSystem);
+        }
+    }
 
-        HideRadius();
+    public void ShowRadius(ParticleSystem ps, ParticleSystem.MainModule modul, float radius)
+    {
+        SetRadius(modul, radius);
+        ps.Play();
     }
 
     public void ShowRadius()
     {
-        UpdateRadius();
-        targetParticleSystem.Play();
+        if (displayMaxRadius > 0)
+        {
+            SetRadius(mainModuleMax, displayMaxRadius);
+            maxRadiusParticleSystem.Play();
+        }
+        if (displayMinRadius > 0)
+        {
+            SetRadius(mainModuleMin, displayMinRadius);
+            minRadiusParticleSystem.Play();
+        }
+    }
+
+    public void HideRadius(ParticleSystem ps)
+    {
+        StartCoroutine(FadeOutParticles(ps));
     }
 
     public void HideRadius()
     {
-        StartCoroutine(FadeOutParticles());
+        if(displayMaxRadius > 0)
+        {
+            StartCoroutine(FadeOutParticles(maxRadiusParticleSystem));
+        }
+        if (displayMinRadius > 0)
+        {
+            StartCoroutine(FadeOutParticles(minRadiusParticleSystem));
+        }
     }
 
-    private IEnumerator FadeOutParticles()
+    private IEnumerator FadeOutParticles(ParticleSystem ps)
     {
-        targetParticleSystem.Stop(); // Stop emitting new particles
+        ps.Stop(); // Stop emitting new particles
 
         // Wait until all particles are dead
-        while (targetParticleSystem.IsAlive(true))
+        while (ps.IsAlive(true))
         {
             yield return null;
         }
 
-        targetParticleSystem.Clear(); // Clear all particles
+        ps.Clear(); // Clear all particles
     }
 
-    private void UpdateRadius()
-    {
-        mainModule.startSize3D = true;
-        mainModule.startSizeX = displayRadius * 2; // Multiplied by 2 because it represents diameter
-        mainModule.startSizeY = displayRadius * 2;
-        // Set mainModule.startSizeZ if needed
-    }
-    private void SetRadius(float radius)
+    private void SetRadius(ParticleSystem.MainModule mainModule, float radius)
     {
         mainModule.startSize3D = true;
         mainModule.startSizeX = radius * 2; // Multiplied by 2 because it represents diameter
@@ -59,21 +87,22 @@ public class RadiusVisualizer : MonoBehaviour
         // Set mainModule.startSizeZ if needed
     }
 
-    private float GetDisplayRadiusFromAttachedScripts()
+    private void GetDisplayRadiusFromAttachedScripts()
     {
         // Prüfen, ob ein Building-Skript angehängt ist
         Building buildingScript = gameObject.GetComponent<Building>();
         if (buildingScript != null)
         {
-            return buildingScript.attackRange;
+            displayMaxRadius = buildingScript.attackRange;
+            displayMinRadius = buildingScript.minAttackRange;
         }
 
         EnemyScript enemyScript = gameObject.GetComponent<EnemyScript>();
         if (enemyScript != null)
         {
-            return enemyScript.attackRange;
+            displayMaxRadius = enemyScript.attackRange;
         }
 
-        return 0f; 
+        return; 
     }
 }

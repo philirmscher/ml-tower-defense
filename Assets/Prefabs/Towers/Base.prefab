@@ -310,6 +310,7 @@ MonoBehaviour:
   isAlive: 1
   fireRate: 0
   attackRange: 0
+  minAttackRange: 0
   fireSpan: 0
   turnSpeed: 0
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
@@ -343,7 +344,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: deac796f0d29b7f498efc768f66eb07d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetParticleSystem: {fileID: 9199936566696858233}
+  maxRadiusParticleSystem: {fileID: 9199936566696858233}
+  minRadiusParticleSystem: {fileID: 0}
 --- !u!1 &2253878985745849153
 GameObject:
   m_ObjectHideFlags: 0
