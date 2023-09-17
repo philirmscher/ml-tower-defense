@@ -56,6 +56,7 @@ public class PointsManager : MonoBehaviour
         var count = 0;
         foreach (var go in objectPlacer.GetPlacedGameObjects())
         {
+            if (go == null) continue;  // Skip if the GameObject is null
             if (go.name.Contains(n))
             {
                 if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
@@ -84,6 +85,7 @@ public class PointsManager : MonoBehaviour
         var count = 0;
         foreach (var go in objectPlacer.GetPlacedGameObjects())
         {
+            if (go == null) continue;  // Skip if the GameObject is null
             if (go.name.Contains(n))
             {
                 if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
