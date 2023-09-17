@@ -31,7 +31,7 @@ Transform:
   - {fileID: 8736115375273638379}
   - {fileID: 6427498292273809966}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8367694002541939016
 GameObject:
@@ -86,13 +86,17 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   placementPlatform: {fileID: 4935526838098480292}
-  enemyWaveManager: {fileID: 5321435831757271874}
-  turnManager: {fileID: 4911929502157547025}
   prefabs:
   - {fileID: 1317225403262561475, guid: 2f43fec325bac4f49a7711c542221367, type: 3}
   - {fileID: 5254891572220670329, guid: e02c1c1867fb68448ab8aabe2f965cbe, type: 3}
   - {fileID: 4170358188628373779, guid: f6f5cd5a81d3a1944918a16b3221dc8d, type: 3}
   - {fileID: 3190951224371716530, guid: a68e55b002f24a3478101dce53bf426b, type: 3}
+  rewardPerKill: 0.1
+  rewardForBaseKill: 1
+  timeRewardDivisor: 63
+  winReward: 3
+  loseReward: -5
+  turnManager: {fileID: 4911929502157547025}
 --- !u!114 &8239663533209003689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2596,6 +2600,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
         type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
+        type: 3}
       propertyPath: timerText
       value: 
       objectReference: {fileID: 0}
@@ -2612,6 +2621,11 @@ PrefabInstance:
     - target: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
         type: 3}
       propertyPath: placementUI
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
+        type: 3}
+      propertyPath: objectPlacer
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
@@ -3298,52 +3312,18 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3056780347224130974}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4152768964794823100, guid: 7e9b12d4b91162e48824fd0dff469432,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2872632680707645859}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e9b12d4b91162e48824fd0dff469432, type: 3}
---- !u!1 &4797208749438958054 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4152768964794823100, guid: 7e9b12d4b91162e48824fd0dff469432,
-    type: 3}
-  m_PrefabInstance: {fileID: 8877301507312633946}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2872632680707645859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4797208749438958054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f78873e89c5b4b94298b7fd63c922757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4911929502157547025 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4546436000346566219, guid: 7e9b12d4b91162e48824fd0dff469432,
     type: 3}
   m_PrefabInstance: {fileID: 8877301507312633946}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4797208749438958054}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c3b6ea043219c844b68deb49cb39b9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5321435831757271874 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3669038544992975640, guid: 7e9b12d4b91162e48824fd0dff469432,
-    type: 3}
-  m_PrefabInstance: {fileID: 8877301507312633946}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4797208749438958054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25ef798183fd794db10d264ea6fac1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &8736115375273638379 stripped

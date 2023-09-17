@@ -34,11 +34,28 @@ public class SaveGridToFileScript : MonoBehaviour
 
         foreach (var placedGameObject in placedGameObjects)
         {
+            if(placedGameObject == null) continue;
             var serializedGridObject = new SerializedGridObject();
+            Debug.Log(placedGameObject.name);
             serializedGridObject.name = placedGameObject.name.Substring(0, placedGameObject.name.Length - 7);
             serializedGridObject.position = placedGameObject.transform.position;
             serializedGridObject.rotation = placedGameObject.transform.rotation.eulerAngles;
             serializedGrid.gridObjects[placedGameObjects.IndexOf(placedGameObject)] = serializedGridObject;
+        }
+        
+        //resizes array
+        var notNullGridObjects = 0;
+        foreach (var serializedGridObject in serializedGrid.gridObjects)
+        {
+            if (serializedGridObject != null)
+                notNullGridObjects++;
+        }
+        
+        var newGridObjects = new SerializedGridObject[notNullGridObjects];
+        
+        for (int i = 0; i < notNullGridObjects; i++)
+        {
+            newGridObjects[i] = serializedGrid.gridObjects[i];
         }
 
         var path = Application.dataPath + "/ML-Agents/Grids.json";

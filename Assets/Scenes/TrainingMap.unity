@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trainingGround: {fileID: 2103790700}
-  amount: 6
+  amount: 1
   speed: 1
 --- !u!4 &527178027
 Transform:
@@ -4101,14 +4101,42 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: prefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: prefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 3190951224371716530, guid: 09de6142b1b9d5b4f818d3d2ccb31f93,
+        type: 3}
+    - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: prefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 1317225403262561475, guid: 6c392190e7942b8418a1cfb158b77cc4,
+        type: 3}
+    - target: {fileID: 4911929502157547025, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6352055884885018747, guid: 67ae5e3cf4f4b6348bab90d09811c720,
         type: 3}
       propertyPath: m_Name
       value: TrainingGround
       objectReference: {fileID: 0}
+    - target: {fileID: 6352055884885018747, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4652288592741410570, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     - {fileID: 3613580129125017993, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
+    - {fileID: 5893224641724910256, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     m_RemovedGameObjects:
     - {fileID: 319565205725055429, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}
     - {fileID: 5675032753339220670, guid: 67ae5e3cf4f4b6348bab90d09811c720, type: 3}

@@ -44,7 +44,7 @@ public class Building : MonoBehaviour
 
     [SerializeField] private HealthBar healthBar;
 
-
+    public TurnManager turnManager;
 
     private float fireCountdown = 0f;
     private Transform target;
@@ -142,6 +142,7 @@ public class Building : MonoBehaviour
             onDeathVfx.Play();
 
         isAlive = false;
+        turnManager.BuildingDestroyed(this);
         alivePrefab.SetActive(false);
         destroyedPrefab.SetActive(true);
         this.gameObject.tag = "Destroyed";
@@ -209,6 +210,17 @@ public class Building : MonoBehaviour
     {
         return isAlive;
     }
+    
+    public bool HasWeaponry()
+    {
+        return hasWeaponry;
+    }
+    
+    public BuildingType GetBuildingType()
+    {
+        return buildingType;
+    }
+    
     private void CalculateMeshCenter()
     {
         MeshRenderer[] meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
