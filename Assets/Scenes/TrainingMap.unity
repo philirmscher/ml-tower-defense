@@ -4104,13 +4104,19 @@ PrefabInstance:
     - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
         type: 3}
       propertyPath: prefabs.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
         type: 3}
       propertyPath: prefabs.Array.data[4]
       value: 
       objectReference: {fileID: 288089230879727120, guid: be1356ac9e336af4ca9b22d6acd8af38,
+        type: 3}
+    - target: {fileID: 4646083811944040102, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: prefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 1317225403262561475, guid: 6c392190e7942b8418a1cfb158b77cc4,
         type: 3}
     - target: {fileID: 6352055884885018747, guid: 67ae5e3cf4f4b6348bab90d09811c720,
         type: 3}
