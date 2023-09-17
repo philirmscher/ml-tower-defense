@@ -36,6 +36,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private TMPro.TMP_Text turnNumberText;
     [SerializeField] private GameObject postTurnUI;
+    [SerializeField] private GameObject speedButtons;
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private PreviewSystem previewSystem;
     [SerializeField] private ObjectPlacer objectPlacer;
@@ -92,10 +93,28 @@ public class TurnManager : MonoBehaviour
         }
     }
     
+    public void Set1XSpeed()
+    {
+        Time.timeScale = 1;
+    }
+    
+    public void Set2XSpeed()
+    {
+        Time.timeScale = 2;
+    }
+    
+    public void Set3XSpeed()
+    {
+        Time.timeScale = 4;
+    }
+    
     private void EndTurn(bool win)
     {
         if(!isTurnPhase) return;
         isTurnPhase = false;
+        if(type != PlayType.Training) Set1XSpeed();
+        if(speedButtons != null)
+            speedButtons.SetActive(false);
         if (win)
         {
             Debug.Log("You win!");
@@ -198,6 +217,8 @@ public class TurnManager : MonoBehaviour
             return;
         }
         
+        if(speedButtons != null)
+            speedButtons.SetActive(true);
         if (playButton != null)
             playButton.SetActive(false);
         if (gridSystem != null)
