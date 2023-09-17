@@ -1047,6 +1047,7 @@ MonoBehaviour:
       amount: 1
   previewSystem: {fileID: 2518582882676874133}
   objectPlacer: {fileID: 1464245883112882379}
+  placementSystem: {fileID: 3019477254054782058}
   maxTurnTime: 180
   onBuildingDestroyed:
     m_PersistentCalls:
@@ -6530,7 +6531,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8434965860971299622, guid: 9349bd35a97875647995a92a15228c95,
         type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: 7831995544749941494}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9349bd35a97875647995a92a15228c95, type: 3}
