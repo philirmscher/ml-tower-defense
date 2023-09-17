@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class EnemyPlacement
@@ -33,6 +35,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private TMPro.TMP_Text turnNumberText;
+    [SerializeField] private GameObject postTurnUI;
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private PreviewSystem previewSystem;
     [SerializeField] private ObjectPlacer objectPlacer;
@@ -43,13 +46,14 @@ public class TurnManager : MonoBehaviour
     public UnityEvent<EnemyScript> onEnemyKilled;
     public UnityEvent<bool, float> onTurnEnd;
 
-    public EnemyWave currentEnemyWave;
+    public EnemyWave currentEnemyWave { get; private set; }
     private List<GameObject> enemies = new ();
     private List<Building> buildings = new ();
 
     private bool isTurnPhase;
     private float turnStartTimeInMs;
     private int turnNumber = 1;
+    private int lives = 2;
     
     public void EnemyKilled(EnemyScript enemyScript)
     {
@@ -89,6 +93,8 @@ public class TurnManager : MonoBehaviour
     
     private void EndTurn(bool win)
     {
+        if(!isTurnPhase) return;
+        isTurnPhase = false;
         if (win)
         {
             Debug.Log("You win!");
@@ -96,11 +102,44 @@ public class TurnManager : MonoBehaviour
         else
         {
             Debug.Log("You lose!");
+            if(type != PlayType.Training) lives--;
         }
-        StartPreTurnPhase();
-        buildings.Clear();
-        enemies.Clear();
-        onTurnEnd.Invoke(!win, Time.time - turnStartTimeInMs);
+        var time = Time.time - turnStartTimeInMs;
+        onTurnEnd.Invoke(!win, time);
+
+        if (postTurnUI == null)
+        {
+            StartPreTurnPhase(win);
+            return;
+        }
+        var winLoseText = postTurnUI.transform.Find("WinLoseText").GetComponent<TMPro.TMP_Text>();
+        winLoseText.SetText(win ? "You win!" : "You lose!");
+        
+        var statusText = postTurnUI.transform.Find("Status").GetComponent<TMPro.TMP_Text>();
+        statusText.SetText(win ? "You have defeated the enemy in " + GetTimeSinceTurnStart() : lives > 0 ? "You have " + lives + " lives left" : "You have no lives left");
+        
+        postTurnUI.transform.Find("ContinueButton").gameObject.SetActive(win);
+        postTurnUI.transform.Find("RetryButton").gameObject.SetActive(!win && lives > 0);
+        postTurnUI.transform.Find("LeaveButton").gameObject.SetActive(!win && lives <= 0);
+        
+        postTurnUI.SetActive(true);
+    }
+    
+    public void Continue()
+    {
+        postTurnUI.SetActive(false);
+        StartPreTurnPhase(true);
+    }
+    
+    public void Retry()
+    {
+        postTurnUI.SetActive(false);
+        StartPreTurnPhase(false);
+    }
+    
+    public void Quit()
+    {
+        SceneManager.LoadScene("Main_Menu");
     }
     
     public void RegisterBuilding(Building building)
@@ -137,19 +176,26 @@ public class TurnManager : MonoBehaviour
 
     public void StartTurnPhase()
     {
+        if(isTurnPhase) return;
+        
         if (objectPlacer != null)
         {
-            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building.GetComponent<Building>()));
-            buildings.ForEach(building => building.turnManager = this);
+            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building != null ? building.GetComponent<Building>() : null));
+            buildings.ForEach(building => {
+                if (building != null)
+                {
+                    building.turnManager = this;
+                }
+            });
         }
+        
+        buildings.RemoveAll(building => building == null);
 
         if (buildings.Find(building => building.GetBuildingType() == Building.BuildingType.Base) == null)
         {
             Debug.Log("No base found!");
             return;
         }
-        
-        if(isTurnPhase) return;
         
         if (playButton != null)
             playButton.SetActive(false);
@@ -166,7 +212,7 @@ public class TurnManager : MonoBehaviour
         if(previewSystem != null)
             previewSystem.StopShowingPreview();
         
-        currentEnemyWave = type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave();
+        currentEnemyWave = CopyEnemyWave(type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave());
         isTurnPhase = true;
         if (type == PlayType.Demo) StartDemoTurn();
     }
@@ -204,17 +250,15 @@ public class TurnManager : MonoBehaviour
         return enemyWave;
     }
 
-    private void StartPreTurnPhase()
+    private void StartPreTurnPhase(bool won)
     {
-        if(!isTurnPhase) return;
-        isTurnPhase = false;
         RemoveAllEnemies();
         if(type != PlayType.Training) RepairBuildings();
         if (timerText != null)
             timerText.SetText("");
         if (turnNumberText != null)
         {
-            turnNumber++;
+            if(won) turnNumber++;
             turnNumberText.SetText($"Turn {turnNumber}");
         }
 
@@ -242,10 +286,28 @@ public class TurnManager : MonoBehaviour
         {
             building.Repair();
         }
+        buildings.Clear();
     }
 
-    public void RemoveAllEnemies()
+    private void RemoveAllEnemies()
     {
         enemies.ForEach(Destroy);
+        enemies.Clear();
+    }
+    
+    private EnemyWave CopyEnemyWave(EnemyWave enemyWave)
+    {
+        var newEnemyWave = new EnemyWave();
+        newEnemyWave.enemyPlacements = new List<EnemyPlacement>();
+        foreach (var enemyPlacement in enemyWave.enemyPlacements)
+        {
+            newEnemyWave.enemyPlacements.Add(new EnemyPlacement
+            {
+                prefab = enemyPlacement.prefab,
+                amount = enemyPlacement.amount
+            });
+        }
+
+        return newEnemyWave;
     }
 }
