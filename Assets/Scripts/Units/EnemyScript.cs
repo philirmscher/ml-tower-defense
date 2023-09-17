@@ -248,7 +248,7 @@ public class EnemyScript : MonoBehaviour
 
             if (angleToTarget < flamethrowerAngle / 2) // /2, da der Winkel in beide Richtungen vom Mittelpunkt aus geht
             {
-                if (Enum.IsDefined(typeof(Building.BuildingType), collider.tag))
+                if (collider.tag != "Destroyed" && Enum.IsDefined(typeof(Building.BuildingType), collider.tag))
                 {
                     Building building = collider.GetComponent<Building>();
                     if (building)
@@ -454,10 +454,6 @@ public class EnemyScript : MonoBehaviour
             }
             else
             {
-                if (target.tag == "Destroyed")
-                {
-                    return;
-                }
                 int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
                 int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
 
@@ -470,6 +466,7 @@ public class EnemyScript : MonoBehaviour
             }
         }
     }
+
 
     private IEnumerator ResetWarningAfterDuration()
     {

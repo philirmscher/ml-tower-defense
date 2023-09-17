@@ -71,7 +71,7 @@ MonoBehaviour:
   - {fileID: 5513771834365031250}
   - {fileID: 2817073069616157084}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
-  damage: 70
+  damage: 45
   secondsBetweenShots: 5
   attackRange: 20
   attackPrioList: 02000000010000000300000000000000
