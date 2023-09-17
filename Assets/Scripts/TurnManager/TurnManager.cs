@@ -37,6 +37,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private PreviewSystem previewSystem;
     [SerializeField] private ObjectPlacer objectPlacer;
     
+    [SerializeField] private float maxTurnTime = 180f;
+    
     public UnityEvent<Building, int> onBuildingDestroyed;
     public UnityEvent<EnemyScript> onEnemyKilled;
     public UnityEvent<bool, float> onTurnEnd;
@@ -67,12 +69,22 @@ public class TurnManager : MonoBehaviour
     public void BuildingDestroyed(Building building)
     {
         if(!isTurnPhase) return;
-        buildings.Remove(building);
-        var weaponsLeft = buildings.FindAll(b => b.GetBuildingType() == Building.BuildingType.Tower).Count;
+        var weaponsLeft = buildings.FindAll(b => b.GetBuildingType() == Building.BuildingType.Tower && b.IsAlive()).Count;
         
         onBuildingDestroyed.Invoke(building, weaponsLeft);
         
         if(building.GetBuildingType() == Building.BuildingType.Base) EndTurn(false);
+    }
+    
+    private void Update() {
+        if (isTurnPhase && Time.time - turnStartTimeInMs > maxTurnTime)
+        {
+            EndTurn(true);
+        }
+        if (isTurnPhase && timerText != null)
+        {
+            timerText.SetText(GetTimeSinceTurnStart());
+        }
     }
     
     private void EndTurn(bool win)
@@ -88,7 +100,7 @@ public class TurnManager : MonoBehaviour
         StartPreTurnPhase();
         buildings.Clear();
         enemies.Clear();
-        onTurnEnd.Invoke(win, Time.time - turnStartTimeInMs);
+        onTurnEnd.Invoke(!win, Time.time - turnStartTimeInMs);
     }
     
     public void RegisterBuilding(Building building)
@@ -157,7 +169,8 @@ public class TurnManager : MonoBehaviour
         var index = 0;
         foreach (var enemyPlacement in currentEnemyWave.enemyPlacements)
         {
-            for (var i = 0; i < enemyPlacement.amount; i++)
+            var amount = enemyPlacement.amount;
+            for (var i = 0; i < amount; i++)
             {
                 SpawnEnemy(index, new Vector3(-15, 0, -15));
             }
@@ -206,14 +219,6 @@ public class TurnManager : MonoBehaviour
             playButton.SetActive(true);
     }
 
-    private void Update()
-    {
-        if (isTurnPhase && timerText != null)
-        {
-            timerText.SetText(GetTimeSinceTurnStart());
-        }
-    }
-
     private string GetTimeSinceTurnStart()
     {
         float timeSinceTurnStartInMs = Time.time - turnStartTimeInMs;
@@ -226,10 +231,9 @@ public class TurnManager : MonoBehaviour
     void RepairBuildings()
     {
         Debug.Log("Rapair buildings!");
-        var buildings = GameObject.FindGameObjectsWithTag("Destroyed");
-        foreach(GameObject building in buildings)
+        foreach(var building in buildings)
         {
-            building.GetComponent<Building>().Repair();
+            building.Repair();
         }
     }
 

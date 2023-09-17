@@ -4118,6 +4118,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1317225403262561475, guid: 6c392190e7942b8418a1cfb158b77cc4,
         type: 3}
+    - target: {fileID: 4911929502157547025, guid: 67ae5e3cf4f4b6348bab90d09811c720,
+        type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6352055884885018747, guid: 67ae5e3cf4f4b6348bab90d09811c720,
         type: 3}
       propertyPath: m_Name

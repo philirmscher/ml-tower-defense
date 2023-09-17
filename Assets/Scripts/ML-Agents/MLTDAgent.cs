@@ -232,9 +232,8 @@ public class MLTDAgent : Agent
             }
             AddReward(rewardForBaseKill);
         }
-        else
+        else if(building.GetBuildingType() == Building.BuildingType.Tower)
             AddReward(rewardPerKill);
-        Debug.Log("Killed Building");
     }
 
     private void Win(float timeTaken)
