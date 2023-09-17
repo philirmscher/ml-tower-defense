@@ -6,6 +6,7 @@ public class PointsManager : MonoBehaviour
 {
     [SerializeField] private int points;
     [SerializeField] private ObjectsDataBase database;
+    [SerializeField] private ObjectPlacer objectPlacer;
 
     private List<int> availableInstancesList;
 
@@ -51,6 +52,19 @@ public class PointsManager : MonoBehaviour
 
     public bool CheckPlaceObject(int databaseObjectIndex)
     {
+        var n = database.objectsData[databaseObjectIndex].Prefab.name;
+        var count = 0;
+        foreach (var go in objectPlacer.GetPlacedGameObjects())
+        {
+            if (go.name.Contains(n))
+            {
+                if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
+                {
+                    Debug.Log("No available Instances!");
+                    return false;
+                }
+            }
+        }
         if (availableInstancesList[databaseObjectIndex] > 0)
             return true;
         else
@@ -66,7 +80,20 @@ public class PointsManager : MonoBehaviour
 
     public void PlaceObject(int databaseObjectIndex)
     {
-
+        var n = database.objectsData[databaseObjectIndex].Prefab.name;
+        var count = 0;
+        foreach (var go in objectPlacer.GetPlacedGameObjects())
+        {
+            if (go.name.Contains(n))
+            {
+                if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
+                {
+                    Debug.Log("No available Instances!");
+                    return;
+                }
+            }
+        }
+        
         if(availableInstancesList[databaseObjectIndex] > 0)
         {
             availableInstancesList[databaseObjectIndex] -= 1;
