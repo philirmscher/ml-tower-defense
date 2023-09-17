@@ -16,8 +16,6 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float health;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private HealthBar healthBar;
-    [SerializeField] private GameObject[] flashDamageMeshes;
-    private Material[] originalMaterials;
     public Material damageMaterial;
 
     // Attack Settings
@@ -70,7 +68,6 @@ public class EnemyScript : MonoBehaviour
     private void Start()
     {
         CalculateMeshCenter();
-        saveOriginalMaterials();
         healthBar.UpdateHealthBar(health, maxHealth);
         SortGameObjectsByDistance();
         gameObjectToAttack = FindHighestPriorityInAttackRange();
@@ -175,7 +172,6 @@ public class EnemyScript : MonoBehaviour
         underAttackBy = attacker;
         health -= amount;
         healthBar.UpdateHealthBar(health, maxHealth);
-        StartCoroutine(FlashDamage());
 
         if (health <= 0f)
         {
@@ -190,52 +186,6 @@ public class EnemyScript : MonoBehaviour
         isResettingUnderAttackBy = false;
     }
 
-    IEnumerator FlashDamage()
-    {
-        if (flashDamageMeshes.Length != 0 && originalMaterials != null)
-        {
-            setMaterials(damageMaterial);
-            yield return new WaitForSeconds(0.1f);
-            setMaterials(originalMaterials);
-
-        }
-    }
-
-    private void setMaterials(Material material)
-    {
-        int index = 0;
-        foreach (GameObject flashDamageMesh in flashDamageMeshes)
-        {
-            flashDamageMeshes[index].GetComponent<Renderer>().material = material;
-            index++;
-        }
-    }
-
-    private void setMaterials(Material[] material)
-    {
-        int index = 0;
-        foreach (GameObject flashDamageMesh in flashDamageMeshes)
-        {
-            flashDamageMeshes[index].GetComponent<Renderer>().material = material[index];
-            index++;
-        }
-    }
-
-
-    private void saveOriginalMaterials()
-    {
-
-        if (flashDamageMeshes.Length != 0 && originalMaterials == null)
-        {
-            originalMaterials = new Material[flashDamageMeshes.Length];
-            int index = 0;
-            foreach (GameObject flashDamageMesh in flashDamageMeshes)
-            {
-                originalMaterials[index] = flashDamageMeshes[index].GetComponent<Renderer>().material;
-                index++;
-            }
-        }
-    }
     void ApplyFlamethrowerDamage()
     {
         Collider[] colliders = Physics.OverlapSphere(muzzlePoint.position, flamethrowerRange);

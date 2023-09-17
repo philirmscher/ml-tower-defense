@@ -29,10 +29,6 @@ public class Building : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
 
-
-    [SerializeField] private GameObject[] flashDamageMeshes;
-    private Material[] originalMaterials;
-
     [SerializeField] private ParticleSystem onDeathVfx;
 
     [SerializeField] private float health, maxHealth = 100f;
@@ -69,7 +65,6 @@ public class Building : MonoBehaviour
 
         health = maxHealth;
         healthBar.UpdateHealthBar(health, maxHealth);
-        saveOriginalMaterials();
 
     }
 
@@ -139,54 +134,6 @@ public class Building : MonoBehaviour
     {
         health -= amount;
         healthBar.UpdateHealthBar(health, maxHealth);
-        StartCoroutine(FlashDamage());
-    }
-
-    IEnumerator FlashDamage()
-    {
-        if(flashDamageMeshes.Length != 0 && originalMaterials != null)
-        {
-            setMaterials(damageMaterial);
-            yield return new WaitForSeconds(0.1f);
-            setMaterials(originalMaterials);
-
-        }
-    }
-
-    private void setMaterials(Material material)
-    {
-        int index = 0;
-        foreach (GameObject flashDamageMesh in flashDamageMeshes)
-        {
-            flashDamageMeshes[index].GetComponent<Renderer>().material = material;
-            index++;
-        }
-    }
-
-    private void setMaterials(Material[] material)
-    {
-        int index = 0;
-        foreach (GameObject flashDamageMesh in flashDamageMeshes)
-        {
-            flashDamageMeshes[index].GetComponent<Renderer>().material = material[index];
-            index++;
-        }
-    }
-
-
-    private void saveOriginalMaterials()
-    {
-
-        if (flashDamageMeshes.Length != 0 && originalMaterials == null)
-        {
-            originalMaterials = new Material[flashDamageMeshes.Length];
-            int index = 0;
-            foreach (GameObject flashDamageMesh in flashDamageMeshes)
-            {
-                originalMaterials[index] = flashDamageMeshes[index].GetComponent<Renderer>().material;
-                index++;
-            }
-        }
     }
 
     void Die()
