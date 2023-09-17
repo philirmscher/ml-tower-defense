@@ -303,8 +303,6 @@ MonoBehaviour:
   cannon: {fileID: 0}
   projectilePrefab: {fileID: 0}
   muzzlePoint: {fileID: 0}
-  flashDamageMeshes:
-  - {fileID: 667650871511671243}
   onDeathVfx: {fileID: 3324408151218783254}
   health: 250
   maxHealth: 250

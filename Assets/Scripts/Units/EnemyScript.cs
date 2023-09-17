@@ -27,7 +27,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private Building.BuildingType[] attackPrioList;
     private float timeUntilNextShot = 0f;  // Previously fireCountdown
     private float attackCountdown = 0f;
-    private GameObject gameObjectToAttack;
+    public GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
 
     // Alert Settings
@@ -298,6 +298,17 @@ public class EnemyScript : MonoBehaviour
                 else
                 {
                     return null;
+                }
+            }
+        }
+
+        if (sortedGameObjects.Count > 0 && sortedGameObjects[0].tag == "Wall")
+        {
+            for (int i = 1; i < sortedGameObjects.Count; i++)
+            {
+                if (sortedGameObjects[i].tag != "Wall")
+                {
+                    return sortedGameObjects[i];
                 }
             }
         }

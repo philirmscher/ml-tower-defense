@@ -6,11 +6,9 @@ using UnityEngine.AI;
 
 public class StupidTroopAIScript : MonoBehaviour
 {
-    Transform target;
-    
     [SerializeField] private float speed = 5f;
     private NavMeshAgent agent;
-    private GameObject gameObjectToAttack;
+    private GameObject target;
     private EnemyScript enemyScript;
     private void Awake()
     {
@@ -18,7 +16,8 @@ public class StupidTroopAIScript : MonoBehaviour
     }
     private void Start()
     {
-        gameObjectToAttack = this.GetComponent<EnemyScript>().getNearestObject();
+        target = this.GetComponent<EnemyScript>().getNearestObject();
+        agent.SetDestination(target.transform.position);
     }
 
     private void Update()
@@ -40,16 +39,20 @@ public class StupidTroopAIScript : MonoBehaviour
             return;
         }
 
-        gameObjectToAttack = enemyScript.getNearestObject();
+        GameObject newTarget = enemyScript.getNearestObject();
 
         if (enemyScript.isWarned && enemyScript.underAttackBy)
         {
             agent.isStopped = false;
-            agent.SetDestination(enemyScript.underAttackBy.transform.position);
+            if (newTarget.transform.position != target.transform.position || target == null)
+            {
+                target = newTarget;
+                agent.SetDestination(target.transform.position);
+            }
             return;
         }
 
-        if (gameObjectToAttack == null)
+        if (newTarget == null)
         {
             GameObject gameManager = GameObject.Find("GameManager");
             if (gameManager)
@@ -61,16 +64,20 @@ public class StupidTroopAIScript : MonoBehaviour
             return;
         }
 
-        target = gameObjectToAttack.transform;
 
-        if (enemyScript.getIsInAttackRange())
+        if (enemyScript.getIsInAttackRange() && enemyScript.gameObjectToAttack.tag != "Wall")
         {
             agent.isStopped = true;
         }
         else
         {
             agent.isStopped = false;
-            agent.SetDestination(target.position);
+
+            if (newTarget.transform.position != target.transform.position || target == null)
+            {
+                target = newTarget;
+                agent.SetDestination(target.transform.position);
+            }
         }
         
     }
