@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -58,6 +59,8 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private ParticleSystem flamethrowerEffect;
     [SerializeField] private float flamethrowerRange = 10f;
     [SerializeField] private float flamethrowerAngle = 45f;
+    
+    public TurnManager turnManager;
 
     private List<GameObject> sortedGameObjects = new List<GameObject>();
     private Vector3 meshCenterLocal;
@@ -266,6 +269,7 @@ public class EnemyScript : MonoBehaviour
             return;
 
         isAlive = false;
+        turnManager.EnemyKilled(this);
         this.tag = "Destroyed";
 
         if (onDeathVfx1 && onDeathVfx2)

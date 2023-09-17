@@ -4,38 +4,52 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MLTDAgent : Agent
 {
     [SerializeField] private GameObject placementPlatform;
-    [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private GameObject[] prefabs;
     [Header("Reward Settings")]
     [SerializeField] private float rewardPerKill = .1f;
+    [SerializeField] private float rewardForBaseKill = 1f;
     [SerializeField] private float timeRewardDivisor = 63f;
     [SerializeField] private float winReward = 3f;
     [SerializeField] private float loseReward = -5f;
-    public List<GameObject> placedGameObjects = new ();
+    [SerializeField] private TurnManager turnManager;
+    private List<GameObject> placedGameObjects = new ();
 
     private SerializedGrids serializedGrids;
 
-    public void Awake()
+    public void Start()
     {
         var saveGridToFileScript = GetComponent<SaveGridToFileScript>();
         serializedGrids = saveGridToFileScript.GetGrids();
+        turnManager.onBuildingDestroyed.AddListener(KilledBuilding);
+        turnManager.onTurnEnd.AddListener((won, time) =>
+        {
+            if (won)
+            {
+                Win(time);
+            }
+            else
+            {
+                Lose();
+            }
+        });
     }
 
     public override void OnEpisodeBegin()
     {
-        //remove all placed objects
+        Debug.Log("Started Episode");
+        
         foreach (var placedGameObject in placedGameObjects)
         {
             Destroy(placedGameObject);
         }
-
-        placedGameObjects.Clear();
         
+        placedGameObjects.Clear();
 
         //load random grid
         var randomGrid = serializedGrids.grids[UnityEngine.Random.Range(0, serializedGrids.grids.Length)];
@@ -53,9 +67,11 @@ public class MLTDAgent : Agent
             var position = serializedGridObject.position;
             var newObject = Instantiate(prefab, position + placementPlatform.transform.position, rotation);
             placedGameObjects.Add(newObject);
+            turnManager.RegisterBuilding(newObject.GetComponent<Building>());
         }
         
-        enemyWaveManager.TrainingTurn();
+        turnManager.StartTurnPhase();
+        Debug.Log("Started Turn");
     }
 
     private GameObject GetPrefabByName(string name)
@@ -91,11 +107,20 @@ public class MLTDAgent : Agent
          * 6: Tank Amount
          * 7-631: Grid with Placement Positions and Tower Types (0: None, 1: Sniper, 2: Machine Gun, 3: Morter)
          */
-        var wave = enemyWaveManager.GetWave();
-        var enemyPlacements = wave.enemyPlacements;
-        sensor.AddObservation(enemyPlacements[0].amount);
-        sensor.AddObservation(enemyPlacements[1].amount);
-        sensor.AddObservation(enemyPlacements[2].amount);
+        var wave = turnManager.currentEnemyWave;
+        if (wave == null)
+        {
+            sensor.AddObservation(0f);
+            sensor.AddObservation(0f);
+            sensor.AddObservation(0f);
+        }
+        else
+        {
+            var enemyPlacements = wave.enemyPlacements;
+            sensor.AddObservation(enemyPlacements[0].amount);
+            sensor.AddObservation(enemyPlacements[1].amount);
+            sensor.AddObservation(enemyPlacements[2].amount);
+        }
 
         var gridSize = 40;
         var grid = new int[40][];
@@ -106,6 +131,7 @@ public class MLTDAgent : Agent
 
         foreach (var placedGameObject in placedGameObjects)
         {
+            if(placedGameObject == null) continue;
             var building = placedGameObject.GetComponent<Building>();
             if (!building.IsAlive()) continue;
             var position = placedGameObject.transform.localPosition;
@@ -123,12 +149,12 @@ public class MLTDAgent : Agent
         }
     }
 
-    private int GetTowerType(GameObject gameObject)
+    private int GetTowerType(GameObject go)
     {
         var index = 0;
         foreach (var prefab in prefabs)
         {
-            if (prefab == gameObject)
+            if (prefab == go)
             {
                 return index;
             }
@@ -193,16 +219,25 @@ public class MLTDAgent : Agent
             position.x = otherCoordinate * xScale / 2;
         }
 
-        enemyWaveManager.SpawnEnemy(towerType - 1, position + placementPlatform.transform.position);
+        turnManager.SpawnEnemy(towerType - 1, position + placementPlatform.transform.position);
     }
 
-    public void KilledBuilding()
+    private void KilledBuilding(Building building, int weaponAmount)
     {
-        AddReward(rewardPerKill);
+        if (building.GetBuildingType() == Building.BuildingType.Base)
+        {
+            for (int i = 0; i < weaponAmount; i++)
+            {
+                AddReward(rewardPerKill);
+            }
+            AddReward(rewardForBaseKill);
+        }
+        else
+            AddReward(rewardPerKill);
         Debug.Log("Killed Building");
     }
 
-    public void Win(float timeTaken)
+    private void Win(float timeTaken)
     {
         AddReward(winReward);
         AddReward(timeRewardDivisor / timeTaken);
@@ -210,7 +245,7 @@ public class MLTDAgent : Agent
         EndEpisode();
     }
 
-    public void Lose()
+    private void Lose()
     {
         AddReward(loseReward);
         Debug.Log("Lost " + GetCumulativeReward());
