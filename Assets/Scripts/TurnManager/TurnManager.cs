@@ -47,8 +47,8 @@ public class TurnManager : MonoBehaviour
     private List<GameObject> enemies = new ();
     private List<Building> buildings = new ();
 
-    public bool isTurnPhase { get; private set; }
-    public float turnStartTimeInMs { get; private set; }
+    private bool isTurnPhase;
+    private float turnStartTimeInMs;
     private int turnNumber = 1;
     
     public void EnemyKilled(EnemyScript enemyScript)
@@ -137,7 +137,20 @@ public class TurnManager : MonoBehaviour
 
     public void StartTurnPhase()
     {
+        if (objectPlacer != null)
+        {
+            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building.GetComponent<Building>()));
+            buildings.ForEach(building => building.turnManager = this);
+        }
+
+        if (buildings.Find(building => building.GetBuildingType() == Building.BuildingType.Base) == null)
+        {
+            Debug.Log("No base found!");
+            return;
+        }
+        
         if(isTurnPhase) return;
+        
         if (playButton != null)
             playButton.SetActive(false);
         if (gridSystem != null)
@@ -152,12 +165,6 @@ public class TurnManager : MonoBehaviour
 
         if(previewSystem != null)
             previewSystem.StopShowingPreview();
-
-        if (objectPlacer != null)
-        {
-            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building.GetComponent<Building>()));
-            buildings.ForEach(building => building.turnManager = this);
-        }
         
         currentEnemyWave = type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave();
         isTurnPhase = true;
