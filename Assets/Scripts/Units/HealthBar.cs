@@ -54,14 +54,21 @@ public class HealthBar : MonoBehaviour
     {
         if (health <= 0 && !isHidden)
         {
-            slider.gameObject.SetActive(false);  // Hide the health bar
+            foreach (Transform child in slider.transform)  // Hide all children of the slider
+            {
+                child.gameObject.SetActive(false);
+            }
             isHidden = true;
             return;
         }
         else if (health > 0 && isHidden)
         {
-            slider.gameObject.SetActive(true);  // Show the health bar
+            foreach (Transform child in slider.transform)  // Hide all children of the slider
+            {
+                child.gameObject.SetActive(true);
+            }
             isHidden = false;
+            return;
         }
         transform.rotation = camera.transform.rotation;
     }

@@ -158,6 +158,7 @@ public class Building : MonoBehaviour
         isAlive = true;
         alivePrefab.SetActive(true);
         destroyedPrefab.SetActive(false);
+        healthBar.UpdateHealthBar(health, maxHealth);
         this.gameObject.tag = buildingType.ToString();
         this.gameObject.GetComponent<BoxCollider>().enabled = true;
 
