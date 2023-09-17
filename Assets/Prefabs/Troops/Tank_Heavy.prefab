@@ -98,15 +98,12 @@ MonoBehaviour:
   health: 300
   maxHealth: 300
   healthBar: {fileID: 8114591896941791699}
-  flashDamageMeshes:
-  - {fileID: 6067569561638711443}
-  - {fileID: 3436178944905077764}
-  - {fileID: 4914370326681716426}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   damage: 24
   secondsBetweenShots: 3
   attackRange: 10
-  attackPrioList: 02000000010000000300000000000000
+  attackPrioList: 03000000020000000100000000000000
+  gameObjectToAttack: {fileID: 0}
   alertRadius: 5
   alertDuration: 1
   underAttackBy: {fileID: 0}
@@ -270,12 +267,6 @@ GameObject:
 --- !u!1 &4914370326681716426 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7870227679644555940, guid: 57da2c0704917f84e90de4e70e6b7c34,
-    type: 3}
-  m_PrefabInstance: {fileID: 2957725474760727662}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6067569561638711443 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9025114664879402237, guid: 57da2c0704917f84e90de4e70e6b7c34,
     type: 3}
   m_PrefabInstance: {fileID: 2957725474760727662}
   m_PrefabAsset: {fileID: 0}

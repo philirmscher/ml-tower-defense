@@ -106,7 +106,7 @@ public class PlacementSystem : MonoBehaviour
         defenseObjectsState.OnRightClicked(worldGridPosition);
     }
 
-    private void StopPlacement()
+    public void StopPlacement()
     {
         if (defenseObjectsState == null)
             return;

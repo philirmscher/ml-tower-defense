@@ -26,6 +26,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private EnemyWaveManager enemyWaveManager;
     [SerializeField] private PreviewSystem previewSystem;
+    [SerializeField] private PlacementSystem placementSystem;
 
     bool isTurnPhase;
     float turnStartTimeInMs;
@@ -46,7 +47,7 @@ public class TurnManager : MonoBehaviour
         }
 
         previewSystem.StopShowingPreview();
-
+        placementSystem.StopPlacement();
         enemyWaveManager.StartWave(enemyWaves[turnNumber - 1]);
         isTurnPhase = true;
     }
