@@ -259,7 +259,7 @@ Transform:
   - {fileID: 4278597072834785786}
   - {fileID: 5973615262301439332}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4871056870381698080
 BoxCollider:
@@ -314,6 +314,7 @@ MonoBehaviour:
   turnSpeed: 0
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   healthBar: {fileID: 8670666891226453589}
+  turnManager: {fileID: 0}
 --- !u!208 &847453229965437919
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -1418,7 +1419,7 @@ PrefabInstance:
     - target: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.351
+      value: 9.44
       objectReference: {fileID: 0}
     - target: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,
         type: 3}

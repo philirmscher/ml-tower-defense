@@ -36,7 +36,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private PreviewSystem previewSystem;
     [SerializeField] private ObjectPlacer objectPlacer;
-    
+    [SerializeField] private PlacementSystem placementSystem;
+
     [SerializeField] private float maxTurnTime = 180f;
     
     public UnityEvent<Building, int> onBuildingDestroyed;
@@ -149,6 +150,8 @@ public class TurnManager : MonoBehaviour
         {
             timerText.SetText("00:00.000");
         }
+
+        placementSystem.StopPlacement();
 
         if(previewSystem != null)
             previewSystem.StopShowingPreview();
