@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsWhenKilled: 100
+  pointsWhenKilled: 75
   speed: 10
   turnSpeed: 50
   health: 500
@@ -105,6 +105,7 @@ MonoBehaviour:
   secondsBetweenShots: 3
   attackRange: 10
   attackPrioList: 03000000020000000100000000000000
+  neverMoveToPrio: Wall
   gameObjectToAttack: {fileID: 0}
   alertRadius: 5
   alertDuration: 1
@@ -124,6 +125,9 @@ MonoBehaviour:
   flamethrowerEffect: {fileID: 0}
   flamethrowerRange: 10
   flamethrowerAngle: 45
+  isWallcracker: 0
+  damageMultiplicator: 0
+  multiplyDamageOfBuildingTag: []
   turnManager: {fileID: 0}
 --- !u!195 &-7694715570256565045
 NavMeshAgent:

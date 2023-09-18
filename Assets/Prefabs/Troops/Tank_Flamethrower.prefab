@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsWhenKilled: 50
+  pointsWhenKilled: 20
   speed: 20
   turnSpeed: 100
   health: 101
@@ -105,6 +105,7 @@ MonoBehaviour:
   secondsBetweenShots: 1
   attackRange: 3
   attackPrioList: 03000000020000000100000000000000
+  neverMoveToPrio: Wall
   gameObjectToAttack: {fileID: 0}
   alertRadius: 3.65
   alertDuration: 1
