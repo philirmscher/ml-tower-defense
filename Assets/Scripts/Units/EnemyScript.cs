@@ -514,6 +514,10 @@ public class EnemyScript : MonoBehaviour
             }
             else
             {
+                if(target.CompareTag("Destroyed") || gameObjectToAttack.CompareTag("Destroyed"))
+                {
+                    return;
+                }
                 int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
                 int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
 
