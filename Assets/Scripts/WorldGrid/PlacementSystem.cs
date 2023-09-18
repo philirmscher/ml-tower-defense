@@ -151,7 +151,6 @@ public class PlacementSystem : MonoBehaviour
 
         if (selectedData == null)
         {
-            // You can choose to handle this scenario differently if needed
             Debug.Log("No selected data found.");
             return;
         }
@@ -181,7 +180,6 @@ public class PlacementSystem : MonoBehaviour
         bool isAlongXAxis = xDiff > zDiff;
         int steps = isAlongXAxis ? xDiff / objectSize.x : zDiff / objectSize.y;
 
-        // Überprüfen Sie, ob genügend Punkte vorhanden sind, um alle Mauern zu platzieren
         if (!pointsManager.CanPlaceMultipleObjects(selectedObjectIndex, steps + 1))
             return false;
 
@@ -249,7 +247,6 @@ public class PlacementSystem : MonoBehaviour
             List<Vector3Int> previewGridPositions = previewSystem.GetPreviewGridPositions();
             GameObject prefab = database.objectsData[objectDatabaseId].Prefab;
 
-            // Jetzt gehen wir nur durch die Wandpositionen und platzieren die Wand an diesen Positionen
             foreach (Vector3Int gridPos in previewGridPositions)
             {
                 int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), gridPos);
@@ -258,10 +255,8 @@ public class PlacementSystem : MonoBehaviour
                 pointsManager.PlaceObject(objectDatabaseId);
             }
         }
-        Debug.Log("Aktuelle Mausgridposition: " + mouseGridPosition);
 
         isPlacingWallLine = false;
-        // Das beendet die Wandlinienplatzierung und setzt die Preview zurück auf ein einzelnes Wand-Objekt an der aktuellen Mausposition.
         previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, CheckPlacementValidity(mouseGridPosition, mouseGridPosition, objectDatabaseId));
     }
     private void OnLeftClicked(Vector3Int worldGridPosition)
@@ -275,7 +270,6 @@ public class PlacementSystem : MonoBehaviour
         previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, false);
 
         int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
-        Debug.Log("Aktuelle Mausgridposition: " + mouseGridPosition);
 
         defenseObjects.AddObjectAt(
             worldGridPosition,
@@ -286,5 +280,4 @@ public class PlacementSystem : MonoBehaviour
         pointsManager.PlaceObject(objectDatabaseId);
     }
 
-    // End PlacementState functions
 }

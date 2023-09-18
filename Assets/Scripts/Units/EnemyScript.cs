@@ -25,6 +25,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private HealthBar healthBar;
     public Material damageMaterial;
     public bool isAlive = true;
+    private bool isDestroying = false;
     #endregion
 
     #region Attack Properties
@@ -33,6 +34,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float secondsBetweenShots = 1f;  // Previously fireRate
     [SerializeField] public float attackRange = 15f;
     [SerializeField] private Building.BuildingType[] attackPrioList;
+    [SerializeField] String neverMoveToPrio = "Wall";
     private float timeUntilNextShot = 0f;  // Previously fireCountdown
     private float attackCountdown = 0f;
     public GameObject gameObjectToAttack;
@@ -66,6 +68,9 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private ParticleSystem flamethrowerEffect;
     [SerializeField] private float flamethrowerRange = 10f;
     [SerializeField] private float flamethrowerAngle = 45f;
+    [SerializeField] bool isWallcracker;
+    [SerializeField] float damageMultiplicator;
+    [SerializeField] String[] multiplyDamageOfBuildingTag;
     #endregion
 
     public TurnManager turnManager;
@@ -134,6 +139,15 @@ public class EnemyScript : MonoBehaviour
             {
                 flamethrowerEffect.Play();
             }
+        }else if (isWallcracker)
+        {
+            Debug.Log("Starting wallcracker damage");
+            if (!isDestroying)
+            {
+                isDestroying = true;
+                StartCoroutine(wallCrackerDamage());
+            }
+
         }
         else
         {
@@ -157,7 +171,7 @@ public class EnemyScript : MonoBehaviour
     private void HandleRotationTowardsTarget()
     {
         if (!isInAttackRange) return;
-
+        if (isWallcracker) return;
         Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
         Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
         Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
@@ -222,6 +236,62 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    IEnumerator wallCrackerDamage()
+    {
+        ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
+        psInst1.transform.parent = this.transform;
+        psInst1.Play();
+        Destroy(psInst1.gameObject, psInst1.main.duration);
+        yield return new WaitForSeconds(psInst1.main.duration);
+        this.GetComponent<StupidTroopAIScript>().agent.isStopped = true;
+        this.GetComponent<StupidTroopAIScript>().agent.speed = 0;
+        // Deactivate the renderer after the first effect
+        DisableAllRenderers();
+
+        // Start the second effect
+        ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
+        psInst2.transform.parent = this.transform;
+        psInst2.Play();
+        Destroy(psInst2.gameObject, psInst2.main.duration);
+        Debug.Log("Main Duration: " + psInst2.main.duration);
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, attackRange);
+
+        foreach (Collider collider in colliders)
+        {
+            if (!collider) continue;  
+
+            Vector3 directionToTarget = collider.transform.position - transform.position;
+            float distanceToTarget = directionToTarget.magnitude;
+
+            if (collider.tag != "Destroyed" && Enum.IsDefined(typeof(Building.BuildingType), collider.tag))
+            {
+
+                Building building = collider.GetComponent<Building>();
+                if (building && building.IsAlive()) 
+                {
+                    // Linear Damage reduction (interpolation)
+                    float damageFactor = 1.0f - (distanceToTarget / attackRange);
+                    float actualDamage = damage * damageFactor;
+
+                    if (multiplyDamageOfBuildingTag.Contains(building.tag))
+                    {
+                        Debug.Log("1 Actual damage " + actualDamage + " GameObject: " + building.tag);
+                        building.TakeDamage(actualDamage * damageMultiplicator);
+                    }
+                    else
+                    {
+                        Debug.Log("2 Actual damage " + actualDamage + " GameObject: " + building.tag);
+                        building.TakeDamage(actualDamage);
+                    }
+
+                }
+            }
+        }
+        yield return new WaitForSeconds(psInst2.main.duration);
+        Die(false);
+    }
+
     private void Die()
     {
         if (!isAlive)
@@ -241,10 +311,30 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    private void Die(bool playVfx)
+    {
+        if (!isAlive)
+            return;
+
+        isAlive = false;
+        turnManager.EnemyKilled(this);
+        this.tag = "Destroyed";
+
+        if (onDeathVfx1 && onDeathVfx2 && playVfx)
+        {
+            StartCoroutine(HandleDeathEffects());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private IEnumerator HandleDeathEffects()
     {
         // Start the first effect
         ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
+        psInst1.transform.parent = this.transform;
         psInst1.Play();
         Destroy(psInst1.gameObject, psInst1.main.duration);
         yield return new WaitForSeconds(psInst1.main.duration);
@@ -254,6 +344,7 @@ public class EnemyScript : MonoBehaviour
 
         // Start the second effect
         ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
+        psInst2.transform.parent = this.transform;
         psInst2.Play();
         Destroy(psInst2.gameObject, psInst2.main.duration);
         yield return new WaitForSeconds(psInst2.main.duration);
@@ -279,11 +370,6 @@ public class EnemyScript : MonoBehaviour
         {
             projectile.Seek(gameObjectToAttack.transform, targetMeshCenter, this.gameObject);
         }
-    }
-    void Attack(GameObject building)
-    {
-        var buildingScript = building.GetComponent<Building>();
-        buildingScript.TakeDamage(damage);
     }
 
     public GameObject getNearestObject() {
@@ -314,12 +400,12 @@ public class EnemyScript : MonoBehaviour
                 }
             }
         }
-
-        if (sortedGameObjects.Count > 0 && sortedGameObjects[0].tag == "Wall")
+        
+        if (sortedGameObjects.Count > 0 && sortedGameObjects[0].tag == neverMoveToPrio)
         {
             for (int i = 1; i < sortedGameObjects.Count; i++)
             {
-                if (sortedGameObjects[i].tag != "Wall")
+                if (sortedGameObjects[i].tag != neverMoveToPrio)
                 {
                     return sortedGameObjects[i];
                 }
