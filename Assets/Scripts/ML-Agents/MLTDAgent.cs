@@ -137,7 +137,7 @@ public class MLTDAgent : Agent
             var position = placedGameObject.transform.localPosition;
             var x = (int) (position.x + 20 - placementPlatform.transform.position.x);
             var z = (int) (position.z + 20 - placementPlatform.transform.position.z);
-            grid[x][z] = GetTowerType(placedGameObject) + 1;
+            grid[x][z] = GetTowerType(placedGameObject) + 2;
         }
 
         foreach (var gridValue in grid)

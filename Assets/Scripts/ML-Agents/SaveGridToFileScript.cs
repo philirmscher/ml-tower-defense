@@ -25,6 +25,7 @@ public class SerializedGrids
 public class SaveGridToFileScript : MonoBehaviour
 {
     [SerializeField] private ObjectPlacer objectPlacer;
+    [SerializeField] private PlacementSystem placementSystem;
 
     public void OnSave()
     {
@@ -88,8 +89,7 @@ public class SaveGridToFileScript : MonoBehaviour
             System.IO.File.WriteAllText(path, json);
         }
         
-        Debug.Log($"Saved grid to {path}");
-        
+        Debug.Log($"Saved grid to {path}, with " + serializedGrids.grids.Length + " examples");
     }
 
     public SerializedGrids GetGrids()
