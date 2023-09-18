@@ -59,7 +59,7 @@ public class PointsManager : MonoBehaviour
             if (go == null) continue;  // Skip if the GameObject is null
             if (go.name.Contains(n))
             {
-                if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
+                if(++count >= database.objectsData[databaseObjectIndex].MaxAvailableInstances)
                 {
                     Debug.Log("No available Instances!");
                     return false;
@@ -88,7 +88,7 @@ public class PointsManager : MonoBehaviour
             if (go == null) continue;  // Skip if the GameObject is null
             if (go.name.Contains(n))
             {
-                if(++count >= database.objectsData[databaseObjectIndex].AvailableInstances)
+                if(++count >= database.objectsData[databaseObjectIndex].MaxAvailableInstances)
                 {
                     Debug.Log("No available Instances!");
                     return;
