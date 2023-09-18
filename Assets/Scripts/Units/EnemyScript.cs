@@ -7,20 +7,22 @@ using UnityEngine.Events;
 
 public class EnemyScript : MonoBehaviour
 {
-    // Movement Settings
+    #region Movement Properties
     [Header("Movement")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float turnSpeed = 10f;
+    #endregion
 
-    // Health Settings
+    #region Health Properties
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private HealthBar healthBar;
     public Material damageMaterial;
+    public bool isAlive = true;
+    #endregion
 
-    // Attack Settings
-    [Header("Attack")]
+    #region Attack Properties
     [Header("Attack")]
     [SerializeField] private float damage = 10f;
     [SerializeField] private float secondsBetweenShots = 1f;  // Previously fireRate
@@ -30,8 +32,9 @@ public class EnemyScript : MonoBehaviour
     private float attackCountdown = 0f;
     public GameObject gameObjectToAttack;
     private bool isInAttackRange = false;
+    #endregion
 
-    // Alert Settings
+    #region Alert Properties
     [Header("Alert")]
     [SerializeField] private float alertRadius = 1f;
     [SerializeField] private float alertDuration = 1f; // Zeit in Sekunden, nach der die Warnung zurückgesetzt wird
@@ -40,26 +43,27 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private float moveToAttackerTime = 1;
     private bool isResettingUnderAttackBy = false;
     private Coroutine resetCoroutine;
-    public bool isAlive = true;
+    #endregion
 
-    // VFX Settings
+    #region VFX Properties
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem onDeathVfx1;
     [SerializeField] private ParticleSystem onDeathVfx2;
+    #endregion
 
-    // Weaponry Settings
+    #region Weaponry Properties
     [Header("Weaponry")]
+    [SerializeField] private bool hasFlamethrower = false;
     [SerializeField] private GameObject topPart;
     [SerializeField] private GameObject cannon;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform muzzlePoint;
-    [SerializeField] private bool hasFlamethrower = false;
     [SerializeField] private ParticleSystem flamethrowerEffect;
     [SerializeField] private float flamethrowerRange = 10f;
     [SerializeField] private float flamethrowerAngle = 45f;
-    
-    public TurnManager turnManager;
+    #endregion
 
+    public TurnManager turnManager;
     private List<GameObject> sortedGameObjects = new List<GameObject>();
     private Vector3 meshCenterLocal;
 

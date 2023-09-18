@@ -14,44 +14,60 @@ public class Building : MonoBehaviour
         Base
     }
 
+    #region General Properties
+    [Header("General Properties")]
     [SerializeField] private GameObject alivePrefab;
     [SerializeField] private GameObject destroyedPrefab;
-
-    [SerializeField] private bool hasWeaponry = true;
-    [SerializeField] private bool hasMortar = false;
-
-    [SerializeField] private float mortarProjectileHeight = 10f;
-    private Vector3 cannonStartPosition;
-    private Vector3 cannonTargetPosition;
-
-    [SerializeField] private GameObject topPart;
-    [SerializeField] private GameObject cannon;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform muzzlePoint;
-
     [SerializeField] private ParticleSystem onDeathVfx;
-
     [SerializeField] private float health, maxHealth = 100f;
     [SerializeField] private BuildingType buildingType;
     [SerializeField] private bool isAlive = true;
+    [SerializeField] private HealthBar healthBar;
+    public TurnManager turnManager;
+    private Vector3 meshCenterLocal;
+    #endregion
 
+    #region Weapon Properties
+    [Header("Weapon Properties")]
+    [SerializeField] private bool hasWeaponry = true;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private bool hasMortar = false;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private GameObject topPart;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private GameObject cannon;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private GameObject projectilePrefab;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private Transform muzzlePoint;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private float mortarProjectileHeight = 10f;
+
+    [ConditionalHide("hasWeaponry", true)]
     [SerializeField] private float fireRate = 1f;
+
+    [ConditionalHide("hasWeaponry", true)]
     [SerializeField] public float attackRange = 15f;
-    [SerializeField] private float fireSpan = 10f;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] public float minAttackRange = 0f;
+
+    [ConditionalHide("hasWeaponry", true)]
     [SerializeField] private float turnSpeed = 10f;
 
-    [SerializeField] private Material damageMaterial;
-
-    [SerializeField] private HealthBar healthBar;
-
-    public TurnManager turnManager;
-
+    private Vector3 cannonStartPosition;
+    private Vector3 cannonTargetPosition;
     private float fireCountdown = 0f;
     private Transform target;
     private string enemyTag = "Enemy";
-
     private BulletScript lastFiredBulletScript;
-    private Vector3 meshCenterLocal;
+    #endregion
     private void Awake()
     {
         healthBar = GetComponentInChildren<HealthBar>();
@@ -158,6 +174,7 @@ public class Building : MonoBehaviour
         isAlive = true;
         alivePrefab.SetActive(true);
         destroyedPrefab.SetActive(false);
+        healthBar.UpdateHealthBar(health, maxHealth);
         this.gameObject.tag = buildingType.ToString();
         this.gameObject.GetComponent<BoxCollider>().enabled = true;
 
@@ -175,17 +192,17 @@ public class Building : MonoBehaviour
         {
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
 
-            if (distanceToEnemy < shortestDistance)
+            if (distanceToEnemy < shortestDistance && distanceToEnemy > minAttackRange) 
             {
                 shortestDistance = distanceToEnemy;
                 nearestEnemy = enemy;
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= attackRange)
+        if (nearestEnemy != null && shortestDistance <= attackRange) 
         {
             target = nearestEnemy.transform;
-            cannonStartPosition = muzzlePoint.position; // oder wo immer der Startpunkt des Geschosses sein sollte
+            cannonStartPosition = muzzlePoint.position;
             cannonTargetPosition = target.position;
         }
         else
@@ -193,6 +210,7 @@ public class Building : MonoBehaviour
             target = null;
         }
     }
+
 
     void Shoot()
     {
@@ -252,8 +270,11 @@ public class Building : MonoBehaviour
     {
         if (hasWeaponry)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, attackRange);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, minAttackRange);
 
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(transform.position, transform.forward * attackRange);
