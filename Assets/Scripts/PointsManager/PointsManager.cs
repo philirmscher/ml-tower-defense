@@ -112,6 +112,26 @@ public class PointsManager : MonoBehaviour
             OnPointsChanged?.Invoke();
         }
     }
+    public bool CanPlaceMultipleObjects(int databaseObjectIndex, int count)
+    {
+        int availableInstances = availableInstancesList[databaseObjectIndex];
+
+        // Die Anzahl der Objekte, die gekauft werden müssen, weil sie nicht verfügbar sind
+        int requiredPurchaseCount = count - availableInstances;
+
+        if (requiredPurchaseCount > 0)
+        {
+            // Wenn wir Objekte kaufen müssen, dann berechnen wir die Gesamtkosten
+            int totalCost = database.objectsData[databaseObjectIndex].Cost * requiredPurchaseCount;
+
+            if (totalCost > this.points)
+            {
+                Debug.Log("Not enough points to purchase additional objects!");
+                return false;
+            }
+        }
+        return true;
+    }
 
     public void RemoveObject(int databaseObjectIndex)
     {

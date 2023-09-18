@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private LayerMask hoverLayerMask; // LayerMask to specify which objects can be hovered over to show the radius
     private Vector3 lastPosition;
 
-    public event Action OnLeftClicked, OnRightClicked, OnExit, OnPressR, OnTabPressed;
+    public event Action OnLeftClickedUp, OnLeftClickedDown, OnRightClicked, OnExit, OnPressR, OnTabPressed;
     private RadiusVisualizer lastHoveredObject;
 
     private void Update()
@@ -21,17 +21,27 @@ public class InputManager : MonoBehaviour
         UpdateShaderUVCoordinates();
 
         if (Input.GetMouseButtonDown(0))
-            OnLeftClicked?.Invoke();
+        {
+            OnLeftClickedDown?.Invoke();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            OnLeftClickedUp?.Invoke();
+        }
+
         if (Input.GetMouseButtonDown(1))
             OnRightClicked?.Invoke();
+
         if (Input.GetKeyDown(KeyCode.Escape))
             OnExit?.Invoke();
+
         if (Input.GetKeyDown(KeyCode.R))
             OnPressR?.Invoke();
+
         if (Input.GetKeyDown(KeyCode.Tab))
             OnTabPressed?.Invoke();
     }
-
     private void HandleHover()
     {
         if (IsPointerOverUI())

@@ -19,6 +19,8 @@ public class PreviewSystem : MonoBehaviour
     private Renderer cellIndicatorRenderer;
     private Vector2Int PreviewObjectSize;
 
+    private List<Vector3Int> previewGridPositions = new List<Vector3Int>();
+
     private void Start()
     {
         previewMaterialInstance = new Material(previewMaterialPrefab);
@@ -92,6 +94,14 @@ public class PreviewSystem : MonoBehaviour
         return position;
     }
 
+    public Vector3Int OffsetPreviewOnGrid(Vector3Int position, Vector2Int scale)
+    {
+        Vector3Int halfScaleOffset = new Vector3Int(scale.x / 2, 0, scale.y / 2);
+        position += halfScaleOffset;
+        return position;
+    }
+
+
     public void StopShowingPreview()
     {
         cellIndicator.SetActive(false);
@@ -99,16 +109,13 @@ public class PreviewSystem : MonoBehaviour
             Destroy(previewObject);
     }
 
-    public void UpdatePosition(Vector3 position, bool validity)
+    public void UpdatePosition(Vector3 gridStartPos, Vector3 gridEndPos, bool validity)
     {
-        if (previewObject != null)
-        {
-            MovePreview(position);
-            ApplyColorToPreview(validity);
+        MovePreview(gridStartPos, gridEndPos);
+        ApplyColorToPreview(validity);
 
-        }
-
-        MoveCursor(position);
+        // Position des Cursors aktualisieren (optional, je nach Bedarf)
+        MoveCursor(gridEndPos);
         ApplyColorToCursor(validity);
     }
 
@@ -133,12 +140,60 @@ public class PreviewSystem : MonoBehaviour
         cellIndicator.transform.position = position;
     }
 
-
-    private void MovePreview(Vector3 position)
+    private void MovePreview(Vector3 gridStartPos, Vector3 gridEndPos)
     {
-        previewObject.transform.position = OffsetPreviewOnGrid(position, PreviewObjectSize);
+        previewGridPositions.Clear();
 
+        if (previewObject == null) return;
+
+        // Differenz zwischen Start- und Endpunkt berechnen
+        Vector3 diff = new Vector3(Mathf.Round(gridEndPos.x - gridStartPos.x), 0, Mathf.Round(gridEndPos.z - gridStartPos.z));
+        bool isAlongXAxis = Mathf.Abs(diff.x) > Mathf.Abs(diff.z) || Mathf.Approximately(diff.z, 0);
+
+        // Den Abstand und die Richtung bestimmen
+        int distance;
+        Vector3 direction;
+
+        if (isAlongXAxis)
+        {
+            distance = Mathf.CeilToInt(Mathf.Abs(diff.x) / PreviewObjectSize.x) - 1;
+            direction = diff.x > 0 ? Vector3.right : Vector3.left;
+        }
+        else // Ansonsten orientieren wir uns an der z-Achse
+        {
+            distance = Mathf.CeilToInt(Mathf.Abs(diff.z) / PreviewObjectSize.x) - 1;
+            direction = diff.z > 0 ? Vector3.forward : Vector3.back;
+        }
+
+        // Vorherige Vorschauprefabs zerstören, AUSSER das ursprüngliche `previewObject`
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject != previewObject)
+                Destroy(child.gameObject);
+        }
+
+        // Das ursprüngliche `previewObject` an der Startposition positionieren
+        previewObject.transform.position = OffsetPreviewOnGrid(gridStartPos, PreviewObjectSize);
+        Vector3Int gridStartPosInt = new Vector3Int(Mathf.RoundToInt(previewObject.transform.position.x), Mathf.RoundToInt(previewObject.transform.position.y), Mathf.RoundToInt(previewObject.transform.position.z));
+        previewGridPositions.Add( gridStartPosInt);
+
+        for (int i = 1; i <= distance; i++) // Starte bei 1, da das `previewObject` bereits an der Startposition ist
+        {
+            GameObject instance = Instantiate(previewObject, transform);
+            Vector3 positionOffset = direction * i * (isAlongXAxis ? PreviewObjectSize.x : PreviewObjectSize.y);
+
+            instance.transform.position = OffsetPreviewOnGrid(gridStartPos + positionOffset, PreviewObjectSize);
+            gridStartPosInt = new Vector3Int(Mathf.RoundToInt(instance.transform.position.x), Mathf.RoundToInt(instance.transform.position.y), Mathf.RoundToInt(instance.transform.position.z));
+            previewGridPositions.Add(gridStartPosInt);
+        }
     }
+
+
+    public List<Vector3Int> GetPreviewGridPositions()
+    {
+        return previewGridPositions;
+    }
+
 
     internal void StartShowingRemovePreview()
     {
