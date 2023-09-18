@@ -20,7 +20,7 @@ MonoBehaviour:
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 1
-    <AvailableInstances>k__BackingField: 10
+    <AvailableInstances>k__BackingField: 50
     <MaxAvailableInstances>k__BackingField: 999
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: eb496d01d3490114dbefe993b0a54256,
@@ -32,7 +32,7 @@ MonoBehaviour:
       type: 3}
     <hasCorner>k__BackingField: 0
     <Cost>k__BackingField: 2
-    <AvailableInstances>k__BackingField: 4
+    <AvailableInstances>k__BackingField: 10
     <MaxAvailableInstances>k__BackingField: 999
     <cornerPrefab>k__BackingField: {fileID: 0}
     <icon>k__BackingField: {fileID: 21300000, guid: 0ffaaa8cb33fdba459a2940a54aaa85d,

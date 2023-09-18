@@ -228,7 +228,9 @@ public class EnemyScript : MonoBehaviour
             return;
 
         isAlive = false;
-        turnManager.EnemyKilled(this);
+        if(turnManager != null)
+            turnManager.EnemyKilled(this);
+
         this.tag = "Destroyed";
 
         if (onDeathVfx1 && onDeathVfx2)

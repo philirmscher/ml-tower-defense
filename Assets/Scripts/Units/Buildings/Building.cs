@@ -158,7 +158,8 @@ public class Building : MonoBehaviour
             onDeathVfx.Play();
 
         isAlive = false;
-        turnManager.BuildingDestroyed(this);
+        if (turnManager != null)
+            turnManager.BuildingDestroyed(this);
         alivePrefab.SetActive(false);
         destroyedPrefab.SetActive(true);
         this.gameObject.tag = "Destroyed";

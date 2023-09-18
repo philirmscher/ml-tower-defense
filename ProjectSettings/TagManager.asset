@@ -11,6 +11,7 @@ TagManager:
   - Wall
   - Base
   - RessourceTower
+  - Platform
   layers:
   - Default
   - TransparentFX
