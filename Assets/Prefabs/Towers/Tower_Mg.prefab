@@ -76,27 +76,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alivePrefab: {fileID: 5656264402423531047}
   destroyedPrefab: {fileID: 6699222265529387809}
+  onDeathVfx: {fileID: 3324408151218783254}
+  health: 200
+  maxHealth: 200
+  buildingType: 2
+  isAlive: 1
+  healthBar: {fileID: 8670666891226453589}
+  turnManager: {fileID: 0}
   hasWeaponry: 1
   hasMortar: 0
-  mortarProjectileHeight: 10
   topPart: {fileID: 3274582505221200209}
   cannon: {fileID: 6837519777786766971}
   projectilePrefab: {fileID: 1082213743303154, guid: 9ba98432db6fd69418ac44265ba6b6aa,
     type: 3}
   muzzlePoint: {fileID: 5633533642354498949}
-  onDeathVfx: {fileID: 3324408151218783254}
-  health: 250
-  maxHealth: 250
-  buildingType: 2
-  isAlive: 1
-  fireRate: 10
+  mortarProjectileHeight: 10
+  fireRate: 5
   attackRange: 15
   minAttackRange: 0
-  fireSpan: 5
   turnSpeed: 5
-  damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
-  healthBar: {fileID: 8670666891226453589}
-  turnManager: {fileID: 0}
 --- !u!208 &847453229965437919
 NavMeshObstacle:
   m_ObjectHideFlags: 0

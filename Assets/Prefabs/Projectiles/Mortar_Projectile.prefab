@@ -19761,9 +19761,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52fea3fc4da280d469bf874bce02ded8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  explosionRadius: 4
-  damage: 40
+  speed: 10
+  explosionRadius: 7
+  damage: 50
   hit: {fileID: 1121192042590650, guid: 3515082850c00044a9fffc1053b56b6b, type: 3}
   flash: {fileID: 1920765516895132, guid: df8bef245b1373047a1e1320f5ed6ac2, type: 3}
   isMortarProjectile: 1
