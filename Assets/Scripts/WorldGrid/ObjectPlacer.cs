@@ -14,7 +14,6 @@ public class ObjectPlacer : MonoBehaviour
 
     public int PlaceObject(GameObject prefab, Quaternion previewRotation, Vector3 previewPosition)
     {
-        Debug.Log($"Placing object at position: {previewPosition} with rotation: {previewRotation}");
         GameObject newObject = Instantiate(prefab);
         newObject.transform.position = previewPosition;
         newObject.transform.rotation = previewRotation;

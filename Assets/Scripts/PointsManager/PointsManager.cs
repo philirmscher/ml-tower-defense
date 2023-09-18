@@ -28,7 +28,7 @@ public class PointsManager : MonoBehaviour
             return;
         }
         
-        GetComponent<TurnManager>().onEnemyKilled.AddListener((enemy) =>
+        GetComponent<TurnManager>()?.onEnemyKilled.AddListener((enemy) =>
         {
             AddPoints(enemy.pointsWhenKilled);
         });
@@ -55,52 +55,8 @@ public class PointsManager : MonoBehaviour
         return true;
     }
 
-    public bool CheckPlaceObject(int databaseObjectIndex)
-    {
-        var n = database.objectsData[databaseObjectIndex].Prefab.name;
-        var count = 0;
-        foreach (var go in objectPlacer.GetPlacedGameObjects())
-        {
-            if (go == null) continue;  // Skip if the GameObject is null
-            if (go.name.Contains(n))
-            {
-                if(++count >= database.objectsData[databaseObjectIndex].MaxAvailableInstances)
-                {
-                    Debug.Log("No available Instances!");
-                    return false;
-                }
-            }
-        }
-        if (availableInstancesList[databaseObjectIndex] > 0)
-            return true;
-        else
-        {
-            if (database.objectsData[databaseObjectIndex].Cost > this.points)
-            {
-                Debug.Log("No available Points!");
-                return false;
-            }
-            return true;
-        }
-    }
-
     public void PlaceObject(int databaseObjectIndex)
     {
-        var n = database.objectsData[databaseObjectIndex].Prefab.name;
-        var count = 0;
-        foreach (var go in objectPlacer.GetPlacedGameObjects())
-        {
-            if (go == null) continue;  // Skip if the GameObject is null
-            if (go.name.Contains(n))
-            {
-                if(++count >= database.objectsData[databaseObjectIndex].MaxAvailableInstances)
-                {
-                    Debug.Log("No available Instances!");
-                    return;
-                }
-            }
-        }
-        
         if(availableInstancesList[databaseObjectIndex] > 0)
         {
             availableInstancesList[databaseObjectIndex] -= 1;
@@ -119,6 +75,21 @@ public class PointsManager : MonoBehaviour
     }
     public bool CanPlaceMultipleObjects(int databaseObjectIndex, int count)
     {
+        var n = database.objectsData[databaseObjectIndex].Prefab.name;
+        var c = 0;
+        foreach (var go in objectPlacer.GetPlacedGameObjects())
+        {
+            if (go == null) continue;  // Skip if the GameObject is null
+            if (go.name.Contains(n))
+            {
+                if(++c+count >= database.objectsData[databaseObjectIndex].MaxAvailableInstances)
+                {
+                    Debug.Log("No available Instances!");
+                    return false;
+                }
+            }
+        }
+    
         int availableInstances = availableInstancesList[databaseObjectIndex];
 
         // Die Anzahl der Objekte, die gekauft werden m�ssen, weil sie nicht verf�gbar sind

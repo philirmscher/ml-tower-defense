@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class StupidTroopAIScript : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
     private GameObject target;
     private EnemyScript enemyScript;
     private void Awake()

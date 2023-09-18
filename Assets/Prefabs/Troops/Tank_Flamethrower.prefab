@@ -124,6 +124,9 @@ MonoBehaviour:
   flamethrowerEffect: {fileID: 7387677347412381837}
   flamethrowerRange: 4.5
   flamethrowerAngle: 48
+  isWallcracker: 0
+  damageMultiplicator: 0
+  multiplyDamageOfBuildingTag: []
   turnManager: {fileID: 0}
 --- !u!195 &-1751145758520790846
 NavMeshAgent:

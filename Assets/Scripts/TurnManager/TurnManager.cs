@@ -231,7 +231,8 @@ public class TurnManager : MonoBehaviour
             timerText.SetText("00:00.000");
         }
 
-        placementSystem.StopPlacement();
+        if(placementSystem != null)
+            placementSystem.StopPlacement();
 
         if(previewSystem != null)
             previewSystem.StopShowingPreview();
