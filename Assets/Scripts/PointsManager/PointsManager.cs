@@ -28,7 +28,7 @@ public class PointsManager : MonoBehaviour
             return;
         }
         
-        GetComponent<TurnManager>().onEnemyKilled.AddListener((enemy) =>
+        GetComponent<TurnManager>()?.onEnemyKilled.AddListener((enemy) =>
         {
             AddPoints(enemy.pointsWhenKilled);
         });
