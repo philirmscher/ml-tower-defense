@@ -249,7 +249,7 @@ public class TurnManager : MonoBehaviour
             var amount = enemyPlacement.amount;
             for (var i = 0; i < amount; i++)
             {
-                SpawnEnemy(index, new Vector3(-15, 0, -15));
+                SpawnEnemy(index, VariantVector(new Vector3(-15, 0, -15)));
             }
             index++;
         }
@@ -333,5 +333,10 @@ public class TurnManager : MonoBehaviour
         }
 
         return newEnemyWave;
+    }
+    
+    private Vector3 VariantVector(Vector3 vector)
+    {
+        return new Vector3(vector.x + UnityEngine.Random.Range(-5f, 5f), vector.y, vector.z + UnityEngine.Random.Range(-5f, 5f));
     }
 }

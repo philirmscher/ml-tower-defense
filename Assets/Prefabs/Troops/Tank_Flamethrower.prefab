@@ -93,14 +93,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  pointsWhenKilled: 50
+  speed: 20
   turnSpeed: 100
-  health: 150
-  maxHealth: 150
+  health: 101
+  maxHealth: 101
   healthBar: {fileID: 7761113515111473741}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   isAlive: 1
-  damage: 15
+  damage: 20
   secondsBetweenShots: 1
   attackRange: 3
   attackPrioList: 03000000020000000100000000000000

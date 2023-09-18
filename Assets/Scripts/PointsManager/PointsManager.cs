@@ -27,6 +27,11 @@ public class PointsManager : MonoBehaviour
             Debug.LogError("The number of elements in availableInstancesList does not match the number of elements in database.objectsData!");
             return;
         }
+        
+        GetComponent<TurnManager>().onEnemyKilled.AddListener((enemy) =>
+        {
+            AddPoints(enemy.pointsWhenKilled);
+        });
     }
     public int GetCurrentPoints()
     {
@@ -36,7 +41,7 @@ public class PointsManager : MonoBehaviour
     public void AddPoints(int points)
     {
         if(points >= 0)
-        this.points += points;
+            this.points += points;
         OnPointsChanged?.Invoke();
     }
 
@@ -116,12 +121,12 @@ public class PointsManager : MonoBehaviour
     {
         int availableInstances = availableInstancesList[databaseObjectIndex];
 
-        // Die Anzahl der Objekte, die gekauft werden müssen, weil sie nicht verfügbar sind
+        // Die Anzahl der Objekte, die gekauft werden mï¿½ssen, weil sie nicht verfï¿½gbar sind
         int requiredPurchaseCount = count - availableInstances;
 
         if (requiredPurchaseCount > 0)
         {
-            // Wenn wir Objekte kaufen müssen, dann berechnen wir die Gesamtkosten
+            // Wenn wir Objekte kaufen mï¿½ssen, dann berechnen wir die Gesamtkosten
             int totalCost = database.objectsData[databaseObjectIndex].Cost * requiredPurchaseCount;
 
             if (totalCost > this.points)

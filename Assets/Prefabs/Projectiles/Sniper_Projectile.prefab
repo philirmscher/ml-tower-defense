@@ -4841,9 +4841,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52fea3fc4da280d469bf874bce02ded8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 40
   explosionRadius: 0
-  damage: 150
+  damage: 100
   hit: {fileID: 1438542530079480, guid: 21710859533a00746ad2bdd323061a2d, type: 3}
   flash: {fileID: 1437680763721510, guid: a311f5de96916bf44bcb1dae61840939, type: 3}
   isMortarProjectile: 0
@@ -4870,7 +4870,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 7db36d08f5482f24cb7034bb3d1353de, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -93,12 +93,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  pointsWhenKilled: 100
+  speed: 10
   turnSpeed: 50
-  health: 300
-  maxHealth: 300
+  health: 500
+  maxHealth: 500
   healthBar: {fileID: 8114591896941791699}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
+  isAlive: 1
   damage: 24
   secondsBetweenShots: 3
   attackRange: 10
@@ -109,17 +111,16 @@ MonoBehaviour:
   underAttackBy: {fileID: 0}
   isWarned: 0
   moveToAttackerTime: 1
-  isAlive: 1
   onDeathVfx1: {fileID: 198856239026640498, guid: 9bba9cf244c53c5439505dfc96fdd11c,
     type: 3}
   onDeathVfx2: {fileID: 198917022394846920, guid: e1b08032bec16ba4eb1ae23cbd572664,
     type: 3}
+  hasFlamethrower: 0
   topPart: {fileID: 3436178944905077764}
   cannon: {fileID: 4914370326681716426}
   projectilePrefab: {fileID: 1082213743303154, guid: e669ca8f802f222458348b41e8e811ca,
     type: 3}
   muzzlePoint: {fileID: 1320799445098504322}
-  hasFlamethrower: 0
   flamethrowerEffect: {fileID: 0}
   flamethrowerRange: 10
   flamethrowerAngle: 45

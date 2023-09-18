@@ -297,8 +297,8 @@ MonoBehaviour:
   alivePrefab: {fileID: 667650871511671243}
   destroyedPrefab: {fileID: 6699222265529387809}
   onDeathVfx: {fileID: 3324408151218783254}
-  health: 250
-  maxHealth: 250
+  health: 1000
+  maxHealth: 1000
   buildingType: 3
   isAlive: 1
   healthBar: {fileID: 8670666891226453589}

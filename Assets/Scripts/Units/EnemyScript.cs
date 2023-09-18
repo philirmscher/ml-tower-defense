@@ -7,6 +7,11 @@ using UnityEngine.Events;
 
 public class EnemyScript : MonoBehaviour
 {
+    #region Value Properties
+    [Header("Values")]
+    [SerializeField] public int pointsWhenKilled = 1;
+    #endregion
+    
     #region Movement Properties
     [Header("Movement")]
     [SerializeField] private float speed = 10f;
