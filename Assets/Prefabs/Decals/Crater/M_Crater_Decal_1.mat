@@ -61,7 +61,7 @@ Material:
     - _AffectMetal: 1
     - _AffectNormal: 1
     - _AffectSmoothness: 1
-    - _Amplitude: 23.44
+    - _Amplitude: 26.2
     - _DecalColorMask0: 15
     - _DecalColorMask1: 15
     - _DecalColorMask2: 11
@@ -72,9 +72,9 @@ Material:
     - _DecalStencilRef: 16
     - _DecalStencilWriteMask: 16
     - _DrawOrder: 8
-    - _Opacity: 0.767
+    - _Opacity: 0.705
     - _Smothness_on_Alpha: 0.412
-    - _Steps: 5
+    - _Steps: 13.1
     m_Colors:
     - _Remap: {r: 0, g: 1, b: 0, a: 0}
     - _Remap_Alpha: {r: 0, g: 0.69, b: 0, a: 0}

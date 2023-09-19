@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4849841540157602273}
   - component: {fileID: 6418413908303526379}
+  - component: {fileID: 142756454996221709}
   m_Layer: 0
   m_Name: Crate_3_Decal
   m_TagString: Decal
@@ -58,3 +59,16 @@ MonoBehaviour:
   m_Size: {x: 9, y: 9, z: 2.44}
   m_FadeFactor: 1
   m_Version: 2
+--- !u!114 &142756454996221709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572527240223533848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b31a522357ed51c4797cc40efb58bbaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 60
