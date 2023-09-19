@@ -56,6 +56,8 @@ public class EnemyScript : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem onDeathVfx1;
     [SerializeField] private ParticleSystem onDeathVfx2;
+    [SerializeField] private GameObject[] deathDecalPrefabs;
+
     #endregion
 
     #region Weaponry Properties
@@ -255,6 +257,9 @@ public class EnemyScript : MonoBehaviour
         Destroy(psInst2.gameObject, psInst2.main.duration);
         Debug.Log("Main Duration: " + psInst2.main.duration);
 
+        //spawn radom decal
+        InstantiateDecalOnDeath();
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, attackRange);
 
         foreach (Collider collider in colliders)
@@ -320,6 +325,7 @@ public class EnemyScript : MonoBehaviour
         turnManager.EnemyKilled(this);
         this.tag = "Destroyed";
 
+
         if (onDeathVfx1 && onDeathVfx2 && playVfx)
         {
             StartCoroutine(HandleDeathEffects());
@@ -327,6 +333,18 @@ public class EnemyScript : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+    private void InstantiateDecalOnDeath()
+    {
+        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0)
+        {
+            GameObject decalPrefab = deathDecalPrefabs[UnityEngine.Random.Range(0, deathDecalPrefabs.Length)];
+            Vector3 decalPosition = transform.position;
+            Quaternion decalRotation = Quaternion.Euler(90f, 0f, UnityEngine.Random.Range(0f, 360f));
+            GameObject decalInstance = Instantiate(decalPrefab, decalPosition, decalRotation);
+            float randomSize = UnityEngine.Random.Range(0.4f, 0.8f);
+            decalInstance.transform.localScale = new Vector3(randomSize, randomSize, decalInstance.transform.localScale.z);
         }
     }
 
@@ -341,6 +359,9 @@ public class EnemyScript : MonoBehaviour
 
         // Deactivate the renderer after the first effect
         DisableAllRenderers();
+
+        //spawn radom decal
+        InstantiateDecalOnDeath();
 
         // Start the second effect
         ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);

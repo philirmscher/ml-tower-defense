@@ -105,6 +105,7 @@ MonoBehaviour:
   secondsBetweenShots: 3
   attackRange: 10
   attackPrioList: 03000000020000000100000000000000
+  neverMoveToPrio: Wall
   gameObjectToAttack: {fileID: 0}
   alertRadius: 5
   alertDuration: 1
@@ -115,6 +116,10 @@ MonoBehaviour:
     type: 3}
   onDeathVfx2: {fileID: 198917022394846920, guid: e1b08032bec16ba4eb1ae23cbd572664,
     type: 3}
+  deathDecalPrefabs:
+  - {fileID: 3657470049363272381, guid: 38f4b7d16fbb01f409713f65b0c0d31f, type: 3}
+  - {fileID: 65755894672084252, guid: df765c388301dcf4392fe219c507aee9, type: 3}
+  - {fileID: 8572527240223533848, guid: 5a0dc7974848ea9459b63dd2d62e0baa, type: 3}
   hasFlamethrower: 0
   topPart: {fileID: 3436178944905077764}
   cannon: {fileID: 4914370326681716426}
@@ -124,6 +129,9 @@ MonoBehaviour:
   flamethrowerEffect: {fileID: 0}
   flamethrowerRange: 10
   flamethrowerAngle: 45
+  isWallcracker: 0
+  damageMultiplicator: 0
+  multiplyDamageOfBuildingTag: []
   turnManager: {fileID: 0}
 --- !u!195 &-7694715570256565045
 NavMeshAgent:
