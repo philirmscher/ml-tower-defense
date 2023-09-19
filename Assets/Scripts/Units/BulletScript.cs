@@ -12,6 +12,10 @@ public class BulletScript : MonoBehaviour
     [SerializeField] private bool isMortarProjectile = false;
     [SerializeField] private float mortarProjectileHeight = 10;
 
+    [Header("Wall Interaction")]
+    [SerializeField] private bool cantShootThroughWalls = false;
+    private string wallTag = "Wall";
+
     private Transform target;
     private string enemyTag = "Enemy";
     private Rigidbody rb;
@@ -82,6 +86,20 @@ public class BulletScript : MonoBehaviour
             Debug.Log("Projektil zerstört wegen fehlendem Ziel.");
             Destroy(gameObject);
             return;
+        }
+
+        if (cantShootThroughWalls)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, targetPoint - transform.position, out hit))
+            {
+                if (hit.collider.tag == wallTag)
+                {
+                    target = hit.transform;
+                    HitTarget(hit.point, Quaternion.identity);
+                    return;
+                }
+            }
         }
 
         if (isMortarProjectile)
