@@ -72,7 +72,9 @@ Material:
     - _DecalStencilRef: 16
     - _DecalStencilWriteMask: 16
     - _DrawOrder: 8
+    - _HUE: 0.511
     - _Opacity: 0.705
+    - _Saturation: -0.01
     - _Smothness_on_Alpha: 0.412
     - _Steps: 13.1
     m_Colors:
