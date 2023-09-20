@@ -1,8 +1,10 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+
 public class PlacementSystem : MonoBehaviour
 {
+    //Properties
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Grid worldGrid;
     [SerializeField] private ObjectsDataBase database;
@@ -10,6 +12,7 @@ public class PlacementSystem : MonoBehaviour
     [SerializeField] private ObjectPlacer objectPlacer;
     [SerializeField] private PointsManager pointsManager;
     [SerializeField] private PreviewSystem previewSystem;
+    [SerializeField] private Material deletionMaterial; // Transparent red material for deletion area
 
     private WorldGridData defenseObjects;
     private int objectDatabaseId = -1;
@@ -19,12 +22,43 @@ public class PlacementSystem : MonoBehaviour
     private bool isPlacingWallLine = false;
     private Vector3Int startGridPosition;
     private Vector3Int mouseGridPosition;
+    private bool isInDeletionMode = false;
+    private Vector3Int initialDeletePosition;
+    private GameObject deletionArea;
+
+    // 2. Unity Methodes
     private void Start()
     {
         StopPlacement();
         defenseObjects = new WorldGridData();
+        initDeletionArea();
     }
 
+    private void Update()
+    {
+        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
+        mouseGridPosition = worldGrid.WorldToCell(mousePosition);
+
+        if (isInDeletionMode)
+        {
+            UpdateDeletionArea(mouseGridPosition);
+        }
+
+        if (!wallLinePlacement)
+        {
+            if (lastDetectedPostion != mouseGridPosition)
+            {
+                UpdateSingleObjectPlacement(mouseGridPosition);
+                lastDetectedPostion = mouseGridPosition;
+            }
+        }
+        else
+        {
+            UpdateWallLinePlacment();
+        }
+    }
+
+    //Placment Methods
     public void StartPlacment(int id)
     {
         StopPlacement();
@@ -42,25 +76,10 @@ public class PlacementSystem : MonoBehaviour
             inputManager.OnLeftClickedUp += SelectWorldGridLeftClick;
         }
 
-        inputManager.OnRightClicked += SelectWorldGridRightClick;
+        inputManager.OnRightMouseDown += SelectWorldGridRightClick;
+        inputManager.OnRightMouseUp += SelectWorldGridRightClick;
         inputManager.OnPressR += RotateStructure;
         inputManager.OnExit += StopPlacement;
-    }
-
-    private void SetupPlacementState(int id)
-    {
-        this.objectDatabaseId = id;
-        if (objectDatabaseId > -1)
-        {
-            previewSystem.StartShowingPlacementPreview(
-                database.objectsData[id].Prefab,
-                database.objectsData[id].Size
-            );
-        }
-        else
-        {
-            throw new System.Exception($"No object with ID {id}");
-        }
     }
 
     public void RotateStructure()
@@ -80,26 +99,6 @@ public class PlacementSystem : MonoBehaviour
             previewSystem.RotatePreview(newRotation);
     }
 
-    private void SelectWorldGridLeftClick()
-    {
-        if (inputManager.IsPointerOverUI())
-            return;
-
-        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-        Vector3Int worldGridPosition = worldGrid.WorldToCell(mousePosition);
-        OnLeftClicked(worldGridPosition);
-    }
-
-    private void SelectWorldGridRightClick()
-    {
-        if (inputManager.IsPointerOverUI())
-            return;
-
-        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-        mouseGridPosition = worldGrid.WorldToCell(mousePosition);
-        OnRightClicked(mouseGridPosition);
-    }
-
     public void StopPlacement()
     {
         previewSystem.StopShowingPreview();
@@ -112,34 +111,197 @@ public class PlacementSystem : MonoBehaviour
         }
 
         inputManager.OnLeftClickedUp -= SelectWorldGridLeftClick;
-        inputManager.OnRightClicked -= SelectWorldGridRightClick;
+        inputManager.OnRightMouseDown -= SelectWorldGridRightClick;
+        inputManager.OnRightMouseUp -= SelectWorldGridRightClick;
         inputManager.OnPressR -= RotateStructure;
         inputManager.OnExit -= StopPlacement;
         lastDetectedPostion = Vector3Int.zero;
     }
-
-    private void Update()
+    private void StartWallLinePlacement()
     {
-        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-        mouseGridPosition = worldGrid.WorldToCell(mousePosition);
+        if (inputManager.IsPointerOverUI())
+            return;
+        startGridPosition = mouseGridPosition;
+        isPlacingWallLine = true;
+    }
 
-        if (!wallLinePlacement)
+    private void UpdateWallLinePlacment()
+    {
+        if (inputManager.IsPointerOverUI())
+            return;
+
+        if (isPlacingWallLine)
         {
-            if (lastDetectedPostion != mouseGridPosition)
-            {
-                UpdateSingleObjectPlacement(mouseGridPosition);
-                lastDetectedPostion = mouseGridPosition;
-            }
+            previewSystem.UpdatePosition(startGridPosition, mouseGridPosition, CheckPlacementValidity(startGridPosition, mouseGridPosition, objectDatabaseId));
         }
         else
         {
-            UpdateWallLinePlacment();
+            UpdateSingleObjectPlacement(mouseGridPosition);
         }
     }
 
+    private void EndWallLinePlacement()
+    {
+        if (inputManager.IsPointerOverUI())
+            return;
 
+        isPlacingWallLine = false;
+        if (CheckPlacementValidity(startGridPosition, mouseGridPosition, objectDatabaseId))
+        {
+            List<Vector3Int> previewGridPositions = previewSystem.GetPreviewGridPositions();
+            GameObject prefab = database.objectsData[objectDatabaseId].Prefab;
 
+            foreach (Vector3Int gridPos in previewGridPositions)
+            {
+                int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), gridPos);
 
+                defenseObjects.AddObjectAt(previewSystem.OffsetPreviewOnGrid(gridPos, -database.objectsData[objectDatabaseId].Size), database.objectsData[objectDatabaseId].Size, database.objectsData[objectDatabaseId].ID, index);
+                pointsManager.PlaceObject(objectDatabaseId);
+            }
+        }
+
+        isPlacingWallLine = false;
+        previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, CheckPlacementValidity(mouseGridPosition, mouseGridPosition, objectDatabaseId));
+    }
+
+    private void OnLeftClicked(Vector3Int worldGridPosition)
+    {
+        bool placementValidity = CheckPlacementValidity(worldGridPosition, worldGridPosition, objectDatabaseId);
+        if (placementValidity == false)
+            return;
+
+        GameObject prefab = database.objectsData[objectDatabaseId].Prefab;
+
+        previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, false);
+
+        int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
+
+        defenseObjects.AddObjectAt(
+            worldGridPosition,
+            database.objectsData[objectDatabaseId].Size,
+            database.objectsData[objectDatabaseId].ID,
+            index);
+
+        pointsManager.PlaceObject(objectDatabaseId);
+    }
+
+    private void SelectWorldGridLeftClick()
+    {
+        if (inputManager.IsPointerOverUI())
+            return;
+
+        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
+        Vector3Int worldGridPosition = worldGrid.WorldToCell(mousePosition);
+        OnLeftClicked(worldGridPosition);
+    }
+
+    private void UpdateSingleObjectPlacement(Vector3Int worldGridPosition)
+    {
+        bool placementValidity = CheckPlacementValidity(worldGridPosition, worldGridPosition, objectDatabaseId);
+        previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, placementValidity);
+    }
+
+    //Private Assistfunctions
+    void initDeletionArea()
+    {
+        deletionArea = new GameObject("DeletionArea");
+        deletionArea.AddComponent<MeshRenderer>().material = deletionMaterial;
+        deletionArea.AddComponent<MeshFilter>().mesh = CreateQuadMesh();
+        deletionArea.SetActive(false);
+    }
+
+    private void SetupPlacementState(int id)
+    {
+        this.objectDatabaseId = id;
+        if (objectDatabaseId > -1)
+        {
+            previewSystem.StartShowingPlacementPreview(
+                database.objectsData[id].Prefab,
+                database.objectsData[id].Size
+            );
+        }
+        else
+        {
+            throw new System.Exception($"No object with ID {id}");
+        }
+    }
+
+    // Deletion
+    private void SelectWorldGridRightClick()
+    {
+        if (inputManager.IsPointerOverUI())
+            return;
+
+        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
+        mouseGridPosition = worldGrid.WorldToCell(mousePosition);
+        if (!isInDeletionMode)
+        {
+            StartDeletionMode(mouseGridPosition);
+        }
+        else
+        {
+            EndDeletionMode(mouseGridPosition);
+        }
+    }
+
+    private void StartDeletionMode(Vector3Int position)
+    {
+        isInDeletionMode = true;
+        initialDeletePosition = position;
+        deletionArea.SetActive(true);
+    }
+
+    private void UpdateDeletionArea(Vector3Int currentPos)
+    {
+        if (isInDeletionMode)
+        {
+            Vector3Int pivotCorner = initialDeletePosition;
+            Vector3Int oppositeCorner = currentPos;
+
+            bool moveRight = currentPos.x >= initialDeletePosition.x;
+            bool moveUp = currentPos.z >= initialDeletePosition.z;
+
+            if (!moveRight)
+            {
+                pivotCorner.x = currentPos.x;
+                oppositeCorner.x = initialDeletePosition.x;
+            }
+            if (!moveUp)
+            {
+                pivotCorner.z = currentPos.z;
+                oppositeCorner.z = initialDeletePosition.z;
+            }
+            Vector3 scale = new Vector3(
+                Mathf.Abs(pivotCorner.x - oppositeCorner.x) + 1,
+                0.1f,
+                Mathf.Abs(pivotCorner.z - oppositeCorner.z) + 1
+            );
+
+            Vector3 worldPos = worldGrid.CellToWorld(pivotCorner);
+            deletionArea.transform.position = worldPos + new Vector3(0, 0.05f, 0);
+            deletionArea.transform.localScale = scale;
+        }
+    }
+
+    private void EndDeletionMode(Vector3Int endPosition)
+    {
+        isInDeletionMode = false;
+        DeleteObjectsInArea(initialDeletePosition, endPosition);
+        deletionArea.SetActive(false);
+    }
+
+    private void DeleteObjectsInArea(Vector3Int startPos, Vector3Int endPos)
+    {
+        // Loop through the area and delete objects
+        for (int x = Mathf.Min(startPos.x, endPos.x); x <= Mathf.Max(startPos.x, endPos.x); x++)
+        {
+            for (int z = Mathf.Min(startPos.z, endPos.z); z <= Mathf.Max(startPos.z, endPos.z); z++)
+            {
+                Vector3Int pos = new Vector3Int(x, 0, z);
+                OnRightClicked(pos);
+            }
+        }
+    }
 
     private void OnRightClicked(Vector3Int worldGridPosition)
     {
@@ -150,10 +312,7 @@ public class PlacementSystem : MonoBehaviour
         }
 
         if (selectedData == null)
-        {
-            Debug.Log("No selected data found.");
             return;
-        }
 
         worldGridObjectIndex = selectedData.GetRepresentationIndex(worldGridPosition);
         if (worldGridObjectIndex == -1)
@@ -176,7 +335,6 @@ public class PlacementSystem : MonoBehaviour
         int stepX = (endGridPosition.x >= startGridPosition.x) ? 1 : -1;
         int stepZ = (endGridPosition.z >= startGridPosition.z) ? 1 : -1;
 
-
         bool isAlongXAxis = xDiff > zDiff;
         int steps = isAlongXAxis ? xDiff / objectSize.x : zDiff / objectSize.y;
 
@@ -196,13 +354,6 @@ public class PlacementSystem : MonoBehaviour
         return true;
     }
 
-
-    private void UpdateSingleObjectPlacement(Vector3Int worldGridPosition)
-    {
-        bool placementValidity = CheckPlacementValidity(worldGridPosition,worldGridPosition, objectDatabaseId);
-        previewSystem.UpdatePosition(mouseGridPosition,mouseGridPosition, placementValidity);
-    }
-
     private bool CheckIfSelectionIsValid(Vector3Int worldGridPosition)
     {
         return !defenseObjects.CanPlaceObjectAt(worldGridPosition, Vector2Int.one);
@@ -212,72 +363,27 @@ public class PlacementSystem : MonoBehaviour
     {
         return database.objectsData[id].Name;
     }
-    private void StartWallLinePlacement()
+
+    Mesh CreateQuadMesh()
     {
-        if (inputManager.IsPointerOverUI())
-            return;
-        startGridPosition = mouseGridPosition;
-        isPlacingWallLine = true;
+        Mesh mesh = new Mesh();
+
+        Vector3[] vertices = {
+        new Vector3(0, 0, 0),
+        new Vector3(1, 0, 0),
+        new Vector3(0, 0, 1),
+        new Vector3(1, 0, 1)
+    };
+
+        int[] triangles = {
+        0, 2, 1,
+        2, 3, 1
+    };
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
+
+        return mesh;
     }
-    private void UpdateWallLinePlacment()
-    {
-
-        if (inputManager.IsPointerOverUI())
-            return;
-
-        if (isPlacingWallLine)
-        {
-            previewSystem.UpdatePosition(startGridPosition, mouseGridPosition, CheckPlacementValidity(startGridPosition, mouseGridPosition, objectDatabaseId));
-        }
-        else
-        {
-            UpdateSingleObjectPlacement(mouseGridPosition);
-        }
-    }
-
-    private void EndWallLinePlacement()
-    {
-
-        if (inputManager.IsPointerOverUI())
-            return;
-
-        isPlacingWallLine = false;
-        if (CheckPlacementValidity(startGridPosition, mouseGridPosition, objectDatabaseId))
-        {
-            List<Vector3Int> previewGridPositions = previewSystem.GetPreviewGridPositions();
-            GameObject prefab = database.objectsData[objectDatabaseId].Prefab;
-
-            foreach (Vector3Int gridPos in previewGridPositions)
-            {
-                int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), gridPos);
-
-                defenseObjects.AddObjectAt(previewSystem.OffsetPreviewOnGrid(gridPos, -database.objectsData[objectDatabaseId].Size), database.objectsData[objectDatabaseId].Size, database.objectsData[objectDatabaseId].ID, index);
-                pointsManager.PlaceObject(objectDatabaseId);
-            }
-        }
-
-        isPlacingWallLine = false;
-        previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, CheckPlacementValidity(mouseGridPosition, mouseGridPosition, objectDatabaseId));
-    }
-    private void OnLeftClicked(Vector3Int worldGridPosition)
-    {
-        bool placementValidity = CheckPlacementValidity(worldGridPosition, worldGridPosition, objectDatabaseId);
-        if (placementValidity == false)
-            return;
-
-        GameObject prefab = database.objectsData[objectDatabaseId].Prefab;
-
-        previewSystem.UpdatePosition(mouseGridPosition, mouseGridPosition, false);
-
-        int index = objectPlacer.PlaceObject(prefab, previewSystem.GetPreviewRotation(), previewSystem.GetPreviewPosition());
-
-        defenseObjects.AddObjectAt(
-            worldGridPosition,
-            database.objectsData[objectDatabaseId].Size,
-            database.objectsData[objectDatabaseId].ID,
-            index);
-
-        pointsManager.PlaceObject(objectDatabaseId);
-    }
-
 }

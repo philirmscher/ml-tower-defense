@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f849939b93931ae46ac7f333e51cb27f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alivePrefab: {fileID: 0}
+  alivePrefab: {fileID: 3590912731104840991}
   destroyedPrefab: {fileID: 1899191669767354925}
   onDeathVfx: {fileID: 7322054550550482976}
   health: 150
@@ -447,6 +447,12 @@ PrefabInstance:
 --- !u!4 &3588534055708403352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 555922428939532698, guid: aedb0872735eecc448b704b91db33d5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3925450252931882754}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3590912731104840991 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 553797822535062045, guid: aedb0872735eecc448b704b91db33d5a,
     type: 3}
   m_PrefabInstance: {fileID: 3925450252931882754}
   m_PrefabAsset: {fileID: 0}

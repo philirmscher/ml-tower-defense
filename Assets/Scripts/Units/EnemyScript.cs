@@ -537,18 +537,17 @@ public class EnemyScript : MonoBehaviour
             }
             else
             {
-                if(target.CompareTag("Destroyed") || gameObjectToAttack.CompareTag("Destroyed"))
+                if(!target.CompareTag("Destroyed") && !gameObjectToAttack.CompareTag("Destroyed") && Enum.IsDefined(typeof(Building.BuildingType), target.tag))
                 {
-                    return;
-                }
-                int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
-                int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
+                    int attackerPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), target.tag));
+                    int currentTargetPrioIndex = GetPriorityIndex((Building.BuildingType)Enum.Parse(typeof(Building.BuildingType), gameObjectToAttack.tag));
 
-                if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priority
-                {
-                    isWarned = true;
-                    this.underAttackBy = target;
-                    StartCoroutine(ResetWarningAfterDuration());
+                    if (attackerPrioIndex < currentTargetPrioIndex) //low index means higher priority
+                    {
+                        isWarned = true;
+                        this.underAttackBy = target;
+                        StartCoroutine(ResetWarningAfterDuration());
+                    }
                 }
             }
         }

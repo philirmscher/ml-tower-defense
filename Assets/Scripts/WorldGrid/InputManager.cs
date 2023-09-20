@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private LayerMask hoverLayerMask; // LayerMask to specify which objects can be hovered over to show the radius
     private Vector3 lastPosition;
 
-    public event Action OnLeftClickedUp, OnLeftClickedDown, OnRightClicked, OnExit, OnPressR, OnTabPressed;
+    public event Action OnLeftClickedUp, OnLeftClickedDown, OnRightClicked, OnExit, OnPressR, OnTabPressed, OnRightMouseDown, OnRightMouseUp;
     private RadiusVisualizer lastHoveredObject;
 
     private void Update()
@@ -31,7 +31,14 @@ public class InputManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(1))
-            OnRightClicked?.Invoke();
+        {
+            OnRightMouseDown?.Invoke();
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            OnRightMouseUp?.Invoke();
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
             OnExit?.Invoke();
