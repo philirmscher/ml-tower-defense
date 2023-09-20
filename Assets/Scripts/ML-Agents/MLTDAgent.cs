@@ -105,11 +105,12 @@ public class MLTDAgent : Agent
          * 4: Archer Amount
          * 5: Melee Amount
          * 6: Tank Amount
-         * 7-631: Grid with Placement Positions and Tower Types (0: None, 1: Sniper, 2: Machine Gun, 3: Morter)
+         * 7-631: Grid with Placement Positions and Tower Types (0: None, 1: Sniper, 2: Machine Gun, 3: Morter, 4: Wallcracker)
          */
         var wave = turnManager.currentEnemyWave;
         if (wave == null)
         {
+            sensor.AddObservation(0f);
             sensor.AddObservation(0f);
             sensor.AddObservation(0f);
             sensor.AddObservation(0f);
@@ -120,6 +121,7 @@ public class MLTDAgent : Agent
             sensor.AddObservation(enemyPlacements[0].amount);
             sensor.AddObservation(enemyPlacements[1].amount);
             sensor.AddObservation(enemyPlacements[2].amount);
+            sensor.AddObservation(enemyPlacements[3].amount);
         }
 
         var gridSize = 40;

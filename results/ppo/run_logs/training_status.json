@@ -2,22 +2,22 @@
     "MLTD Behavior": {
         "checkpoints": [
             {
-                "steps": 102918,
-                "file_path": "results\\ppo\\MLTD Behavior\\MLTD Behavior-102918.onnx",
-                "reward": null,
-                "creation_time": 1695225146.920703,
+                "steps": 848,
+                "file_path": "results\\ppo\\MLTD Behavior\\MLTD Behavior-848.onnx",
+                "reward": 15.245794120244682,
+                "creation_time": 1695243919.7439013,
                 "auxillary_file_paths": [
-                    "results\\ppo\\MLTD Behavior\\MLTD Behavior-102918.pt"
+                    "results\\ppo\\MLTD Behavior\\MLTD Behavior-848.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 102918,
+            "steps": 848,
             "file_path": "results\\ppo\\MLTD Behavior.onnx",
-            "reward": null,
-            "creation_time": 1695225146.920703,
+            "reward": 15.245794120244682,
+            "creation_time": 1695243919.7439013,
             "auxillary_file_paths": [
-                "results\\ppo\\MLTD Behavior\\MLTD Behavior-102918.pt"
+                "results\\ppo\\MLTD Behavior\\MLTD Behavior-848.pt"
             ]
         }
     },

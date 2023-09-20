@@ -51,7 +51,7 @@ MonoBehaviour:
       type: 3}
   - <Name>k__BackingField: Tower MG
     <ID>k__BackingField: 3
-    <Size>k__BackingField: {x: 2, y: 2}
+    <Size>k__BackingField: {x: 3, y: 3}
     <Prefab>k__BackingField: {fileID: 1317225403262561475, guid: 2f43fec325bac4f49a7711c542221367,
       type: 3}
     <hasCorner>k__BackingField: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
       type: 3}
   - <Name>k__BackingField: Sniper
     <ID>k__BackingField: 4
-    <Size>k__BackingField: {x: 2, y: 2}
+    <Size>k__BackingField: {x: 3, y: 3}
     <Prefab>k__BackingField: {fileID: 4170358188628373779, guid: f6f5cd5a81d3a1944918a16b3221dc8d,
       type: 3}
     <hasCorner>k__BackingField: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
       type: 3}
   - <Name>k__BackingField: Morter
     <ID>k__BackingField: 5
-    <Size>k__BackingField: {x: 2, y: 2}
+    <Size>k__BackingField: {x: 3, y: 3}
     <Prefab>k__BackingField: {fileID: 5254891572220670329, guid: e02c1c1867fb68448ab8aabe2f965cbe,
       type: 3}
     <hasCorner>k__BackingField: 0

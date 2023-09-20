@@ -316,6 +316,7 @@ public class TurnManager : MonoBehaviour
 
     private void RemoveAllEnemies()
     {
+        Debug.Log("Removing all enemies!");
         enemies.ForEach(Destroy);
         enemies.Clear();
     }
