@@ -230,7 +230,7 @@ public class TurnManager : MonoBehaviour
         {
             timerText.SetText("00:00.000");
         }
-
+        if(type != PlayType.Training)
         placementSystem.StopPlacement();
 
         if(previewSystem != null)
