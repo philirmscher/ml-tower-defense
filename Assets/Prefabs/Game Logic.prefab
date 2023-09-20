@@ -1576,6 +1576,9 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 0
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 0
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1586,36 +1589,9 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 1
-  - enemyPlacements:
-    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
         type: 3}
       amount: 0
-    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
-        type: 3}
-      amount: 5
-    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
-        type: 3}
-      amount: 1
-  - enemyPlacements:
-    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
-        type: 3}
-      amount: 3
-    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
-        type: 3}
-      amount: 0
-    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
-        type: 3}
-      amount: 0
-  - enemyPlacements:
-    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
-        type: 3}
-      amount: 3
-    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
-        type: 3}
-      amount: 0
-    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
-        type: 3}
-      amount: 1
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1626,6 +1602,48 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 0
+  - enemyPlacements:
+    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
+        type: 3}
+      amount: 3
+    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
+        type: 3}
+      amount: 0
+    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
+        type: 3}
+      amount: 0
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 0
+  - enemyPlacements:
+    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
+        type: 3}
+      amount: 3
+    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
+        type: 3}
+      amount: 0
+    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
+        type: 3}
+      amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 4
+  - enemyPlacements:
+    - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
+        type: 3}
+      amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: c21bf65018611944a8d9d1d7c4b30585,
+        type: 3}
+      amount: 5
+    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
+        type: 3}
+      amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 2
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1636,6 +1654,9 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 2
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1646,6 +1667,9 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 2
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 4
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1655,7 +1679,10 @@ MonoBehaviour:
       amount: 4
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
-      amount: 0
+      amount: 1
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 4
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1666,6 +1693,9 @@ MonoBehaviour:
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
       amount: 3
+    - prefab: {fileID: 1471789225679690459, guid: 5595c2b8832733a4b98e452f4a084061,
+        type: 3}
+      amount: 5
   - enemyPlacements:
     - prefab: {fileID: 7305793360486966212, guid: e1df13636d56d544e8c3975105559848,
         type: 3}
@@ -1675,7 +1705,10 @@ MonoBehaviour:
       amount: 5
     - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
         type: 3}
-      amount: 1
+      amount: 3
+    - prefab: {fileID: 2624058513948954999, guid: 9d510ad6e34f4084791cc06a424eec84,
+        type: 3}
+      amount: 5
   previewSystem: {fileID: 2518582882676874133}
   objectPlacer: {fileID: 1464245883112882379}
   placementSystem: {fileID: 3019477254054782058}
