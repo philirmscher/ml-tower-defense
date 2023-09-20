@@ -44,7 +44,10 @@ public class Building : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
 
     [ConditionalHide("hasWeaponry", true)]
-    [SerializeField] private Transform muzzlePoint;
+    [SerializeField] private Transform muzzlePoint1;
+
+    [ConditionalHide("hasWeaponry", true)]
+    [SerializeField] private Transform muzzlePoint2;
 
     [ConditionalHide("hasWeaponry", true)]
     [SerializeField] private float mortarProjectileHeight = 10f;
@@ -67,6 +70,9 @@ public class Building : MonoBehaviour
     private Transform target;
     private string enemyTag = "Enemy";
     private BulletScript lastFiredBulletScript;
+    private Vector3 initialCannonRotation; 
+    private bool useMuzzlePoint1 = true;
+
     #endregion
     private void Awake()
     {
@@ -81,7 +87,10 @@ public class Building : MonoBehaviour
 
         health = maxHealth;
         healthBar.UpdateHealthBar(health, maxHealth);
-
+        if (hasWeaponry)
+        {
+            initialCannonRotation = cannon.transform.localEulerAngles;
+        }
     }
 
     void Update()
@@ -125,8 +134,10 @@ public class Building : MonoBehaviour
                     float horizontalDistance = Vector3.Distance(new Vector3(target.position.x, cannon.transform.position.y, target.position.z), cannon.transform.position);
                     float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
 
-                    cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+                    // Addieren Sie die gespeicherte Anfangsrotation zur berechneten Neigung
+                    float newPitch = initialCannonRotation.x + pitchAngle;
 
+                    cannon.transform.localRotation = Quaternion.Euler(newPitch, initialCannonRotation.y, initialCannonRotation.z);
                 }
                 if (fireCountdown <= 0f)
                 {
@@ -202,7 +213,7 @@ public class Building : MonoBehaviour
         if (nearestEnemy != null && shortestDistance <= attackRange) 
         {
             target = nearestEnemy.transform;
-            cannonStartPosition = muzzlePoint.position;
+            cannonStartPosition = muzzlePoint1.position;
             cannonTargetPosition = target.position;
         }
         else
@@ -214,7 +225,17 @@ public class Building : MonoBehaviour
 
     void Shoot()
     {
-        GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
+        Transform currentMuzzlePoint;
+        if (muzzlePoint2 != null)
+        {
+            currentMuzzlePoint = useMuzzlePoint1 ? muzzlePoint1 : muzzlePoint2;
+        }
+        else
+        {
+            currentMuzzlePoint = muzzlePoint1;
+        }
+
+        GameObject projectileGO = Instantiate(projectilePrefab, currentMuzzlePoint.position, currentMuzzlePoint.rotation);
         BulletScript projectile = projectileGO.GetComponent<BulletScript>();
 
         if (projectile != null)
@@ -222,8 +243,11 @@ public class Building : MonoBehaviour
             projectile.Seek(target, this.gameObject);
             lastFiredBulletScript = projectile;
         }
+
+        useMuzzlePoint1 = !useMuzzlePoint1;
     }
-    
+
+
     public bool IsAlive()
     {
         return isAlive;
