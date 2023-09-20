@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4481e9621b79a42b2e7d31334d1233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsWhenKilled: 100
+  pointsWhenKilled: 75
   speed: 10
   turnSpeed: 50
   health: 500

@@ -12,6 +12,7 @@ TagManager:
   - Base
   - RessourceTower
   - Decal
+  - Platform
   layers:
   - Default
   - TransparentFX

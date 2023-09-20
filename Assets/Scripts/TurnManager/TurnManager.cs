@@ -306,7 +306,7 @@ public class TurnManager : MonoBehaviour
 
     void RepairBuildings()
     {
-        Debug.Log("Rapair buildings!");
+        Debug.Log("Repair buildings!");
         foreach(var building in buildings)
         {
             building.Repair();
