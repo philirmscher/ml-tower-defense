@@ -17,7 +17,7 @@ public class PointsUiManager : MonoBehaviour
 
     public void UpdatePoints()
     {
-        pointsText.text = pointsManager.GetCurrentPoints().ToString() + "g";
+        pointsText.text = pointsManager.GetCurrentPoints().ToString() + "$";
     }
     // Start is called before the first frame update
     void Start()
