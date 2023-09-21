@@ -88,8 +88,8 @@ MonoBehaviour:
   muzzlePoint2: {fileID: 1153724863700697270}
   mortarProjectileHeight: 5
   fireRate: 0.3
-  attackRange: 25
-  minAttackRange: 10
+  attackRange: 18
+  minAttackRange: 8
   turnSpeed: 1
 --- !u!65 &347228194672369336
 BoxCollider:

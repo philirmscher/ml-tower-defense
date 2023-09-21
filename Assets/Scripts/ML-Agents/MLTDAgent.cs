@@ -139,7 +139,15 @@ public class MLTDAgent : Agent
             var position = placedGameObject.transform.localPosition;
             var x = (int) (position.x + 20 - placementPlatform.transform.position.x);
             var z = (int) (position.z + 20 - placementPlatform.transform.position.z);
-            grid[x][z] = GetTowerType(placedGameObject) + 2;
+
+            if (x >= 0 && x < gridSize && z >= 0 && z < gridSize)
+            {
+                grid[x][z] = GetTowerType(placedGameObject);
+            }
+            else
+            {
+                Debug.LogWarning($"Ungültiger Index: x={x}, z={z}");
+            }
         }
 
         foreach (var gridValue in grid)

@@ -281,12 +281,10 @@ public class EnemyScript : MonoBehaviour
 
                     if (multiplyDamageOfBuildingTag.Contains(building.tag))
                     {
-                        Debug.Log("1 Actual damage " + actualDamage + " GameObject: " + building.tag);
                         building.TakeDamage(actualDamage * damageMultiplicator);
                     }
                     else
                     {
-                        Debug.Log("2 Actual damage " + actualDamage + " GameObject: " + building.tag);
                         building.TakeDamage(actualDamage);
                     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class SerializedGridObject
@@ -31,19 +32,25 @@ public class SaveGridToFileScript : MonoBehaviour
     {
         var placedGameObjects = objectPlacer.GetPlacedGameObjects();
         var serializedGrid = new SerializedGrid();
-        serializedGrid.gridObjects = new SerializedGridObject[placedGameObjects.Count];
+
+        List<SerializedGridObject> serializedGridObjectList = new List<SerializedGridObject>();
 
         foreach (var placedGameObject in placedGameObjects)
         {
-            if(placedGameObject == null) continue;
+            if (placedGameObject == null || string.IsNullOrEmpty(placedGameObject.name))
+            {
+                continue;
+            }
             var serializedGridObject = new SerializedGridObject();
-            Debug.Log(placedGameObject.name);
             serializedGridObject.name = placedGameObject.name.Substring(0, placedGameObject.name.Length - 7);
             serializedGridObject.position = placedGameObject.transform.position;
             serializedGridObject.rotation = placedGameObject.transform.rotation.eulerAngles;
-            serializedGrid.gridObjects[placedGameObjects.IndexOf(placedGameObject)] = serializedGridObject;
+
+            serializedGridObjectList.Add(serializedGridObject);
         }
-        
+
+        serializedGrid.gridObjects = serializedGridObjectList.ToArray();
+
         //resizes array
         var notNullGridObjects = 0;
         foreach (var serializedGridObject in serializedGrid.gridObjects)
