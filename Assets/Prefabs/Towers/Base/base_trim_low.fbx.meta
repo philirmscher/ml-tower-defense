@@ -3,7 +3,42 @@ guid: 83407d488e29bff4c9ee40430e7325e5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hallway_Corner_1_SciFi_Trim
+    second: {fileID: 2100000, guid: 73dea878082feb44c8f6ff081de4763f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hallway_Straight_1_SciFi_Trim
+    second: {fileID: 2100000, guid: 77b152093ac508a4fba7cd1c564f1f79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Panels_1_SciFi_Trim
+    second: {fileID: 2100000, guid: eebded1559070894496051ca7f9c8363, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Panels_2_SciFi_Trim
+    second: {fileID: 2100000, guid: 8fa6e2e3791d865409e28343f3f59d32, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Panels_2_SciFi_Trim.002
+    second: {fileID: 2100000, guid: 8fa6e2e3791d865409e28343f3f59d32, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sci-fi 1 QM
+    second: {fileID: 2100000, guid: 4f928d58e5b110e4ab70266e75fe875e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sci-fi 4 QM
+    second: {fileID: 2100000, guid: 9a1e332195051404f80e95edeff388f0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

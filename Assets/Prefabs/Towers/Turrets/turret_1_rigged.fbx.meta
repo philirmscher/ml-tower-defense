@@ -8,8 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Hallway_Corner_1_SciFi_Trim
-    second: {fileID: 7749557847871874939, guid: 83407d488e29bff4c9ee40430e7325e5,
-      type: 3}
+    second: {fileID: 2100000, guid: 73dea878082feb44c8f6ff081de4763f, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -30,6 +29,21 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Panels_2_SciFi_Trim
     second: {fileID: 2100000, guid: 8fa6e2e3791d865409e28343f3f59d32, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sci-fi 1 QM
+    second: {fileID: 2100000, guid: 4f928d58e5b110e4ab70266e75fe875e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sci-fi 3 QM
+    second: {fileID: 2100000, guid: 2e72035d4dd75a04fbcd53d65c85611b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sci-fi 4 QM
+    second: {fileID: 2100000, guid: 9a1e332195051404f80e95edeff388f0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
