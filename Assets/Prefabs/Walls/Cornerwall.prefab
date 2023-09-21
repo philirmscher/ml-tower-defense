@@ -56,8 +56,8 @@ MonoBehaviour:
   - {fileID: 3657470049363272381, guid: 38f4b7d16fbb01f409713f65b0c0d31f, type: 3}
   - {fileID: 65755894672084252, guid: df765c388301dcf4392fe219c507aee9, type: 3}
   - {fileID: 8572527240223533848, guid: 5a0dc7974848ea9459b63dd2d62e0baa, type: 3}
-  health: 500
-  maxHealth: 500
+  health: 200
+  maxHealth: 200
   buildingType: 0
   isAlive: 1
   healthBar: {fileID: 3299444314419212510}

@@ -64,8 +64,8 @@ MonoBehaviour:
   pointsWhenKilled: 50
   speed: 75
   turnSpeed: 200
-  health: 50
-  maxHealth: 50
+  health: 100
+  maxHealth: 100
   healthBar: {fileID: 1538124869643296065}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   isAlive: 1
