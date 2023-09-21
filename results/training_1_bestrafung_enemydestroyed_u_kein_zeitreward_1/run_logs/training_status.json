@@ -1,0 +1,65 @@
+{
+    "MLTD Behavior": {
+        "checkpoints": [
+            {
+                "steps": 46134,
+                "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-46134.onnx",
+                "reward": 3.966666561861833,
+                "creation_time": 1695295939.462228,
+                "auxillary_file_paths": [
+                    "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-46134.pt"
+                ]
+            },
+            {
+                "steps": 47614,
+                "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-47614.onnx",
+                "reward": 4.6500001437962055,
+                "creation_time": 1695296186.2634985,
+                "auxillary_file_paths": [
+                    "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-47614.pt"
+                ]
+            },
+            {
+                "steps": 48766,
+                "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-48766.onnx",
+                "reward": null,
+                "creation_time": 1695296288.8429475,
+                "auxillary_file_paths": [
+                    "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-48766.pt"
+                ]
+            },
+            {
+                "steps": 88367,
+                "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-88367.onnx",
+                "reward": 0.32499996572732925,
+                "creation_time": 1695296869.0882046,
+                "auxillary_file_paths": [
+                    "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-88367.pt"
+                ]
+            },
+            {
+                "steps": 137384,
+                "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-137384.onnx",
+                "reward": -2.0749999824911356,
+                "creation_time": 1695297279.629722,
+                "auxillary_file_paths": [
+                    "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-137384.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 137384,
+            "file_path": "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior.onnx",
+            "reward": -2.0749999824911356,
+            "creation_time": 1695297279.629722,
+            "auxillary_file_paths": [
+                "results\\training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1\\MLTD Behavior\\MLTD Behavior-137384.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

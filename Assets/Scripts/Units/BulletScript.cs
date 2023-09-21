@@ -12,6 +12,8 @@ public class BulletScript : MonoBehaviour
     [SerializeField] private bool isMortarProjectile = false;
     [SerializeField] private float mortarProjectileHeight = 10;
 
+    public TurnManager turnManager;
+
     [Header("Wall Interaction")]
     [SerializeField] private bool cantShootThroughWalls = false;
     private string wallTag = "Wall";
@@ -59,7 +61,7 @@ public class BulletScript : MonoBehaviour
         {
             targetStartPosition = target.position;
 
-            if (flash != null)
+            if (flash != null && turnManager.type != PlayType.Training)
             {
                 var flashInstance = Instantiate(flash, transform.position, Quaternion.identity);
                 flashInstance.transform.forward = target.position - transform.position;
@@ -138,7 +140,7 @@ public class BulletScript : MonoBehaviour
     
     void HitTarget(Vector3 targetPos,Quaternion targetRot)
     {
-        if (hit != null)
+        if (hit != null && turnManager.type != PlayType.Training)
         {
             var hitInstance = Instantiate(hit, targetPos, targetRot);
 
@@ -196,7 +198,7 @@ public class BulletScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision == null)
+        if (collision == null || target == null)
             return;
         if (collision.gameObject == target.gameObject && collision.contacts.Length > 0)
         {

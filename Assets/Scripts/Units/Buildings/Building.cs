@@ -238,6 +238,7 @@ public class Building : MonoBehaviour
 
         GameObject projectileGO = Instantiate(projectilePrefab, currentMuzzlePoint.position, currentMuzzlePoint.rotation);
         BulletScript projectile = projectileGO.GetComponent<BulletScript>();
+        projectile.turnManager = this.turnManager;
 
         if (projectile != null)
         {

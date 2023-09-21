@@ -14,7 +14,9 @@ public class MLTDAgent : Agent
     [Header("Reward Settings")]
     [SerializeField] private float rewardPerKill = .1f;
     [SerializeField] private float rewardForBaseKill = 1f;
+    [SerializeField] private float unitLossPenalty = -0.1f;
     [SerializeField] private float timeRewardDivisor = 63f;
+    [SerializeField] private bool enableTimeReward = false;
     [SerializeField] private float winReward = 3f;
     [SerializeField] private float loseReward = -5f;
     [SerializeField] private TurnManager turnManager;
@@ -24,8 +26,14 @@ public class MLTDAgent : Agent
 
     public void Start()
     {
-        var saveGridToFileScript = GetComponent<SaveGridToFileScript>();
-        serializedGrids = saveGridToFileScript.GetGrids();
+        if(turnManager.type == PlayType.Training)
+        {
+            var saveGridToFileScript = GetComponent<SaveGridToFileScript>();
+            serializedGrids = saveGridToFileScript.GetGrids();
+        }
+
+
+        turnManager.onEnemyKilled.AddListener(OnEnemyKilled);
         turnManager.onBuildingDestroyed.AddListener(KilledBuilding);
         turnManager.onTurnEnd.AddListener((won, time) =>
         {
@@ -43,6 +51,11 @@ public class MLTDAgent : Agent
     public override void OnEpisodeBegin()
     {
         Debug.Log("Started Episode");
+
+        if(turnManager.type == PlayType.Play)
+        {
+            return;
+        }
         
         foreach (var placedGameObject in placedGameObjects)
         {
@@ -107,6 +120,11 @@ public class MLTDAgent : Agent
          * 6: Tank Amount
          * 7-631: Grid with Placement Positions and Tower Types (0: None, 1: Sniper, 2: Machine Gun, 3: Morter, 4: Wallcracker)
          */
+        if (!turnManager.isTurnPhase)
+        {
+            return;
+        }
+
         var wave = turnManager.currentEnemyWave;
         if (wave == null)
         {
@@ -187,6 +205,11 @@ public class MLTDAgent : Agent
          * Placement Position
          */
 
+        if (!turnManager.isTurnPhase)
+        {
+            return;
+        }
+
         var discreteActions = actions.DiscreteActions;
         var continuousActions = actions.ContinuousActions;
 
@@ -245,11 +268,18 @@ public class MLTDAgent : Agent
         else if(building.GetBuildingType() == Building.BuildingType.Tower)
             AddReward(rewardPerKill);
     }
-
+    private void OnEnemyKilled(EnemyScript enemyScript)
+    {
+        AddReward(unitLossPenalty);
+        Debug.Log("Einheit verloren: " + GetCumulativeReward());
+    }
     private void Win(float timeTaken)
     {
         AddReward(winReward);
-        AddReward(timeRewardDivisor / timeTaken);
+        if (enableTimeReward)
+        {
+            AddReward(timeRewardDivisor / timeTaken);
+        }
         Debug.Log("Won " + GetCumulativeReward());
         EndEpisode();
     }

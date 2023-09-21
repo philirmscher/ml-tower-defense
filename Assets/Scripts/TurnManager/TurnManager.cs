@@ -29,7 +29,8 @@ public enum PlayType
 
 public class TurnManager : MonoBehaviour
 {
-    [SerializeField] private PlayType type;
+    [SerializeField] public PlayType type;
+    [SerializeField] private MLTDAgent mlAgent;
     [SerializeField] private GameObject gridSystem;
     [SerializeField] private GameObject placementUI;
     [SerializeField] private GameObject playButton;
@@ -52,7 +53,7 @@ public class TurnManager : MonoBehaviour
     private List<GameObject> enemies = new ();
     private List<Building> buildings = new ();
 
-    private bool isTurnPhase;
+    public bool isTurnPhase;
     private float turnStartTimeInMs;
     private int turnNumber = 1;
     private int lives = 2;
@@ -62,9 +63,8 @@ public class TurnManager : MonoBehaviour
         if(!isTurnPhase) return;
         enemies.Remove(enemyScript.gameObject);
         onEnemyKilled.Invoke(enemyScript);
-        
-        Debug.Log(enemies.Count);
-        Debug.Log(GetTroopCount());
+        //Debug.Log(enemies.Count);
+        //Debug.Log(GetTroopCount());
         
         if (enemies.Count == 0 && GetTroopCount() == 0)
         {
@@ -107,7 +107,69 @@ public class TurnManager : MonoBehaviour
     {
         Time.timeScale = 4;
     }
-    
+
+    public void StartTurnPhase()
+    {
+        if (isTurnPhase) return;
+
+        if (objectPlacer != null)
+        {
+            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building != null ? building.GetComponent<Building>() : null));
+            buildings.ForEach(building => {
+                if (building != null)
+                {
+                    building.turnManager = this;
+                }
+            });
+        }
+
+        buildings.RemoveAll(building => building == null);
+
+        if (buildings.Find(building => building.GetBuildingType() == Building.BuildingType.Base) == null)
+        {
+            Debug.Log("No base found!");
+            return;
+        }
+
+        if (speedButtons != null)
+            speedButtons.SetActive(true);
+        if (playButton != null)
+            playButton.SetActive(false);
+        if (gridSystem != null)
+            gridSystem.SetActive(false);
+        if (placementUI != null)
+            placementUI.SetActive(false);
+        turnStartTimeInMs = Time.time;
+        if (timerText != null)
+        {
+            timerText.SetText("00:00.000");
+        }
+
+        if (type != PlayType.Training || placementSystem != null)
+            placementSystem.StopPlacement();
+
+        if (previewSystem != null)
+            previewSystem.StopShowingPreview();
+
+        currentEnemyWave = CopyEnemyWave(type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave());
+        isTurnPhase = true;
+        if (type == PlayType.Demo) StartDemoTurn();
+    }
+
+    private void StartDemoTurn()
+    {
+        var index = 0;
+        foreach (var enemyPlacement in currentEnemyWave.enemyPlacements)
+        {
+            var amount = enemyPlacement.amount;
+            for (var i = 0; i < amount; i++)
+            {
+                SpawnEnemy(index, VariantVector(new Vector3(-15, 0, -15)));
+            }
+            index++;
+        }
+    }
+
     private void EndTurn(bool win)
     {
         if(!isTurnPhase) return;
@@ -143,6 +205,10 @@ public class TurnManager : MonoBehaviour
         postTurnUI.transform.Find("LeaveButton").gameObject.SetActive(!win && lives <= 0);
         
         postTurnUI.SetActive(true);
+        if (type == PlayType.Play)
+        {
+            mlAgent.EndEpisode();
+        }
     }
     
     public void Continue()
@@ -192,68 +258,6 @@ public class TurnManager : MonoBehaviour
         }
 
         return troopCount;
-    }
-
-    public void StartTurnPhase()
-    {
-        if(isTurnPhase) return;
-        
-        if (objectPlacer != null)
-        {
-            buildings.AddRange(objectPlacer.GetPlacedGameObjects().ConvertAll(building => building != null ? building.GetComponent<Building>() : null));
-            buildings.ForEach(building => {
-                if (building != null)
-                {
-                    building.turnManager = this;
-                }
-            });
-        }
-        
-        buildings.RemoveAll(building => building == null);
-
-        if (buildings.Find(building => building.GetBuildingType() == Building.BuildingType.Base) == null)
-        {
-            Debug.Log("No base found!");
-            return;
-        }
-        
-        if(speedButtons != null)
-            speedButtons.SetActive(true);
-        if (playButton != null)
-            playButton.SetActive(false);
-        if (gridSystem != null)
-            gridSystem.SetActive(false);
-        if (placementUI != null)
-            placementUI.SetActive(false);
-        turnStartTimeInMs = Time.time;
-        if (timerText != null)
-        {
-            timerText.SetText("00:00.000");
-        }
-
-        if(type != PlayType.Training || placementSystem != null)
-        placementSystem.StopPlacement();
-
-        if(previewSystem != null)
-            previewSystem.StopShowingPreview();
-        
-        currentEnemyWave = CopyEnemyWave(type != PlayType.Training ? enemyWaves[turnNumber - 1] : GenerateRandomEnemyWave());
-        isTurnPhase = true;
-        if (type == PlayType.Demo) StartDemoTurn();
-    }
-    
-    private void StartDemoTurn()
-    {
-        var index = 0;
-        foreach (var enemyPlacement in currentEnemyWave.enemyPlacements)
-        {
-            var amount = enemyPlacement.amount;
-            for (var i = 0; i < amount; i++)
-            {
-                SpawnEnemy(index, VariantVector(new Vector3(-15, 0, -15)));
-            }
-            index++;
-        }
     }
 
     private EnemyWave GenerateRandomEnemyWave()

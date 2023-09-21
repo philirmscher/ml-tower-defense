@@ -137,7 +137,7 @@ public class EnemyScript : MonoBehaviour
             ApplyFlamethrowerDamage();
 
             // Activate the flamethrower effect
-            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying)
+            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying && turnManager.type != PlayType.Training)
             {
                 flamethrowerEffect.Play();
             }
@@ -337,7 +337,7 @@ public class EnemyScript : MonoBehaviour
     }
     private void InstantiateDecalOnDeath()
     {
-        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0)
+        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && turnManager.type != PlayType.Training)
         {
             GameObject decalPrefab = deathDecalPrefabs[UnityEngine.Random.Range(0, deathDecalPrefabs.Length)];
             Vector3 decalPosition = transform.position;
@@ -350,25 +350,29 @@ public class EnemyScript : MonoBehaviour
 
     private IEnumerator HandleDeathEffects()
     {
-        // Start the first effect
-        ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
-        psInst1.transform.parent = this.transform;
-        psInst1.Play();
-        Destroy(psInst1.gameObject, psInst1.main.duration);
-        yield return new WaitForSeconds(psInst1.main.duration);
+        if(turnManager.type != PlayType.Training)
+        {
+            // Start the first effect
+            ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
+            psInst1.transform.parent = this.transform;
+            psInst1.Play();
+            Destroy(psInst1.gameObject, psInst1.main.duration);
+            yield return new WaitForSeconds(psInst1.main.duration);
 
-        // Deactivate the renderer after the first effect
-        DisableAllRenderers();
+            // Deactivate the renderer after the first effect
+            DisableAllRenderers();
 
-        //spawn radom decal
-        InstantiateDecalOnDeath();
+            //spawn radom decal
+            InstantiateDecalOnDeath();
 
-        // Start the second effect
-        ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
-        psInst2.transform.parent = this.transform;
-        psInst2.Play();
-        Destroy(psInst2.gameObject, psInst2.main.duration);
-        yield return new WaitForSeconds(psInst2.main.duration);
+            // Start the second effect
+            ParticleSystem psInst2 = Instantiate(onDeathVfx2, transform.position, transform.rotation);
+            psInst2.transform.parent = this.transform;
+            psInst2.Play();
+            Destroy(psInst2.gameObject, psInst2.main.duration);
+            yield return new WaitForSeconds(psInst2.main.duration);
+
+        }
 
         // Finally, destroy the enemy object
         Destroy(gameObject);
@@ -387,6 +391,7 @@ public class EnemyScript : MonoBehaviour
         Vector3 targetMeshCenter = gameObjectToAttack.GetComponent<Building>()?.GetMeshCenterInWorld() ?? gameObjectToAttack.transform.position;
         GameObject projectileGO = Instantiate(projectilePrefab, muzzlePoint.position, muzzlePoint.rotation);
         BulletScript projectile = projectileGO.GetComponent<BulletScript>();
+        projectile.turnManager = this.turnManager;
         if (projectile != null)
         {
             projectile.Seek(gameObjectToAttack.transform, targetMeshCenter, this.gameObject);
