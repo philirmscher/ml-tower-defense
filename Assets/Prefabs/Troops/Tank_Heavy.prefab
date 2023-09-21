@@ -102,7 +102,7 @@ MonoBehaviour:
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   isAlive: 1
   damage: 24
-  secondsBetweenShots: 3
+  secondsBetweenShots: 1.5
   attackRange: 10
   attackPrioList: 03000000020000000100000000000000
   neverMoveToPrio: Wall

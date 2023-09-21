@@ -19,6 +19,7 @@ public class Building : MonoBehaviour
     [SerializeField] private GameObject alivePrefab;
     [SerializeField] private GameObject destroyedPrefab;
     [SerializeField] private ParticleSystem onDeathVfx;
+    [SerializeField] private GameObject[] deathDecalPrefabs;
     [SerializeField] private float health, maxHealth = 100f;
     [SerializeField] private BuildingType buildingType;
     [SerializeField] private bool isAlive = true;
@@ -172,7 +173,12 @@ public class Building : MonoBehaviour
         if (turnManager != null)
             turnManager.BuildingDestroyed(this);
         alivePrefab.SetActive(false);
-        destroyedPrefab.SetActive(true);
+        if (destroyedPrefab)
+        {
+            destroyedPrefab.SetActive(true);
+        }
+        InstantiateDecalOnDeath();
+
         this.gameObject.tag = "Destroyed";
         this.gameObject.GetComponent<BoxCollider>().enabled = false;
 
@@ -185,7 +191,10 @@ public class Building : MonoBehaviour
         health = maxHealth;
         isAlive = true;
         alivePrefab.SetActive(true);
-        destroyedPrefab.SetActive(false);
+        if (destroyedPrefab)
+        {
+            destroyedPrefab.SetActive(false);
+        }
         healthBar.UpdateHealthBar(health, maxHealth);
         this.gameObject.tag = buildingType.ToString();
         this.gameObject.GetComponent<BoxCollider>().enabled = true;
@@ -289,6 +298,18 @@ public class Building : MonoBehaviour
         {
             Debug.LogWarning("No Collider found on the GameObject! Using local mesh center instead.");
             return transform.TransformPoint(meshCenterLocal);
+        }
+    }
+    private void InstantiateDecalOnDeath()
+    {
+        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && turnManager.type != PlayType.Training)
+        {
+            GameObject decalPrefab = deathDecalPrefabs[UnityEngine.Random.Range(0, deathDecalPrefabs.Length)];
+            Vector3 decalPosition = transform.position;
+            Quaternion decalRotation = Quaternion.Euler(90f, 0f, UnityEngine.Random.Range(0f, 360f));
+            GameObject decalInstance = Instantiate(decalPrefab, decalPosition, decalRotation);
+            float randomSize = UnityEngine.Random.Range(0.4f, 0.8f);
+            decalInstance.transform.localScale = new Vector3(randomSize, randomSize, decalInstance.transform.localScale.z);
         }
     }
 

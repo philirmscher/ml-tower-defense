@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trainingGround: {fileID: 2103790700}
-  amount: 6
+  amount: 3
   speed: 10
 --- !u!4 &527178027
 Transform:

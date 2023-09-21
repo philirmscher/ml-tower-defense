@@ -66,8 +66,8 @@ checkpoint_settings:
   run_id: training_1_bestrafung_enemydestroyed_u_kein_zeitreward_1
   initialize_from: null
   load_model: false
-  resume: true
-  force: false
+  resume: false
+  force: true
   train_model: false
   inference: false
   results_dir: results
