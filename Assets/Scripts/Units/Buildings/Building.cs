@@ -124,7 +124,7 @@ public class Building : MonoBehaviour
                     float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
 
                     Quaternion currentRotation = cannon.transform.localRotation;
-                    Quaternion desiredRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+                    Quaternion desiredRotation = Quaternion.Euler(-pitchAngle + 68.362f*2, 0f, 0f);
                     Quaternion smoothRotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime * turnSpeed);
                     cannon.transform.localRotation = smoothRotation;
 
