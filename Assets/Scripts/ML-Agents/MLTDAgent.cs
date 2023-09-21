@@ -84,7 +84,6 @@ public class MLTDAgent : Agent
         }
         
         turnManager.StartTurnPhase();
-        Debug.Log("Started Turn");
     }
 
     private GameObject GetPrefabByName(string name)
@@ -271,7 +270,6 @@ public class MLTDAgent : Agent
     private void OnEnemyKilled(EnemyScript enemyScript)
     {
         AddReward(unitLossPenalty);
-        Debug.Log("Einheit verloren: " + GetCumulativeReward());
     }
     private void Win(float timeTaken)
     {

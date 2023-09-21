@@ -106,7 +106,7 @@ Material:
     - _DefaultScale: {r: 10, g: 10, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _MousePos: {r: 0.4039601, g: 0.052735806, b: 0, a: 0}
+    - _MousePos: {r: 0.34257966, g: 0.013032312, b: 0, a: 0}
     - _Size: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1188989978683422858

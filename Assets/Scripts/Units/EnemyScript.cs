@@ -615,6 +615,7 @@ public class EnemyScript : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, alertRadius);
 
         // Flamethrower Cone
+        if(muzzlePoint)
         DrawConeGizmo(muzzlePoint.position, muzzlePoint.forward, flamethrowerAngle, flamethrowerRange, Color.magenta);
     }
 }
