@@ -71,7 +71,8 @@ public class Building : MonoBehaviour
     private Transform target;
     private string enemyTag = "Enemy";
     private BulletScript lastFiredBulletScript;
-    private Vector3 initialCannonRotation; 
+    private Vector3 initialCannonRotation;
+    private Quaternion initialCannonRotationQuaternion;
     private bool useMuzzlePoint1 = true;
 
     #endregion
@@ -91,6 +92,7 @@ public class Building : MonoBehaviour
         if (hasWeaponry)
         {
             initialCannonRotation = cannon.transform.localEulerAngles;
+            initialCannonRotationQuaternion = cannon.transform.localRotation;
         }
     }
 
@@ -118,17 +120,18 @@ public class Building : MonoBehaviour
 
                 if (hasMortar)
                 {
-                    Vector3 firstParabolaPoint = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, 0.01f);
-                    float heightDifference = firstParabolaPoint.y - cannon.transform.position.y;
-                    float horizontalDistance = Vector3.Distance(new Vector3(firstParabolaPoint.x, cannon.transform.position.y, firstParabolaPoint.z), cannon.transform.position);
-                    float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+                    Vector3 point1 = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, 0.01f);
+                    Vector3 point2 = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, 0.02f);
 
-                    Quaternion currentRotation = cannon.transform.localRotation;
-                    Quaternion desiredRotation = Quaternion.Euler(-pitchAngle + 68.362f*2, 0f, 0f);
-                    Quaternion smoothRotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime * turnSpeed);
-                    cannon.transform.localRotation = smoothRotation;
+                    Vector3 direction = (point2 - point1).normalized;
 
+                    Quaternion desiredRotation = Quaternion.LookRotation(direction);
+                    Quaternion smoothRotation = Quaternion.Lerp(cannon.transform.rotation, desiredRotation, Time.deltaTime * turnSpeed);
+
+                    // Da wir nur den Neigungswinkel ändern wollen, halten wir die anderen Winkel gleich
+                    cannon.transform.rotation = Quaternion.Euler(smoothRotation.eulerAngles.x, cannon.transform.rotation.eulerAngles.y, cannon.transform.rotation.eulerAngles.z);
                 }
+
                 else
                 {
                     float heightDifference = target.position.y - cannon.transform.position.y;
@@ -315,6 +318,17 @@ public class Building : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (hasMortar && cannonStartPosition != null && cannonTargetPosition != null)
+        {
+            Gizmos.color = Color.magenta;  // Farbe des Gizmo
+            float step = 0.05f;  // Schrittgröße
+            for (float t = 0; t <= 1; t += step)
+            {
+                Vector3 point1 = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, t);
+                Vector3 point2 = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, t + step);
+                Gizmos.DrawLine(point1, point2);  // Zeichnet eine Linie zwischen zwei Punkten auf der Parabel
+            }
+        }
         if (hasWeaponry)
         {
             Gizmos.color = Color.blue;
