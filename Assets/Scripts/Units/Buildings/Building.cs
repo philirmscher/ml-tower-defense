@@ -124,13 +124,14 @@ public class Building : MonoBehaviour
                     Vector3 point2 = MathParabola.Parabola(cannonStartPosition, cannonTargetPosition, mortarProjectileHeight, 0.02f);
 
                     Vector3 direction = (point2 - point1).normalized;
+                    float desiredAngleX = Mathf.Atan2(direction.y, direction.z) * Mathf.Rad2Deg + 68.3f;
+                    Quaternion desiredRotation = Quaternion.Euler(desiredAngleX, cannon.transform.rotation.eulerAngles.y, cannon.transform.rotation.eulerAngles.z);
 
-                    Quaternion desiredRotation = Quaternion.LookRotation(direction);
                     Quaternion smoothRotation = Quaternion.Lerp(cannon.transform.rotation, desiredRotation, Time.deltaTime * turnSpeed);
-
-                    // Da wir nur den Neigungswinkel ändern wollen, halten wir die anderen Winkel gleich
-                    cannon.transform.rotation = Quaternion.Euler(smoothRotation.eulerAngles.x, cannon.transform.rotation.eulerAngles.y, cannon.transform.rotation.eulerAngles.z);
+                    cannon.transform.rotation = smoothRotation;
                 }
+
+
 
                 else
                 {
