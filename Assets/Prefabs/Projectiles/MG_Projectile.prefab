@@ -4841,7 +4841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52fea3fc4da280d469bf874bce02ded8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 40
   explosionRadius: 0
   damage: 5
   hit: {fileID: 1344461201369764, guid: cfe0c511fa8d1cf4abf31f2f48dfe4f9, type: 3}
@@ -4850,7 +4850,7 @@ MonoBehaviour:
   mortarProjectileHeight: 10
   turnManager: {fileID: 0}
   cantShootThroughWalls: 0
-  HitsMultiple: 0
+  hitsMultiple: 0
 --- !u!199 &199876447181911204
 ParticleSystemRenderer:
   serializedVersion: 6
