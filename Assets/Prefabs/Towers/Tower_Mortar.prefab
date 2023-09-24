@@ -92,8 +92,8 @@ MonoBehaviour:
   muzzlePoint2: {fileID: 1020488296886782315}
   mortarProjectileHeight: 5
   fireRate: 0.3
-  attackRange: 18
-  minAttackRange: 8
+  attackRange: 15
+  minAttackRange: 6
   turnSpeed: 1
 --- !u!65 &347228194672369336
 BoxCollider:
@@ -588,7 +588,7 @@ PrefabInstance:
     - target: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 4.27
+      value: 5.297
       objectReference: {fileID: 0}
     - target: {fileID: 3679620861985173733, guid: 1ec7942b2b5ff6e47a5955976573acf2,
         type: 3}

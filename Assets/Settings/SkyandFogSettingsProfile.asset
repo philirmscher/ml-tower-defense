@@ -642,7 +642,7 @@ MonoBehaviour:
     m_Value: 1
   tracing:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   rayMiss:
     m_OverrideState: 0
     m_Value: 3
@@ -653,10 +653,10 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   m_MaxRaySteps:
-    m_OverrideState: 0
-    m_Value: 64
+    m_OverrideState: 1
+    m_Value: 32
   m_DenoiseSS:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   m_HalfResolutionDenoiserSS:
     m_OverrideState: 0
@@ -686,13 +686,13 @@ MonoBehaviour:
     m_Value: 50
   m_ClampValue:
     m_OverrideState: 0
-    m_Value: 0.8
+    m_Value: 1.5
   mode:
     m_OverrideState: 1
     m_Value: 1
   m_FullResolution:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   sampleCount:
     m_OverrideState: 0
     m_Value: 2
@@ -707,13 +707,13 @@ MonoBehaviour:
     m_Value: 0
   m_DenoiserRadius:
     m_OverrideState: 0
-    m_Value: 0.66
+    m_Value: 1
   m_SecondDenoiserPass:
     m_OverrideState: 0
     m_Value: 1
   m_MaxMixedRaySteps:
     m_OverrideState: 0
-    m_Value: 48
+    m_Value: 64
   receiverMotionRejection:
     m_OverrideState: 0
     m_Value: 1
@@ -877,7 +877,7 @@ MonoBehaviour:
     m_Value: 2
   limitMax:
     m_OverrideState: 1
-    m_Value: 14
+    m_Value: 11.224914
   curveMap:
     m_OverrideState: 0
     m_Value:

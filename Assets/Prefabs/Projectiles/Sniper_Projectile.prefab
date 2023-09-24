@@ -4843,13 +4843,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   explosionRadius: 0
-  damage: 100
+  damage: 120
   hit: {fileID: 1438542530079480, guid: 21710859533a00746ad2bdd323061a2d, type: 3}
   flash: {fileID: 1437680763721510, guid: a311f5de96916bf44bcb1dae61840939, type: 3}
   isMortarProjectile: 0
   mortarProjectileHeight: 10
   turnManager: {fileID: 0}
   cantShootThroughWalls: 0
+  hitsMultiple: 0
 --- !u!199 &199876447181911204
 ParticleSystemRenderer:
   serializedVersion: 6

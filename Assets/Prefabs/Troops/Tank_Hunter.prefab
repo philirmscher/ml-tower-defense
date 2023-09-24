@@ -69,9 +69,9 @@ MonoBehaviour:
   healthBar: {fileID: 1538124869643296065}
   damageMaterial: {fileID: 2100000, guid: fb9f9e612c2fa674a9a36c056ca0750a, type: 2}
   isAlive: 1
-  damage: 45
+  damage: 80
   secondsBetweenShots: 5
-  attackRange: 20
+  attackRange: 18
   attackPrioList: 03000000020000000100000000000000
   neverMoveToPrio: Wall
   gameObjectToAttack: {fileID: 0}
