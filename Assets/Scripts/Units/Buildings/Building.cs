@@ -209,6 +209,17 @@ public class Building : MonoBehaviour
 
     void UpdateTarget()
     {
+        
+        if (target != null)
+        {
+            EnemyScript enemyComponent = target.GetComponent<EnemyScript>();
+            float distanceToCurrentTarget = Vector3.Distance(transform.position, target.position);
+            if (enemyComponent != null && enemyComponent.isAlive && distanceToCurrentTarget <= attackRange && distanceToCurrentTarget > minAttackRange)
+            {
+                return;
+            }
+        }
+
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         float shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
@@ -217,15 +228,21 @@ public class Building : MonoBehaviour
         {
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
 
-            if (distanceToEnemy < shortestDistance && distanceToEnemy > minAttackRange) 
+            if (distanceToEnemy < shortestDistance && distanceToEnemy > minAttackRange)
             {
                 shortestDistance = distanceToEnemy;
                 nearestEnemy = enemy;
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= attackRange) 
+        if (nearestEnemy != null && shortestDistance <= attackRange)
         {
+            EnemyScript enemyComponent = nearestEnemy.GetComponent<EnemyScript>();
+            if (enemyComponent == null || !enemyComponent.isAlive)
+            {
+                return;
+            }
+
             target = nearestEnemy.transform;
             cannonStartPosition = muzzlePoint1.position;
             cannonTargetPosition = target.position;
@@ -235,6 +252,7 @@ public class Building : MonoBehaviour
             target = null;
         }
     }
+
 
 
     void Shoot()
