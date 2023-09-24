@@ -244,7 +244,7 @@ public class TurnManager : MonoBehaviour
         currentEnemyWave.enemyPlacements[index].amount--;
         
         var enemy = Instantiate(currentEnemyWave.enemyPlacements[index].prefab,  position, Quaternion.identity);
-        enemy.AddComponent<StupidTroopAIScript>();
+        enemy.AddComponent<EnemyMovement>();
         enemy.GetComponent<EnemyScript>().turnManager = this;
         enemies.Add(enemy);
     }

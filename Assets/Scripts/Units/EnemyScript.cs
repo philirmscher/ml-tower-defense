@@ -137,7 +137,7 @@ public class EnemyScript : MonoBehaviour
             ApplyFlamethrowerDamage();
 
             // Activate the flamethrower effect
-            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying && turnManager.type != PlayType.Training)
+            if (flamethrowerEffect != null && !flamethrowerEffect.isPlaying && (turnManager == null || turnManager.type != PlayType.Training))
             {
                 flamethrowerEffect.Play();
             }
@@ -174,15 +174,21 @@ public class EnemyScript : MonoBehaviour
     {
         if (!isInAttackRange) return;
         if (isWallcracker) return;
+
+        Vector3 targetMeshCenter = gameObjectToAttack.GetComponent<Building>()?.GetMeshCenterInWorld() ?? gameObjectToAttack.transform.position;
+
         Vector3 dir1 = gameObjectToAttack.transform.position - transform.position;
         Quaternion lookRotation1 = Quaternion.LookRotation(dir1);
         Vector3 rotation1 = Quaternion.Lerp(topPart.transform.rotation, lookRotation1, Time.deltaTime * turnSpeed).eulerAngles;
         topPart.transform.rotation = Quaternion.Euler(-90f, rotation1.y, 0f);
+        if (!hasFlamethrower)
+        {
+            float heightDifference = targetMeshCenter.y - cannon.transform.position.y;
+            float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
+            float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
+            cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
 
-        float heightDifference = gameObjectToAttack.transform.position.y - cannon.transform.position.y;
-        float horizontalDistance = Vector3.Distance(new Vector3(gameObjectToAttack.transform.position.x, cannon.transform.position.y, gameObjectToAttack.transform.position.z), cannon.transform.position);
-        float pitchAngle = Mathf.Atan2(heightDifference, horizontalDistance) * Mathf.Rad2Deg;
-        cannon.transform.localRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
+        }
     }
 
     public void Move(int direction)
@@ -245,8 +251,8 @@ public class EnemyScript : MonoBehaviour
         psInst1.Play();
         Destroy(psInst1.gameObject, psInst1.main.duration);
         yield return new WaitForSeconds(psInst1.main.duration);
-        this.GetComponent<StupidTroopAIScript>().agent.isStopped = true;
-        this.GetComponent<StupidTroopAIScript>().agent.speed = 0;
+        this.GetComponent<EnemyMovement>().agent.isStopped = true;
+        this.GetComponent<EnemyMovement>().agent.speed = 0;
         // Deactivate the renderer after the first effect
         DisableAllRenderers();
 
@@ -337,7 +343,7 @@ public class EnemyScript : MonoBehaviour
     }
     private void InstantiateDecalOnDeath()
     {
-        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && turnManager.type != PlayType.Training)
+        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && (turnManager == null || turnManager.type != PlayType.Training))
         {
             GameObject decalPrefab = deathDecalPrefabs[UnityEngine.Random.Range(0, deathDecalPrefabs.Length)];
             Vector3 decalPosition = transform.position;
@@ -350,7 +356,7 @@ public class EnemyScript : MonoBehaviour
 
     private IEnumerator HandleDeathEffects()
     {
-        if(turnManager.type != PlayType.Training)
+        if(turnManager == null || turnManager.type != PlayType.Training)
         {
             // Start the first effect
             ParticleSystem psInst1 = Instantiate(onDeathVfx1, transform.position, transform.rotation);
@@ -615,7 +621,7 @@ public class EnemyScript : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, alertRadius);
 
         // Flamethrower Cone
-        if(muzzlePoint)
+        if(muzzlePoint && hasFlamethrower)
         DrawConeGizmo(muzzlePoint.position, muzzlePoint.forward, flamethrowerAngle, flamethrowerRange, Color.magenta);
     }
 }

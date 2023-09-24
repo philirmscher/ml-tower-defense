@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,10 +17,12 @@ public class BulletScript : MonoBehaviour
 
     [Header("Wall Interaction")]
     [SerializeField] private bool cantShootThroughWalls = false;
+    [SerializeField] private bool hitsMultiple = false;
     private string wallTag = "Wall";
 
     private Transform target;
     private string enemyTag = "Enemy";
+    private string targetTag;
     private Rigidbody rb;
     private GameObject projectileOrigin;
     private Vector3 startPos;
@@ -56,12 +59,14 @@ public class BulletScript : MonoBehaviour
 
     void Start()
     {
+        targetTag = target.gameObject.tag;
+
         startPos = transform.position;
         if (target != null)
         {
             targetStartPosition = target.position;
 
-            if (flash != null && turnManager.type != PlayType.Training)
+            if (flash != null && (turnManager == null || turnManager.type != PlayType.Training))
             {
                 var flashInstance = Instantiate(flash, transform.position, Quaternion.identity);
                 flashInstance.transform.forward = target.position - transform.position;
@@ -78,6 +83,8 @@ public class BulletScript : MonoBehaviour
             }
         }
         rb = GetComponent<Rigidbody>();
+        //if (hitsMultiple)
+            //rb.isKinematic = true;
         Destroy(gameObject, 5);
     }
 
@@ -98,7 +105,7 @@ public class BulletScript : MonoBehaviour
                 if (hit.collider.tag == wallTag)
                 {
                     target = hit.transform;
-                    HitTarget(hit.point, Quaternion.identity);
+                    HitTarget(hit.point, Quaternion.identity, this.target);
                     return;
                 }
             }
@@ -110,7 +117,7 @@ public class BulletScript : MonoBehaviour
             float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(targetStartPosition.x, targetStartPosition.z));
             if (distanceToTarget < 0.1f)
             {
-                HitTarget(targetStartPosition, Quaternion.identity);
+                HitTarget(targetStartPosition, Quaternion.identity, this.target);
                 return;
             }
         }
@@ -125,9 +132,9 @@ public class BulletScript : MonoBehaviour
             Vector3 direction = targetPoint - transform.position;
             float distanceThisFrame = speed * Time.deltaTime;
 
-            if (direction.magnitude <= distanceThisFrame)
+            if (direction.magnitude <= distanceThisFrame && !hitsMultiple && !cantShootThroughWalls)
             {
-                HitTarget(targetPoint, Quaternion.identity); // Hier verwenden wir targetPoint statt target.position
+                HitTarget(targetPoint, Quaternion.identity,this.target); // Hier verwenden wir targetPoint statt target.position
                 return;
             }
 
@@ -138,9 +145,9 @@ public class BulletScript : MonoBehaviour
 
 
     
-    void HitTarget(Vector3 targetPos,Quaternion targetRot)
+    void HitTarget(Vector3 targetPos,Quaternion targetRot, Transform hitTarget)
     {
-        if (hit != null && turnManager.type != PlayType.Training)
+        if (hit != null && (turnManager == null || turnManager.type != PlayType.Training))
         {
             var hitInstance = Instantiate(hit, targetPos, targetRot);
 
@@ -161,10 +168,10 @@ public class BulletScript : MonoBehaviour
         }
         else
         {
-            Damage(target);
+            Damage(hitTarget);
         }
-        
-        Destroy(gameObject);
+        if(!hitsMultiple)
+            Destroy(gameObject);
     }
     
     void Explode()
@@ -182,28 +189,47 @@ public class BulletScript : MonoBehaviour
 
     void Damage(Transform hitTarget)
     {
-        EnemyScript enemyScript = hitTarget.GetComponent<EnemyScript>();
-        if (enemyScript != null)
+        if (targetTag == hitTarget.tag || Enum.IsDefined(typeof(Building.BuildingType), hitTarget.tag))
         {
-            enemyScript.TakeDamage(damage, projectileOrigin);
-            return;
+            EnemyScript enemyScript = hitTarget.GetComponent<EnemyScript>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(damage, projectileOrigin);
+                return;
+            }
+
+            Building buildingScript = hitTarget.GetComponent<Building>();
+            if (buildingScript != null)
+            {
+                buildingScript.TakeDamage(damage);
+            }
         }
 
-        Building buildingScript = hitTarget.GetComponent<Building>();
-        if (buildingScript != null)
-        {
-            buildingScript.TakeDamage(damage);
-        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision == null || target == null)
             return;
+        if (hitsMultiple)
+        {
+            if (collision.transform && collision.contacts.Length > 0)
+            {
+                Vector3 explosionPoint = collision.contacts[0].point;
+                HitTarget(explosionPoint, Quaternion.identity, collision.transform);
+            }
+            if(collision.transform == this.target)
+            {
+                Destroy(gameObject);
+            }
+            return;
+        }
+
+
         if (collision.gameObject == target.gameObject && collision.contacts.Length > 0)
         {
             Vector3 explosionPoint = collision.contacts[0].point;
-            HitTarget(explosionPoint, Quaternion.identity);
+            HitTarget(explosionPoint, Quaternion.identity,this.target);
         }
     }
 

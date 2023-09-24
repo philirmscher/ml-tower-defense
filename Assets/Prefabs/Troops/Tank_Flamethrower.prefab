@@ -127,8 +127,8 @@ MonoBehaviour:
     type: 3}
   muzzlePoint: {fileID: 9098090784425104504}
   flamethrowerEffect: {fileID: 7387677347412381837}
-  flamethrowerRange: 4.5
-  flamethrowerAngle: 48
+  flamethrowerRange: 5.5
+  flamethrowerAngle: 45
   isWallcracker: 0
   damageMultiplicator: 0
   multiplyDamageOfBuildingTag: []
@@ -257,6 +257,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035729732355280143, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035729732355280143, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035729732355280143, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035729732355280143, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035729732355280143, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7261704177512972434, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0527
+      objectReference: {fileID: 0}
+    - target: {fileID: 7261704177512972434, guid: f230eff338dbf8e4db16e8e5f53dd90c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0015
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

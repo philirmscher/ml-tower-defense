@@ -19770,6 +19770,7 @@ MonoBehaviour:
   mortarProjectileHeight: 10
   turnManager: {fileID: 0}
   cantShootThroughWalls: 0
+  HitsMultiple: 0
 --- !u!199 &199622684974115234
 ParticleSystemRenderer:
   serializedVersion: 6

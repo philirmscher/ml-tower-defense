@@ -306,7 +306,7 @@ public class Building : MonoBehaviour
     }
     private void InstantiateDecalOnDeath()
     {
-        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && turnManager.type != PlayType.Training)
+        if (deathDecalPrefabs != null && deathDecalPrefabs.Length > 0 && (turnManager == null || turnManager.type != PlayType.Training))
         {
             GameObject decalPrefab = deathDecalPrefabs[UnityEngine.Random.Range(0, deathDecalPrefabs.Length)];
             Vector3 decalPosition = transform.position;

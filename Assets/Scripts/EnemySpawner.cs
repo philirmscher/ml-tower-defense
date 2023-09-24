@@ -33,7 +33,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 if (hit.transform.CompareTag("Platform"))
                 {
-                    Instantiate(currentEnemyPrefab, hit.point, Quaternion.identity).AddComponent<StupidTroopAIScript>();
+                    Instantiate(currentEnemyPrefab, hit.point, Quaternion.identity).AddComponent<EnemyMovement>();
                 }
             }
         }

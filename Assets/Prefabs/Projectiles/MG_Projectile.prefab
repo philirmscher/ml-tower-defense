@@ -4848,6 +4848,9 @@ MonoBehaviour:
   flash: {fileID: 1262955698068164, guid: 284aa8115675f03488377d544e50cbf5, type: 3}
   isMortarProjectile: 0
   mortarProjectileHeight: 10
+  turnManager: {fileID: 0}
+  cantShootThroughWalls: 0
+  HitsMultiple: 0
 --- !u!199 &199876447181911204
 ParticleSystemRenderer:
   serializedVersion: 6
