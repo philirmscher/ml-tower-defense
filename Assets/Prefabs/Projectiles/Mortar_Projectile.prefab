@@ -14780,7 +14780,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 5.35e-43, y: 0, z: 0, w: 1e-45}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 3.9e-44, z: 1.8256e-41, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -19763,14 +19763,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   explosionRadius: 4
-  damage: 50
+  damage: 90
   hit: {fileID: 1121192042590650, guid: 3515082850c00044a9fffc1053b56b6b, type: 3}
   flash: {fileID: 1920765516895132, guid: df8bef245b1373047a1e1320f5ed6ac2, type: 3}
   isMortarProjectile: 1
   mortarProjectileHeight: 10
   turnManager: {fileID: 0}
   cantShootThroughWalls: 0
-  HitsMultiple: 0
+  hitsMultiple: 0
 --- !u!199 &199622684974115234
 ParticleSystemRenderer:
   serializedVersion: 6
