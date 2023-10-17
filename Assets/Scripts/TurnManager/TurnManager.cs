@@ -37,6 +37,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private TMPro.TMP_Text turnNumberText;
     [SerializeField] private GameObject postTurnUI;
+    [SerializeField] private GameObject gameEndScreen;
     [SerializeField] private GameObject speedButtons;
     [SerializeField] private List<EnemyWave> enemyWaves;
     [SerializeField] private PreviewSystem previewSystem;
@@ -194,6 +195,13 @@ public class TurnManager : MonoBehaviour
             StartPreTurnPhase(win);
             return;
         }
+
+        if (turnNumber >= enemyWaves.Count)
+        {
+            gameEndScreen.SetActive(true);
+            return;
+        }
+        
         var winLoseText = postTurnUI.transform.Find("WinLoseText").GetComponent<TMPro.TMP_Text>();
         winLoseText.SetText(win ? "You win!" : "You lose!");
         
